@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
@@ -43,8 +44,10 @@ public class Player {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(32 / Zombie.PPM);
-        fixtureDef.shape = shape;
+
+        PolygonShape polygon = new PolygonShape();
+        polygon.setAsBox(25 / Zombie.PPM, 55 / Zombie.PPM);
+        fixtureDef.shape = polygon;
 
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.LEFT_CORNER;

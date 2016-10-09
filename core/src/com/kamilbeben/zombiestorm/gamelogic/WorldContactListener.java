@@ -61,7 +61,7 @@ public class WorldContactListener implements ContactListener {
         Body hole = (a.getUserData() instanceof Hole) ? a : b;
 
         if (hole.getUserData() instanceof Hole && enemy.getUserData() instanceof Enemy) {
-            ((Enemy) enemy.getUserData()).collisionsOff();
+            ((Enemy) enemy.getUserData()).killEnemy();
         }
     }
 
@@ -84,7 +84,7 @@ public class WorldContactListener implements ContactListener {
         Body enemy = (a.getUserData() instanceof Enemy) ? a : b;
 
         if (enemy.getUserData() instanceof Enemy && shotgunShell.getUserData() instanceof ShotgunShell) {
-            ((Enemy) enemy.getUserData()).shotgunShot();
+            ((Enemy) enemy.getUserData()).killEnemy();
             ((ShotgunShell) shotgunShell.getUserData()).setToHarmless();
         }
     }

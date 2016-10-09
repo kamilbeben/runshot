@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
@@ -37,8 +38,8 @@ public class Walker extends Enemy {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(bodyRadius);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(30 / Zombie.PPM, 60 / Zombie.PPM);
         fixtureDef.shape = shape;
 
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
@@ -100,6 +101,6 @@ public class Walker extends Enemy {
     }
 
     private void updateSpritePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - bodyRadius);
+        setPosition(body.getPosition().x - getHeight() / 2, body.getPosition().y - 60 / Zombie.PPM);
     }
 }

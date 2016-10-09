@@ -10,13 +10,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 
 /**
- * Created by bezik on 08.10.16.
+ * Created by bezik on 10.10.16.
  */
-public class IslandShort extends Island {
+public class IslandLong extends Island {
 
-    public IslandShort(World world, float x, float y, float timer) {
-        super(new Texture("island_short.png"), timer);
-        setSize(getWidth() / Zombie.PPM, 16f / Zombie.PPM);
+    public IslandLong(World world, float x, float y, float timer) {
+        super(new Texture("island_long.png"), timer);
+        setSize(getWidth() * 2 / Zombie.PPM, 16f / Zombie.PPM);
         this.world = world;
         setupBody(x, y);
         updateSpritePosition();
@@ -30,7 +30,7 @@ public class IslandShort extends Island {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(100f / Zombie.PPM, 12f / Zombie.PPM);
+        shape.setAsBox(200f / Zombie.PPM, 12f / Zombie.PPM);
         fixtureDef.shape = shape;
         fixtureDef.friction = 0f;
         fixtureDef.filter.categoryBits = Zombie.STATIC_BIT;
@@ -38,7 +38,7 @@ public class IslandShort extends Island {
         body.createFixture(fixtureDef);
 
         EdgeShape line = new EdgeShape();
-        line.set(new Vector2(-105 / Zombie.PPM, 28 / Zombie.PPM), new Vector2(110 / Zombie.PPM, 28 / Zombie.PPM));
+        line.set(new Vector2(-205 / Zombie.PPM, 28 / Zombie.PPM), new Vector2(210 / Zombie.PPM, 28 / Zombie.PPM));
         fixtureDef.filter.categoryBits = Zombie.GROUND_BIT;
         fixtureDef.shape = line;
         fixtureDef.isSensor = true;

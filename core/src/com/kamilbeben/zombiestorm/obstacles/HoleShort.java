@@ -12,11 +12,11 @@ import com.kamilbeben.zombiestorm.tools.Tools;
 /**
  * Created by bezik on 30.09.16.
  */
-public class ShortHole extends Hole {
+public class HoleShort extends Hole {
 
 
 
-    public ShortHole(World world, float x, float y, float timer) {
+    public HoleShort(World world, float x, float y, float timer) {
         super(new Texture("hole_short.png"), timer);
         setSize(getWidth() / Zombie.PPM, getHeight() / Zombie.PPM);
         this.world = world;

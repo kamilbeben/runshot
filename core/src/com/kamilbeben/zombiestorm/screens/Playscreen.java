@@ -17,9 +17,10 @@ import com.kamilbeben.zombiestorm.gamelogic.Physics;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Island;
+import com.kamilbeben.zombiestorm.obstacles.IslandLong;
 import com.kamilbeben.zombiestorm.obstacles.IslandShort;
-import com.kamilbeben.zombiestorm.obstacles.LongHole;
-import com.kamilbeben.zombiestorm.obstacles.ShortHole;
+import com.kamilbeben.zombiestorm.obstacles.HoleLong;
+import com.kamilbeben.zombiestorm.obstacles.HoleShort;
 import com.kamilbeben.zombiestorm.tools.Tools;
 import com.kamilbeben.zombiestorm.tools.WorldRenderer;
 
@@ -146,16 +147,25 @@ public class Playscreen implements Screen {
     }
 
     private void addIsland() {
-        islands.add(new IslandShort(physics.world, 1200, 260, timer.getTime()));
+        islands.add(randomizeIsland());
         lastRandomWasAnObstacle = true;
+    }
+
+    private Island randomizeIsland() {
+        int random = Tools.randomFrom1To10();
+        if (random < 5) {
+            return new IslandShort(physics.world, 1200, 270, timer.getTime());
+        } else {
+            return new IslandLong(physics.world, 1200, 270, timer.getTime());
+        }
     }
 
     private Hole randomizeHole() {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new ShortHole(physics.world, 1200, 200, timer.getTime());
+            return new HoleShort(physics.world, 1200, 200, timer.getTime());
         } else {
-            return new LongHole(physics.world, 1200, 200, timer.getTime());
+            return new HoleLong(physics.world, 1200, 200, timer.getTime());
         }
     }
 

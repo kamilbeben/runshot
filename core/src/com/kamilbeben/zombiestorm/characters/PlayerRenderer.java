@@ -150,9 +150,9 @@ public class PlayerRenderer {
 
 
     public void updatePosition(Body body) {
-        upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 4, body.getPosition().y + 12f / Zombie.PPM);
-        lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 4 - 44 / Zombie.PPM,
-                body.getPosition().y - 34 / Zombie.PPM);
+        upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3, body.getPosition().y - 12 / Zombie.PPM);
+        lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 44 / Zombie.PPM,
+                body.getPosition().y - 58 / Zombie.PPM);
     }
 
     public void render(SpriteBatch batch) {

@@ -57,10 +57,10 @@ public class Tools {
 
     public static final float randomizeMonkeyJumpTime() {
         int random = randomFrom1To10();
-        if (random > 7) {
+        if (random > 5) {
+            return 1.5f;
+        } else if (random > 8) {
             return 2f;
-        } else if (random > 3) {
-            return 4f;
         } else {
             return 6f;
         }

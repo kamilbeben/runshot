@@ -73,7 +73,7 @@ public abstract class Enemy extends Sprite {
 
     public abstract void dead();
 
-    public void shotgunShot() {
+    public void killEnemy() {
         alive = false;
         justGotShot = true;
         disableBodyCollisions();
@@ -92,14 +92,6 @@ public abstract class Enemy extends Sprite {
         }
     }
 
-
-    public void collisionsOff() {
-        dead();
-        Array<Fixture> fixtures = body.getFixtureList();
-        for (Fixture tmp : fixtures) {
-            tmp.setSensor(true);
-        }
-    }
 
     public boolean gotShot() {
         if (justGotShot) {

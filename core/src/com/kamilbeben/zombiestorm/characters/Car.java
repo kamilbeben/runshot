@@ -21,7 +21,7 @@ public class Car extends Enemy {
     private Animation carRiding;
 
     public Car(World world, float x, float y, float timer) {
-        super(world, x, y, new Texture("carHard.png"));
+        super(world, x, y, new Texture("car.png"));
         setupBody(x, y);
         setupLooks();
         calculateSpeed(timer);
@@ -48,14 +48,16 @@ public class Car extends Enemy {
 
     private void setupLooks() {
 
-        setBounds(0, 98, 200 / Zombie.PPM, 100 / Zombie.PPM);
+        setBounds(0, 98, 161 / Zombie.PPM, 64 / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i=0; i<3; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 64, 0, 64, 96));
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 161, 0, 161, 64));
         }
-        carRiding = new Animation(0.3f, frames); //TODO adjust
+        carRiding = new Animation(0.1f, frames); //TODO adjust
         frames.clear();
+
+        setSize(getWidth() * 1.5f, getHeight() * 1.5f);
     }
 
     @Override
@@ -66,25 +68,15 @@ public class Car extends Enemy {
 
     public void update(float delta) {
         updatePosition();
-//        setRegion(getFrame(delta));
+        setRegion(getFrame(delta));
         walk(speed, delta);
     }
 
     public TextureRegion getFrame(float delta) {
-        currentState = getState();
         TextureRegion region;
         region = carRiding.getKeyFrame(stateTimer, true);
-        stateTimer = (currentState == previousState) ? stateTimer + delta : 0;
-        previousState = currentState;
+        stateTimer += delta;
         return region;
-    }
-
-    public State getState() {
-        if (alive) {
-            return State.WALKING;
-        } else {
-            return State.DEAD;
-        }
     }
 
 
@@ -93,7 +85,7 @@ public class Car extends Enemy {
     }
 
     private void updatePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - 32 / Zombie.PPM);
+        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - 48 / Zombie.PPM);
     }
 
     private void calculateSpeed(float timer) {
@@ -101,7 +93,7 @@ public class Car extends Enemy {
     }
 
     @Override
-    public void shotgunShot() {
+    public void killEnemy() {
         laughAtPlayer();
     }
 
