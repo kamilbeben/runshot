@@ -196,13 +196,15 @@ public class Playscreen implements Screen {
     }
 
     private void handleInput() {
-        if (Gdx.input.justTouched() && timer.isItTimeToShootSomething()) {
+        if (Gdx.input.justTouched() && timer.isItTimeToShootSomething() &&
+                Gdx.input.getX() > Gdx.graphics.getWidth()/2) {
             shotgunShot((int) (Gdx.input.getY() * (Zombie.HEIGHT)) / viewport.getScreenHeight());
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && physics.canPlayerJump() && !playerIsFalling) {
+        if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.justTouched() &&
+                Gdx.input.getX() < Gdx.graphics.getWidth()/2) ) && physics.canPlayerJump() && !playerIsFalling) {
             player.jump();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R) && gameOver) {
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.justTouched()) && gameOver) {
             game.setScreen(new Playscreen(game));
         }
     }
