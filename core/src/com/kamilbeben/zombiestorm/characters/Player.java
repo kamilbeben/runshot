@@ -30,6 +30,8 @@ public class Player {
 
     private PlayerRenderer playerRenderer;
 
+    private int bullets = 6;
+
 
     public Player(World world) {
         setupBody(world);
@@ -64,8 +66,14 @@ public class Player {
         body.setUserData(this);
     }
 
-    public void shotgunShot() {
-        shooting = true;
+    public boolean shotgunShot() {
+        if (bullets > 0 ){
+            shooting = true;
+            bullets--;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void update(float delta) {
@@ -103,6 +111,10 @@ public class Player {
         for (Fixture tmp : fixtures) {
             tmp.setSensor(true);
         }
+    }
+
+    public int getBulletsAmount() {
+        return bullets;
     }
 
     public void dead() {

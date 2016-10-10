@@ -84,7 +84,7 @@ public class Playscreen implements Screen {
             timer.updateTimer(delta);
             score += delta + timer.getTime() / 1000;
         }
-        hud.update(timer.getTime(), score);
+        hud.update(timer.getTime(), score, player.getBulletsAmount());
         handleInput();
         player.update(delta);
         for (Enemy tmp : enemies) {
@@ -165,7 +165,8 @@ public class Playscreen implements Screen {
         if (random < 5) {
             return new HoleShort(physics.world, 1200, 200, timer.getTime());
         } else {
-            return new HoleLong(physics.world, 1200, 200, timer.getTime());
+            return new HoleLong(physics.world, 1200, 200, timer.getTime()) {
+            };
         }
     }
 
@@ -196,7 +197,7 @@ public class Playscreen implements Screen {
 
     private void handleInput() {
         if (Gdx.input.justTouched() && timer.isItTimeToShootSomething()) {
-            shotgunShot(4f, (int) (Gdx.input.getY() * (Zombie.HEIGHT)) / viewport.getScreenHeight());
+            shotgunShot((int) (Gdx.input.getY() * (Zombie.HEIGHT)) / viewport.getScreenHeight());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && physics.canPlayerJump() && !playerIsFalling) {
             player.jump();
@@ -206,9 +207,10 @@ public class Playscreen implements Screen {
         }
     }
 
-    private void shotgunShot(float force, int yAxis) {
-        player.shotgunShot();
-        physics.shotgunShot(force, yAxis, player.getPosition().y);
+    private void shotgunShot( int yAxis) {
+        if (player.shotgunShot()) {
+            physics.shotgunShot(yAxis, player.getPosition().y);
+        }
     }
 
 
@@ -262,10 +264,11 @@ public class Playscreen implements Screen {
 
     @Override
     public void dispose() {
-        physics.dispose();
+        hud.dispose();
         player.dispose();
         for (Enemy tmp : enemies) {
             tmp.dispose(physics.world);
         }
+        physics.dispose();
     }
 }

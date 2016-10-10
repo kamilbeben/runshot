@@ -20,13 +20,15 @@ import com.kamilbeben.zombiestorm.Zombie;
  */
 public class ShotgunShell {
 
+    private static final float force = 5f;
+
     public Body body;
     private FixtureDef fixtureDef;
     private BodyDef bodyDef;
     private CircleShape shape;
 
 
-    public ShotgunShell(World world, float force, int yAxis, float playerYPosition) {
+    public ShotgunShell(World world, int yAxis, float playerYPosition) {
         shape = new CircleShape();
         shape.setRadius(4 / Zombie.PPM);
         bodyDef = new BodyDef();
@@ -35,11 +37,11 @@ public class ShotgunShell {
         fixtureDef.filter.categoryBits = Zombie.SHOTGUN_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT;
         fixtureDef.density = 80f;
-        bodyDef.position.set(48 / Zombie.PPM, playerYPosition); //TODO modify playerPosition when sprite changed
+        bodyDef.position.set(64 / Zombie.PPM, playerYPosition);
         body = world.createBody(bodyDef);
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef);
-        body.applyLinearImpulse(new Vector2(force, (480 - yAxis) / Zombie.PPM), body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(force, (480 - yAxis - 20) / Zombie.PPM), body.getWorldCenter(), true);
         body.setUserData(this);
         shape.dispose();
     }

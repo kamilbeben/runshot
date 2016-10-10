@@ -32,7 +32,7 @@ public class HoleLong extends Hole {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(64f / Zombie.PPM, 2f / Zombie.PPM);
+        shape.setAsBox(46f / Zombie.PPM, 2f / Zombie.PPM);
         fixtureDef.shape = shape;
 
         fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;

@@ -84,8 +84,8 @@ public class Physics {
         world.setContactListener(contactListener);
     }
 
-    public void shotgunShot(float force, int yAxis, float playerYPosition) {
-        shotgunShells.add(new ShotgunShell(world, force, yAxis, playerYPosition));
+    public void shotgunShot(int yAxis, float playerYPosition) {
+        shotgunShells.add(new ShotgunShell(world, yAxis, playerYPosition));
     }
 
     public boolean canPlayerJump() {

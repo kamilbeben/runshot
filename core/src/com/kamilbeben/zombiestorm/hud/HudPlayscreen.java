@@ -25,7 +25,7 @@ public class HudPlayscreen {
         text = new TextPlayscreen(stage);
     }
 
-    public void update(float timer, float score) {
+    public void update(float timer, float score, int bulletAmount) {
         text.update(timer, score);
     }
 
