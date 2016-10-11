@@ -19,6 +19,7 @@ public class Zombie extends Game {
 	public static final short USED_BIT = 32;
 	public static final short HOLE_BIT = 64;
 	public static final short LEFT_CORNER = 128;
+	public static final short PREHOLE_BIT = 256;
 
 	public SpriteBatch batch;
 	

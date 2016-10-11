@@ -69,6 +69,7 @@ public abstract class Enemy extends Sprite {
     public abstract void render(SpriteBatch batch);
 
     public abstract void update(float delta);
+    public abstract void actionBeforeHole();
 
 
     public abstract void dead();

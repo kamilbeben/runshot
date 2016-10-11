@@ -45,7 +45,7 @@ public abstract class Hole extends Sprite {
 
     protected void updateSpritePosition() {
         setPosition(body.getPosition().x - getWidth() / 2 - 8f / Zombie.PPM,
-                body.getPosition().y - getHeight() - (4f / Zombie.PPM));
+                body.getPosition().y - getHeight() - (3f / Zombie.PPM));
     }
 
     public void render(SpriteBatch batch) {

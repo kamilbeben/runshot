@@ -64,6 +64,14 @@ public class Walker extends Enemy {
     }
 
     @Override
+    public void actionBeforeHole() {
+        stopWalking();
+    }
+
+    private void stopWalking() {
+        //changes speed to hole's and do something with animations
+    }
+    @Override
     public void dead() {
         Gdx.app.log("Walker", "Im dead now");
     }

@@ -61,6 +61,11 @@ public class Car extends Enemy {
     }
 
     @Override
+    public void actionBeforeHole() {
+
+    }
+
+    @Override
     public void dead() {
         Gdx.app.log("Walker", "Im dead now");
     }

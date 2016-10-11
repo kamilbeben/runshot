@@ -22,7 +22,7 @@ public class Monkey extends Enemy {
 
     private static final float bodyRadius = 36 / Zombie.PPM;
     private float speed = 10f;
-    private static final float jumpForce = 4f;
+    private static final float jumpForce = 5f;
 
     private float randomJumptimer = Tools.randomizeMonkeyJumpTime();
 
@@ -68,8 +68,8 @@ public class Monkey extends Enemy {
         running = new Animation(0.05f, frames); //TODO adjust
         frames.clear();
 
-        for (int i=3; i<5; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 64, 0, 64, 96));
+        for (int i=4; i<13; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 134, 0, 134, 119));
         }
         jumping = new Animation(0.3f, frames);
         frames.clear();
@@ -97,6 +97,16 @@ public class Monkey extends Enemy {
     private void jumpOnce() {
             body.applyLinearImpulse(new Vector2(0, jumpForce), body.getWorldCenter(), true);
             jumpTimer = 0f;
+    }
+
+    @Override
+    public void actionBeforeHole() {
+        forceJumpAboveHole();
+    }
+
+    private void forceJumpAboveHole() {
+        body.applyLinearImpulse(new Vector2(-1f, jumpForce), body.getWorldCenter(), true);
+        jumpTimer = 0f;
     }
 
     public TextureRegion getFrame(float delta) {

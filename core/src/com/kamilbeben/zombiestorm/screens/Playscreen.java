@@ -80,10 +80,6 @@ public class Playscreen implements Screen {
             player.dead();
         }
 
-        if (!gameOver) {
-            timer.updateTimer(delta);
-            score += delta + timer.getTime() / 1000;
-        }
         hud.update(timer.getTime(), score, player.getBulletsAmount());
         handleInput();
         player.update(delta);
@@ -94,21 +90,26 @@ public class Playscreen implements Screen {
                 score += 10f;
             }
         }
-        for (Hole tmp : holes) {
-            tmp.update(delta);
-            if (tmp.isPlayerAboveHole()) {
-                playerIsFalling = true;
-            }
-            if (tmp.isHoleOnScreen()) {
-                worldRenderer.updateGround(tmp.getStartTileAndNumberOfTiles());
-            }
-        }
 
-        for (Island tmp : islands) {
-            tmp.update(delta);
+        if (!gameOver) {
+            timer.updateTimer(delta);
+            score = (int) timer.getTime();
+            for (Hole tmp : holes) {
+                tmp.update(delta);
+                if (tmp.isPlayerAboveHole()) {
+                    playerIsFalling = true;
+                }
+                if (tmp.isHoleOnScreen()) {
+                    worldRenderer.updateGround(tmp.getStartTileAndNumberOfTiles());
+                }
+            }
+            for (Island tmp : islands) {
+                tmp.update(delta);
+            }
         }
-        if (playerIsFalling)
+        if (playerIsFalling) {
             player.collisionsOff();
+        }
 
         camera.update();
         physics.update(delta);
@@ -154,9 +155,9 @@ public class Playscreen implements Screen {
     private Island randomizeIsland() {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new IslandShort(physics.world, 1200, 270, timer.getTime());
+            return new IslandShort(physics.world, 1200, 260, timer.getTime());
         } else {
-            return new IslandLong(physics.world, 1200, 270, timer.getTime());
+            return new IslandLong(physics.world, 1200, 260, timer.getTime());
         }
     }
 
@@ -177,6 +178,7 @@ public class Playscreen implements Screen {
         } else if (random < 8) {
             return new Monkey(physics.world, 1200, 200, timer.getTime());
         } else if (!lastRandomWasAnObstacle && !lastRandomWasACar){
+            lastRandomWasACar = true;
             return new Car(physics.world, 1200, 200, timer.getTime());
         } else {
             return new Monkey(physics.world, 1200, 200, timer.getTime());

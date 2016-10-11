@@ -1,7 +1,9 @@
 package com.kamilbeben.zombiestorm.obstacles;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -31,9 +33,9 @@ public class HoleLong extends Hole {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(46f / Zombie.PPM, 2f / Zombie.PPM);
-        fixtureDef.shape = shape;
+        EdgeShape line = new EdgeShape();
+        line.set(new Vector2(-40 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(40 / Zombie.PPM, 0 / Zombie.PPM));
+        fixtureDef.shape = line;
 
         fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
         fixtureDef.filter.maskBits = Zombie.STATIC_BIT;
@@ -41,10 +43,17 @@ public class HoleLong extends Hole {
         body.createFixture(fixtureDef);
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
-        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT | Zombie.ENEMY_BIT;
 
         body.createFixture(fixtureDef);
 
+        line.set(new Vector2(100 / Zombie.PPM, 10 / Zombie.PPM), new Vector2(120 / Zombie.PPM, 10 / Zombie.PPM));
+        fixtureDef.filter.categoryBits = Zombie.PREHOLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT;
+        fixtureDef.shape = line;
+        fixtureDef.isSensor = true;
+
+        body.createFixture(fixtureDef);
         body.setUserData(this);
     }
 

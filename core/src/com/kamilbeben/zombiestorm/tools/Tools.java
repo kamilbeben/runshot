@@ -47,11 +47,11 @@ public class Tools {
     private void randomizeTimerBetweenEnemies() {
         int random = randomFrom1To10();
         if (random > 8) {
-            timerBetweenEnemies = 1f;
+            timerBetweenEnemies = 1.5f;
         } else if (random > 4) {
             timerBetweenEnemies = 3f;
         } else if (random > 0) {
-            timerBetweenEnemies = 4f;
+            timerBetweenEnemies = 3.5f;
         }
     }
 
