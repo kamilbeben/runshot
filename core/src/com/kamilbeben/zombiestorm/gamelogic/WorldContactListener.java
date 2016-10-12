@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Player;
+import com.kamilbeben.zombiestorm.objects.AmmoPack;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 
 /**
@@ -30,21 +31,11 @@ public class WorldContactListener implements ContactListener {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
         checkForCollisionBetweenZombieAndShotgunShell(a, b);
-        checkForCollisionBetweenZombieAndPlayer(a, b);
         checkForCollisionsBetweeenPlayerAndHoles(a, b);
+        checkForCollisionsBetweeenPlayerAndAmmoPacks(a, b);
         checkForCollisionsBetweeenZombiesAndHoles(a, b);
         checkForCollisionBetweenPlayerAndGround(contact.getFixtureA(), contact.getFixtureB());
         checkIfPlayerCollidesWithLeftWall(contact.getFixtureA(), contact.getFixtureB());
-    }
-
-    private void checkForCollisionBetweenZombieAndPlayer(Body a, Body b) {
-        Body player = (a.getUserData() instanceof Player) ? a : b;
-        Body enemy = (a.getUserData() instanceof Enemy) ? a : b;
-
-        if (enemy.getUserData() instanceof Enemy && player.getUserData() instanceof Player) {
-            ((Player) player.getUserData()).dead();
-            playerFootContacts++;
-        }
     }
 
     private void checkForCollisionsBetweeenPlayerAndHoles(Body a, Body b) {
@@ -55,6 +46,7 @@ public class WorldContactListener implements ContactListener {
             ((Hole) hole.getUserData()).collisionOff();
         }
     }
+
 
     private void checkForCollisionsBetweeenZombiesAndHoles(Body a, Body b) {
         Body enemy = (a.getUserData() instanceof Enemy) ? a : b;
@@ -86,6 +78,16 @@ public class WorldContactListener implements ContactListener {
         if (enemy.getUserData() instanceof Enemy && shotgunShell.getUserData() instanceof ShotgunShell) {
             ((Enemy) enemy.getUserData()).killEnemy();
             ((ShotgunShell) shotgunShell.getUserData()).setToHarmless();
+        }
+    }
+
+    private void checkForCollisionsBetweeenPlayerAndAmmoPacks(Body a, Body b) {
+        Body player = (a.getUserData() instanceof Player) ? a : b;
+        Body ammo = (a.getUserData() instanceof AmmoPack) ? a : b;
+
+        if (ammo.getUserData() instanceof AmmoPack && player.getUserData() instanceof Player) {
+            ((AmmoPack) ammo.getUserData()).stopRendering();
+            ((Player) player.getUserData()).pickAmmo(); //TODO sound here
         }
     }
 

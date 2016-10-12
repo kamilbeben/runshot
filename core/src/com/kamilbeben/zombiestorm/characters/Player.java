@@ -33,9 +33,9 @@ public class Player {
     private int bullets = 6;
 
 
-    public Player(World world) {
+    public Player(World world, Texture texture) {
         setupBody(world);
-        playerRenderer = new PlayerRenderer(new Texture("player.png"));
+        playerRenderer = new PlayerRenderer(texture);
         playerRenderer.setupLooks();
     }
 
@@ -59,7 +59,7 @@ public class Player {
 
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK;
         body.createFixture(fixtureDef);
 
         body.setUserData(this);
@@ -73,6 +73,10 @@ public class Player {
         } else {
             return false;
         }
+    }
+
+    public void pickAmmo() {
+        bullets = 6;
     }
 
     public void update(float delta) {

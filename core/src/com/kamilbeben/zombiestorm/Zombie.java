@@ -3,6 +3,7 @@ package com.kamilbeben.zombiestorm;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.screens.Playscreen;
+import com.kamilbeben.zombiestorm.tools.Assets;
 
 public class Zombie extends Game {
 
@@ -19,8 +20,10 @@ public class Zombie extends Game {
 	public static final short USED_BIT = 32;
 	public static final short HOLE_BIT = 64;
 	public static final short LEFT_CORNER = 128;
-	public static final short PREHOLE_BIT = 256;
+	public static final short AMMO_PACK = 256;
 
+
+	public Assets assets = new Assets();
 	public SpriteBatch batch;
 	
 	@Override

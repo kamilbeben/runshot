@@ -20,7 +20,7 @@ import com.kamilbeben.zombiestorm.tools.Tools;
 public class Monkey extends Enemy {
 
     private float speed = 10f;
-    private static final float jumpForce = 5f;
+    private static final float jumpForce = 4f;
 
     private float randomJumptimer = Timer.randomizeMonkeyJumpTime();
 
@@ -29,8 +29,8 @@ public class Monkey extends Enemy {
     private Animation dying;
 
 
-    public Monkey(World world, float x, float y, int speedLevel) {
-        super(world, x, y, new Texture("monkey.png"));
+    public Monkey(World world, float x, float y, int speedLevel, Texture texture) {
+        super(world, x, y, texture);
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();

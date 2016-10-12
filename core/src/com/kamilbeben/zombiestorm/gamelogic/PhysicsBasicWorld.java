@@ -50,7 +50,7 @@ public class PhysicsBasicWorld {
     }
 
     private void createLeftWallSensor(Body body, FixtureDef fixtureDef, EdgeShape line) {
-        line.set(new Vector2(5 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(5 / Zombie.PPM, 600 / Zombie.PPM));
+        line.set(new Vector2(25 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(25 / Zombie.PPM, 600 / Zombie.PPM));
         fixtureDef.filter.categoryBits = Zombie.LEFT_CORNER;
         fixtureDef.shape = line;
         fixtureDef.isSensor = true;

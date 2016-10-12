@@ -19,15 +19,15 @@ public class WorldRenderer {
     private Sprite spriteAnimation;
     private Animation animation;
 
-    public WorldRenderer () {
+    public WorldRenderer(Texture texture) {
         renderGround = new boolean[25];
         resetGround();
-        setupAnimations();
+        setupAnimations(texture);
         setSpeedLevel(1);
     }
 
-    private void setupAnimations() {
-        spriteAnimation = new Sprite(new Texture("grass_animation.png"));
+    private void setupAnimations(Texture texture) {
+        spriteAnimation = new Sprite(texture);
         spriteAnimation.setBounds(0, 0, 32 / Zombie.PPM, 96 / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();

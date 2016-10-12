@@ -37,7 +37,7 @@ public class Playscreen implements Screen {
 
     private OrthographicCamera camera = new OrthographicCamera();
     private Viewport viewport;
-    private WorldRenderer worldRenderer = new WorldRenderer();
+    private WorldRenderer worldRenderer;
     private HudPlayscreen hud;
 
     private Physics physics;
@@ -55,19 +55,22 @@ public class Playscreen implements Screen {
     private boolean gameOver = false;
 
     private boolean pause = false;
+    private boolean debugMode = false;
 
 
 
     public Playscreen(Zombie game) {
         this.game = game;
-        hud = new HudPlayscreen(game.batch);
+        game.assets.loadPlayscreenAssets();
+        worldRenderer = new WorldRenderer(game.assets.textureHolder.GAME_EXTRAS_GRASS_ANIMATION);
+        hud = new HudPlayscreen(game);
         setupCamera();
         physics = new Physics();
-        player = new Player(physics.world);
+        player = new Player(physics.world, game.assets.textureHolder.GAME_PLAYER);
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
         islands = new ArrayList<Island>();
-        objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world);
+        objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world, game.assets.textureHolder);
     }
 
     private void setupCamera() {
@@ -188,25 +191,25 @@ public class Playscreen implements Screen {
         float enemiesPosition = 700;
         float holesPosition = 900;
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel()));
+            enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_WALKER));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            enemies.add(new Monkey(physics.world, enemiesPosition, 200, timer.getSpeedLevel()));
+            enemies.add(new Monkey(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_MONKEY));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            enemies.add(new Car(physics.world, enemiesPosition, 200, timer.getSpeedLevel()));
+            enemies.add(new Car(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_CAR));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            holes.add(new HoleShort(physics.world, holesPosition, 100, timer.getSpeedLevel()));
+            holes.add(new HoleShort(physics.world, holesPosition, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_SHORT));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            holes.add(new HoleLong(physics.world, holesPosition, 100, timer.getSpeedLevel()));
+            holes.add(new HoleLong(physics.world, holesPosition, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_LONG));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            islands.add(new IslandLong(physics.world, holesPosition, 260, timer.getSpeedLevel()));
+            islands.add(new IslandLong(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            islands.add(new IslandShort(physics.world, holesPosition, 260, timer.getSpeedLevel()));
+            islands.add(new IslandShort(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
             timer.addTenSeconds();
@@ -217,6 +220,13 @@ public class Playscreen implements Screen {
                 pause = false;
             } else {
                 pause = true;
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            if (debugMode) {
+                debugMode = false;
+            } else {
+                debugMode = true;
             }
         }
     }
@@ -237,24 +247,29 @@ public class Playscreen implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             game.batch.setProjectionMatrix(camera.combined);
 
-            game.batch.begin();
-            worldRenderer.draw(game.batch);
+            if (!debugMode) {
+                game.batch.begin();
+                worldRenderer.draw(game.batch);
 
-            player.render(game.batch);
-            for (Enemy tmp : enemies) {
-                tmp.render(game.batch);
+                player.render(game.batch);
+                for (Enemy tmp : enemies) {
+                    tmp.render(game.batch);
+                }
+                for (Island tmp : islands) {
+                    tmp.render(game.batch);
+                }
+
+                for (Hole tmp : holes)
+                    tmp.render(game.batch);
+
+                game.batch.end();
+
+                hud.render(game.batch);
+
             }
-            for (Island tmp : islands) {
-                tmp.render(game.batch);
+            else {
+                physics.renderDebug(camera);
             }
-
-            for (Hole tmp : holes)
-                tmp.render(game.batch);
-
-            game.batch.end();
-
-            hud.render();
-            physics.renderDebug(camera);
         }
     }
 

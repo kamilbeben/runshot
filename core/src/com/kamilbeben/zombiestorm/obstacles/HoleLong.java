@@ -12,8 +12,9 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class HoleLong extends Hole {
 
-    public HoleLong(World world, float x, float y, int speedLevel) {
-        super(new Texture("hole_long.png"), speedLevel);
+
+    public HoleLong(World world, float x, float y, int speedLevel, Texture texture) {
+        super(texture, speedLevel);
         setSize(getWidth() / Zombie.PPM, getHeight() / Zombie.PPM);
         setupBody(x, y, world);
         updateSpritePosition();
@@ -22,7 +23,6 @@ public class HoleLong extends Hole {
     @Override
     protected void setupBody(float x, float y, World world) {
 
-        PolygonShape shape = new PolygonShape();
         shape.setAsBox(45 / Zombie.PPM, 1 / Zombie.PPM);
 
         createBody(x, y, shape, world);

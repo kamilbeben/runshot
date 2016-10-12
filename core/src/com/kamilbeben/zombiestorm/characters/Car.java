@@ -20,8 +20,8 @@ public class Car extends Enemy {
 
     private Animation carRiding;
 
-    public Car(World world, float x, float y, int speedLevel) {
-        super(world, x, y, new Texture("car.png"));
+    public Car(World world, float x, float y, int speedLevel, Texture texture) {
+        super(world, x, y, texture);
         setupBody(x, y);
         setupLooks();
         setSpeedLevel(speedLevel);

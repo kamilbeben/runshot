@@ -18,10 +18,12 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public abstract class Hole extends Sprite {
 
+
+    protected PolygonShape shape = new PolygonShape();
+
     private float speed = 7f;
 
     private boolean isPlayerAboveHole = false;
-    private boolean holeIsOnScreen = false;
 
     protected World world;
     public Body body;
@@ -52,7 +54,7 @@ public abstract class Hole extends Sprite {
     }
 
     public void render(SpriteBatch batch) {
-        if (holeIsOnScreen) {
+        if (isHoleOnScreen()) {
             draw(batch);
         }
     }
@@ -68,11 +70,9 @@ public abstract class Hole extends Sprite {
     }
 
     public boolean isHoleOnScreen() {
-        if (body.getPosition().x > -100 / Zombie.PPM && body.getPosition().x < 900 / Zombie.PPM) {
-            holeIsOnScreen = true;
+        if (body.getPosition().x > -100 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {
             return true;
         } else {
-            holeIsOnScreen = false;
             return false;
         }
     }
@@ -111,7 +111,4 @@ public abstract class Hole extends Sprite {
     public void setSpeedLevel(int speedLevel) {
         speed = Tools.getStaticObjectsSpeedLevel(speedLevel);
     }
-
-
-
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.objects.AmmoPack;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -18,8 +19,11 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public abstract class Island extends Sprite {
 
+    protected AmmoPack ammoPack;
+    protected PolygonShape islandShape = new PolygonShape();
+    protected EdgeShape jumpLine = new EdgeShape();
+
     private float speed = 7f;
-    private boolean islandIsOnScreen = false;
 
     public Body body;
 
@@ -49,7 +53,7 @@ public abstract class Island extends Sprite {
         fixtureDef.shape = islandShape;
         fixtureDef.friction = 0f;
         fixtureDef.filter.categoryBits = Zombie.STATIC_BIT;
-        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT | Zombie.AMMO_PACK;
         body.createFixture(fixtureDef);
     }
 
@@ -62,15 +66,16 @@ public abstract class Island extends Sprite {
 
 
     public void update(float delta) {
-        isIslandOnScreen();
-        updateSpritePosition();
         move(delta);
+        updateSpritePosition();
+        ammoPack.updateSpritePosition();
     }
 
 
     public void move(float delta) {
         float calculatedSpeed = speed * delta;
         body.setLinearVelocity(new Vector2(-calculatedSpeed, 0f));
+        ammoPack.move(calculatedSpeed);
     }
 
     protected void updateSpritePosition() {
@@ -79,18 +84,17 @@ public abstract class Island extends Sprite {
     }
 
     public void render(SpriteBatch batch) {
-        if (islandIsOnScreen) {
+        if (isIslandOnScreen()) {
             draw(batch);
+            ammoPack.render(batch);
         }
     }
 
-
-
-    private void isIslandOnScreen() {
-        if (body.getPosition().x > -200 / Zombie.PPM && body.getPosition().x < 900 / Zombie.PPM) {
-            islandIsOnScreen = true;
+    public boolean isIslandOnScreen() {
+        if (body.getPosition().x > -300 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {
+            return true;
         } else {
-            islandIsOnScreen = false;
+            return false;
         }
     }
 

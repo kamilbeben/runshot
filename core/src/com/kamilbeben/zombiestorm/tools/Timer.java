@@ -45,14 +45,7 @@ public class Timer {
     }
 
     public static final float randomizeMonkeyJumpTime() {
-        int random = Tools.randomFrom1To10();
-        if (random > 5) {
-            return 1.5f;
-        } else if (random > 8) {
-            return 2f;
-        } else {
-            return 6f;
-        }
+        return 1f + (Tools.randomFrom1To10() / 4f);
     }
 
 

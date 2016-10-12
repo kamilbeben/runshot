@@ -22,8 +22,8 @@ public class Walker extends Enemy {
 
     private Animation walkerWalking;
 
-    public Walker(World world, float x, float y, int speedLevel) {
-        super(world, x, y, new Texture("walker.png"));
+    public Walker(World world, float x, float y, int speedLevel, Texture texture) {
+        super(world, x, y, texture);
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();
