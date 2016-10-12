@@ -60,10 +60,6 @@ public class Car extends Enemy {
         setSize(getWidth() * 1.5f, getHeight() * 1.5f);
     }
 
-    @Override
-    public void actionBeforeHole() {
-
-    }
 
     @Override
     public void dead() {

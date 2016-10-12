@@ -21,6 +21,7 @@ public class Physics {
 
     private Vector2 gravity = new Vector2(0, -10);
     public World world = new World(gravity, true);
+    private PhysicsBasicWorld basicWorld = new PhysicsBasicWorld(world);
     public WorldContactListener contactListener;
     public Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
@@ -48,36 +49,6 @@ public class Physics {
         debugRenderer.render(world, camera.combined);
     }
 
-
-    public void setupPhysisWorld() {
-        BodyDef bodyDef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fixtureDef = new FixtureDef();
-        Body body;
-
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        body = world.createBody(bodyDef);
-        shape.setAsBox(32*50f / Zombie.PPM, 96f / Zombie.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Zombie.STATIC_BIT;
-        fixtureDef.friction = 1.6f;
-        body.createFixture(fixtureDef);
-
-        shape.setAsBox(32*50f / Zombie.PPM, 100f / Zombie.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Zombie.GROUND_BIT;
-        fixtureDef.isSensor = true;
-
-        body.createFixture(fixtureDef);
-        shape.dispose();
-
-        EdgeShape line = new EdgeShape();
-        line.set(new Vector2(5 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(5 / Zombie.PPM, 600 / Zombie.PPM));
-        fixtureDef.filter.categoryBits = Zombie.LEFT_CORNER;
-        fixtureDef.shape = line;
-        fixtureDef.isSensor = true;
-        body.createFixture(fixtureDef);
-    }
 
     private void initializeCollisionDetection() {
         contactListener = new WorldContactListener(world);

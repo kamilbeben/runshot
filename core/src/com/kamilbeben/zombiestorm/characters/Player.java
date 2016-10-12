@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -27,6 +26,7 @@ public class Player {
     private boolean alive = true;
 
     private static final float jumpForce = 6.5f;
+    private int zombieKilled = 0;
 
     private PlayerRenderer playerRenderer;
 
@@ -41,11 +41,10 @@ public class Player {
 
     private void setupBody(World world) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(64 * 1/Zombie.PPM, 30 * 1/ Zombie.PPM);
+        bodyDef.position.set(64 / Zombie.PPM, 97 / Zombie.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
-        CircleShape shape = new CircleShape();
 
         PolygonShape polygon = new PolygonShape();
         polygon.setAsBox(25 / Zombie.PPM, 55 / Zombie.PPM);
@@ -121,6 +120,13 @@ public class Player {
         alive = false;
     }
 
+    public void zombieGotShot() {
+        zombieKilled++;
+    }
+
+    public int howManyZombiesDidIKilled() {
+        return zombieKilled;
+    }
     public void dispose() {
     }
 }

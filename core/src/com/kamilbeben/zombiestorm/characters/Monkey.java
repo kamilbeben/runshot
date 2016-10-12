@@ -5,10 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
@@ -20,7 +22,6 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class Monkey extends Enemy {
 
-    private static final float bodyRadius = 36 / Zombie.PPM;
     private float speed = 10f;
     private static final float jumpForce = 5f;
 
@@ -46,8 +47,8 @@ public class Monkey extends Enemy {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(bodyRadius);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(20 / Zombie.PPM, 40 / Zombie.PPM);
         fixtureDef.shape = shape;
 
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
@@ -99,15 +100,6 @@ public class Monkey extends Enemy {
             jumpTimer = 0f;
     }
 
-    @Override
-    public void actionBeforeHole() {
-        forceJumpAboveHole();
-    }
-
-    private void forceJumpAboveHole() {
-        body.applyLinearImpulse(new Vector2(-1f, jumpForce), body.getWorldCenter(), true);
-        jumpTimer = 0f;
-    }
 
     public TextureRegion getFrame(float delta) {
         currentState = getState();
@@ -150,6 +142,6 @@ public class Monkey extends Enemy {
     }
 
     private void updateSpritePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - bodyRadius);
+        setPosition(body.getPosition().x - getWidth() / 2 + 10 / Zombie.PPM, body.getPosition().y - 40 / Zombie.PPM);
     }
 }

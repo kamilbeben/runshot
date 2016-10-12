@@ -39,7 +39,7 @@ public class Walker extends Enemy {
         body = world.createBody(bodyDef);
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(30 / Zombie.PPM, 60 / Zombie.PPM);
+        shape.setAsBox(10 / Zombie.PPM, 50 / Zombie.PPM);
         fixtureDef.shape = shape;
 
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
@@ -63,14 +63,6 @@ public class Walker extends Enemy {
         frames.clear();
     }
 
-    @Override
-    public void actionBeforeHole() {
-        stopWalking();
-    }
-
-    private void stopWalking() {
-        //changes speed to hole's and do something with animations
-    }
     @Override
     public void dead() {
         Gdx.app.log("Walker", "Im dead now");
@@ -109,6 +101,6 @@ public class Walker extends Enemy {
     }
 
     private void updateSpritePosition() {
-        setPosition(body.getPosition().x - getHeight() / 2, body.getPosition().y - 60 / Zombie.PPM);
+        setPosition(body.getPosition().x - getHeight() / 2 + 10 / Zombie.PPM, body.getPosition().y - 50 / Zombie.PPM);
     }
 }

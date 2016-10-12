@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.HolePosition;
@@ -45,7 +49,7 @@ public abstract class Hole extends Sprite {
 
     protected void updateSpritePosition() {
         setPosition(body.getPosition().x - getWidth() / 2 - 8f / Zombie.PPM,
-                body.getPosition().y - getHeight() - (3f / Zombie.PPM));
+                body.getPosition().y - getHeight() - (2f / Zombie.PPM));
     }
 
     public void render(SpriteBatch batch) {
@@ -71,6 +75,33 @@ public abstract class Hole extends Sprite {
         }
     }
 
+    protected void createBody(float x, float y, PolygonShape shape) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(x / Zombie.PPM, y / Zombie.PPM);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        body = world.createBody(bodyDef);
+        FixtureDef fixtureDef = new FixtureDef();
+
+        createHoleStaticBody(fixtureDef, shape);
+        createHoleSensorForPlayerAndEnemies(fixtureDef, shape);
+
+        shape.dispose();
+        body.setUserData(this);
+    }
+
+    private void createHoleStaticBody(FixtureDef fixtureDef, PolygonShape holeShape) {
+        fixtureDef.shape = holeShape;
+        fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.STATIC_BIT;
+        body.createFixture(fixtureDef);
+    }
+
+    private void createHoleSensorForPlayerAndEnemies(FixtureDef fixtureDef, PolygonShape holeShape) {
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT | Zombie.ENEMY_BIT;
+        body.createFixture(fixtureDef);
+    }
 
     private void calculateSpeed(float timer) {
         speed = 7f + 1 * timer / 15f;

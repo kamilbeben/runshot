@@ -28,33 +28,11 @@ public class HoleLong extends Hole {
 
     @Override
     protected void setupBody(float x, float y) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
-        EdgeShape line = new EdgeShape();
-        line.set(new Vector2(-40 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(40 / Zombie.PPM, 0 / Zombie.PPM));
-        fixtureDef.shape = line;
 
-        fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
-        fixtureDef.filter.maskBits = Zombie.STATIC_BIT;
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(40 / Zombie.PPM, 1 / Zombie.PPM);
 
-        body.createFixture(fixtureDef);
-        fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
-        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT | Zombie.ENEMY_BIT;
-
-        body.createFixture(fixtureDef);
-
-        line.set(new Vector2(100 / Zombie.PPM, 10 / Zombie.PPM), new Vector2(120 / Zombie.PPM, 10 / Zombie.PPM));
-        fixtureDef.filter.categoryBits = Zombie.PREHOLE_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT;
-        fixtureDef.shape = line;
-        fixtureDef.isSensor = true;
-
-        body.createFixture(fixtureDef);
-        body.setUserData(this);
+        createBody(x, y, shape);
     }
 
 
