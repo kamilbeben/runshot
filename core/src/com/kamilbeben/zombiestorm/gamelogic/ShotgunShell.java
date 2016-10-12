@@ -35,7 +35,7 @@ public class ShotgunShell {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         fixtureDef = new FixtureDef();
         fixtureDef.filter.categoryBits = Zombie.SHOTGUN_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.HEAD_BIT;
         fixtureDef.density = 80f;
         bodyDef.position.set(64 / Zombie.PPM, playerYPosition);
         body = world.createBody(bodyDef);

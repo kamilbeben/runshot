@@ -197,7 +197,7 @@ public class Playscreen implements Screen {
             enemies.add(new Monkey(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_MONKEY));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            enemies.add(new Car(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_CAR));
+            enemies.add(new Car(physics.world, enemiesPosition + 100, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_CAR));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             holes.add(new HoleShort(physics.world, holesPosition, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_SHORT));
@@ -265,6 +265,7 @@ public class Playscreen implements Screen {
                 game.batch.end();
 
                 hud.render(game.batch);
+                physics.renderDebug(camera);
 
             }
             else {

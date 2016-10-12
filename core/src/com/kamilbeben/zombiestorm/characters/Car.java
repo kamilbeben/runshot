@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -29,21 +31,42 @@ public class Car extends Enemy {
 
     @Override
     protected void setupBody(float x, float y) {
+        defineBody(x, y);
+
+        FixtureDef fixtureDef = new FixtureDef();
+
+        setupStaticBody(fixtureDef);
+        setupZombieDestroyer(fixtureDef);
+
+        body.setUserData(this);
+    }
+
+    private void defineBody(float x, float y) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(80f / Zombie.PPM, 35 / Zombie.PPM);
-        fixtureDef.shape = shape;
+    }
 
+    private void setupStaticBody(FixtureDef fixtureDef) {
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(60f / Zombie.PPM, 35 / Zombie.PPM);
+        fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT;
-
         body.createFixture(fixtureDef);
+        shape.dispose();
+    }
 
-        body.setUserData(this);
+    private void setupZombieDestroyer(FixtureDef fixtureDef) {
+        EdgeShape line = new EdgeShape();
+        line.set(new Vector2(-84 / Zombie.PPM, -10 / Zombie.PPM), new Vector2(-84 / Zombie.PPM, 10 / Zombie.PPM));
+        fixtureDef.shape = line;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.CAR_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT;
+        body.createFixture(fixtureDef);
+        line.dispose();
     }
 
     private void setupLooks() {
@@ -87,7 +110,7 @@ public class Car extends Enemy {
 
 
     private void updatePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - 48 / Zombie.PPM);
+        setPosition(body.getPosition().x - getWidth() / 2 + 40f / Zombie.PPM, body.getPosition().y - 48 / Zombie.PPM);
     }
 
 

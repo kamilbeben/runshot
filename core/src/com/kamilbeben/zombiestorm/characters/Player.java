@@ -59,7 +59,7 @@ public class Player {
 
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK;
+        fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK_BIT;
         body.createFixture(fixtureDef);
 
         body.setUserData(this);

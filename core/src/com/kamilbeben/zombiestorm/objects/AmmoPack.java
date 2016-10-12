@@ -48,7 +48,7 @@ public class AmmoPack {
     }
 
     private void setupStaticBody(FixtureDef fixtureDef) {
-        fixtureDef.filter.categoryBits = Zombie.AMMO_PACK;
+        fixtureDef.filter.categoryBits = Zombie.AMMO_PACK_BIT;
         fixtureDef.filter.maskBits =  Zombie.STATIC_BIT | Zombie.PLAYER_BIT;
         body.createFixture(fixtureDef);
 
@@ -56,7 +56,7 @@ public class AmmoPack {
 
     private void setupSensorBody(FixtureDef fixtureDef) {
         fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = Zombie.AMMO_PACK;
+        fixtureDef.filter.categoryBits = Zombie.AMMO_PACK_BIT;
         fixtureDef.filter.maskBits =  Zombie.PLAYER_BIT;
         body.createFixture(fixtureDef);
     }

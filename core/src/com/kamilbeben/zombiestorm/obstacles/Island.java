@@ -53,7 +53,7 @@ public abstract class Island extends Sprite {
         fixtureDef.shape = islandShape;
         fixtureDef.friction = 0f;
         fixtureDef.filter.categoryBits = Zombie.STATIC_BIT;
-        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT | Zombie.AMMO_PACK;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT | Zombie.AMMO_PACK_BIT;
         body.createFixture(fixtureDef);
     }
 

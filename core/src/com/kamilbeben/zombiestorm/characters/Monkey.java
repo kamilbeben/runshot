@@ -49,7 +49,7 @@ public class Monkey extends Enemy {
         fixtureDef.shape = shape;
 
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
 
         body.setUserData(this);

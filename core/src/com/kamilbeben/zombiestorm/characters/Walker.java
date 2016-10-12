@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -32,22 +34,44 @@ public class Walker extends Enemy {
 
     @Override
     protected void setupBody(float x, float y) {
+        defineBody(x, y);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        setupMainBody(fixtureDef);
+
+        body.setUserData(this);
+
+        setupHead(fixtureDef);
+
+    }
+
+    private void defineBody(float x, float y) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
+    }
+
+    private void setupMainBody(FixtureDef fixtureDef) {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(10 / Zombie.PPM, 50 / Zombie.PPM);
         fixtureDef.shape = shape;
-
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT
-                | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT;
-
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
+        shape.dispose();
+    }
 
-        body.setUserData(this);
+    private void setupHead(FixtureDef fixtureDef) {
+        CircleShape shape = new CircleShape();
+        shape.setRadius(15 / Zombie.PPM);
+        shape.setPosition(new Vector2(-7 / Zombie.PPM, 65 / Zombie.PPM));
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.HEAD_BIT;
+        fixtureDef.filter.maskBits = Zombie.SHOTGUN_BIT;
+        body.createFixture(fixtureDef);
+        shape.dispose();
     }
 
     private void setupLooks() {
@@ -72,6 +96,9 @@ public class Walker extends Enemy {
         Gdx.app.log("Walker", "Im dead now");
     }
 
+    public void headShot() { //TODO falling head or etc
+        System.out.println("HeadShot!");
+    }
 
     public void update(float delta) {
         updateSpritePosition();

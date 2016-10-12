@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Player;
+import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.objects.AmmoPack;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 
@@ -30,11 +31,13 @@ public class WorldContactListener implements ContactListener {
     public void beginContact(Contact contact) {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
+        checkForHeadshot(contact.getFixtureA(), contact.getFixtureB());
         checkForCollisionBetweenZombieAndShotgunShell(a, b);
         checkForCollisionsBetweeenPlayerAndHoles(a, b);
         checkForCollisionsBetweeenPlayerAndAmmoPacks(a, b);
         checkForCollisionsBetweeenZombiesAndHoles(a, b);
         checkForCollisionBetweenPlayerAndGround(contact.getFixtureA(), contact.getFixtureB());
+        checkForCollisionBetweenZombieAndCar(contact.getFixtureA(), contact.getFixtureB());
         checkIfPlayerCollidesWithLeftWall(contact.getFixtureA(), contact.getFixtureB());
     }
 
@@ -68,6 +71,24 @@ public class WorldContactListener implements ContactListener {
         if ((a.getFilterData().categoryBits == Zombie.PLAYER_BIT && b.getFilterData().categoryBits == Zombie.LEFT_CORNER) ||
                 (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.LEFT_CORNER)) {
             playerCollidesWithLeftWall = true;
+        }
+    }
+
+    private void checkForCollisionBetweenZombieAndCar(Fixture a, Fixture b) {
+        if ((a.getFilterData().categoryBits == Zombie.ENEMY_BIT && b.getFilterData().categoryBits == Zombie.CAR_BIT) ||
+                (b.getFilterData().categoryBits == Zombie.ENEMY_BIT && a.getFilterData().categoryBits == Zombie.CAR_BIT)) {
+            Fixture zombie = (a.getFilterData().categoryBits == Zombie.CAR_BIT) ? b : a;
+            ((Enemy) zombie.getBody().getUserData()).carAccident();
+        }
+    }
+
+    private void checkForHeadshot(Fixture a, Fixture b) {
+        if ((a.getFilterData().categoryBits == Zombie.HEAD_BIT && b.getFilterData().categoryBits == Zombie.SHOTGUN_BIT) ||
+                (b.getFilterData().categoryBits == Zombie.HEAD_BIT && a.getFilterData().categoryBits == Zombie.SHOTGUN_BIT)) {
+            Fixture head = (a.getFilterData().categoryBits == Zombie.CAR_BIT) ? b : a;
+            if (head.getBody().getUserData() instanceof Walker) {
+                ((Walker) head.getBody().getUserData()).headShot();
+            }
         }
     }
 

@@ -75,6 +75,10 @@ public abstract class Enemy extends Sprite {
         dead();
     }
 
+    public void carAccident() {
+        killEnemy();
+    }
+
     public void disableBodyCollisions() {
         Array<Fixture> fixtures = body.getFixtureList();
         Filter filter;
