@@ -63,7 +63,7 @@ public class Monkey extends Enemy {
         for (int i=0; i<14; i++) {
             frames.add(new TextureRegion(getTexture(), i * 134, 0, 134, 119));
         }
-        running = new Animation(0.05f, frames); //TODO adjust
+        running = new Animation(0.05f, frames);
         frames.clear();
 
         for (int i=4; i<13; i++) {

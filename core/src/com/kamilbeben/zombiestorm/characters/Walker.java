@@ -58,7 +58,7 @@ public class Walker extends Enemy {
         for (int i=0; i<11; i++) {
             frames.add(new TextureRegion(getTexture(), i * 110, 0, 110, 148));
         }
-        walkerWalking = new Animation(0.15f, frames); //TODO adjust
+        walkerWalking = new Animation(0.15f, frames);
         frames.clear();
     }
 

@@ -17,32 +17,21 @@ public class IslandLong extends Island {
     public IslandLong(World world, float x, float y, int speedLevel) {
         super(new Texture("island_long.png"), speedLevel);
         setSize(getWidth() * 2 / Zombie.PPM, 16f / Zombie.PPM);
-        this.world = world;
-        setupBody(x, y);
+        setupBody(x, y, world);
         updateSpritePosition();
     }
 
     @Override
-    protected void setupBody(float x, float y) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
-        body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(200f / Zombie.PPM, 12f / Zombie.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.friction = 0f;
-        fixtureDef.filter.categoryBits = Zombie.STATIC_BIT;
-        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
-        body.createFixture(fixtureDef);
+    protected void setupBody(float x, float y, World world) {
 
-        EdgeShape line = new EdgeShape();
-        line.set(new Vector2(-205 / Zombie.PPM, 28 / Zombie.PPM), new Vector2(210 / Zombie.PPM, 28 / Zombie.PPM));
-        fixtureDef.filter.categoryBits = Zombie.GROUND_BIT;
-        fixtureDef.shape = line;
-        fixtureDef.isSensor = true;
-        body.createFixture(fixtureDef);
+        PolygonShape islandShape = new PolygonShape();
+        islandShape.setAsBox(200f / Zombie.PPM, 12f / Zombie.PPM);
+
+        EdgeShape jumpLine = new EdgeShape();
+        jumpLine.set(new Vector2(-205 / Zombie.PPM, 28 / Zombie.PPM), new Vector2(210 / Zombie.PPM, 28 / Zombie.PPM));
+
+        createBody(x, y, islandShape, jumpLine, world);
+
 
     }
 }

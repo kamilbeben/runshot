@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -32,7 +31,7 @@ public abstract class Hole extends Sprite {
         setSpeedLevel(speedLevel);
     }
 
-    protected abstract void setupBody(float x, float y);
+    protected abstract void setupBody(float x, float y, World world);
     public abstract HolePosition getStartTileAndNumberOfTiles();
 
 
@@ -44,14 +43,11 @@ public abstract class Hole extends Sprite {
 
     public void move(float delta) {
         float calculatedSpeed = speed * delta;
-//        if (body.getLinearVelocity().x >= -(speed / 3f)) {
-//            body.applyLinearImpulse(new Vector2(-calculatedSpeed*2, 0f), body.getWorldCenter(), true);
-//        }
-        body.setLinearVelocity(new Vector2(-calculatedSpeed, 0f));
+        body.setLinearVelocity(new Vector2(-calculatedSpeed, body.getLinearVelocity().y));
     }
 
     protected void updateSpritePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2 - 7f / Zombie.PPM,
+        setPosition(body.getPosition().x - getWidth() / 2 - 0 / Zombie.PPM,
                 body.getPosition().y - getHeight() - (3f / Zombie.PPM));
     }
 
@@ -81,21 +77,24 @@ public abstract class Hole extends Sprite {
         }
     }
 
-    protected void createBody(float x, float y, PolygonShape shape) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x / Zombie.PPM, y / Zombie.PPM);
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        body = world.createBody(bodyDef);
+    protected void createBody(float x, float y, PolygonShape shape, World world) {
+        defineBody(x, y, world);
         FixtureDef fixtureDef = new FixtureDef();
 
-        createHoleStaticBody(fixtureDef, shape);
+        createHoleDynamicBody(fixtureDef, shape);
         createHoleSensorForPlayerAndEnemies(fixtureDef, shape);
 
         shape.dispose();
         body.setUserData(this);
     }
 
-    private void createHoleStaticBody(FixtureDef fixtureDef, PolygonShape holeShape) {
+    private void defineBody(float x, float y, World world) {BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(x / Zombie.PPM, y / Zombie.PPM);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        body = world.createBody(bodyDef);
+    }
+
+    private void createHoleDynamicBody(FixtureDef fixtureDef, PolygonShape holeShape) {
         fixtureDef.shape = holeShape;
         fixtureDef.filter.categoryBits = Zombie.HOLE_BIT;
         fixtureDef.filter.maskBits = Zombie.STATIC_BIT;

@@ -71,7 +71,7 @@ public class PlayerRenderer {
         animationRunningLowerBody = new Animation(0.1f, frames);
         frames.clear();
 
-        yPosition = 4*105; //TODO ADJUST
+        yPosition = 4*105;
         for (int i=0; i<6; i++) {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 116, yPosition, 116, 105));
         }

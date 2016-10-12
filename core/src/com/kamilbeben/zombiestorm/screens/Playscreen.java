@@ -54,6 +54,8 @@ public class Playscreen implements Screen {
     private boolean playerIsFallingThroughHole = false;
     private boolean gameOver = false;
 
+    private boolean pause = false;
+
 
 
     public Playscreen(Zombie game) {
@@ -86,8 +88,8 @@ public class Playscreen implements Screen {
         if (physics.playerCollidesWithLeftWall()) {
             player.dead();
         }
-        if (playerIsFallingThroughHole) { //TODO OFFCOLLISIONS
-//            player.collisionsOff();
+        if (playerIsFallingThroughHole) {
+            player.collisionsOff();
         }
 
         player.update(delta);
@@ -102,7 +104,7 @@ public class Playscreen implements Screen {
         worldRenderer.updateAnimation(timer.getTime());
         camera.update();
         checkForGameOver();
-//        objectSpawner.update(timer);
+        objectSpawner.update(timer);
     }
 
     private void updateSpeedLevel() {
@@ -129,7 +131,6 @@ public class Playscreen implements Screen {
     private void updateEnemies(float delta) {
         for (Enemy tmp : enemies) {
             tmp.update(delta);
-            tmp.disposeIfOutOfMap(physics.world);
             if (tmp.gotShot()) {
                 player.zombieGotShot();
             }
@@ -181,7 +182,6 @@ public class Playscreen implements Screen {
         if ((Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.justTouched()) && gameOver) {
             game.setScreen(new Playscreen(game));
         }
-        testKeyboard();
     }
 
     private void testKeyboard() {
@@ -211,6 +211,14 @@ public class Playscreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
             timer.addTenSeconds();
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            if (pause) {
+                pause = false;
+            } else {
+                pause = true;
+            }
+        }
     }
 
     private void shotgunShot( int yAxis) {
@@ -222,30 +230,32 @@ public class Playscreen implements Screen {
 
     @Override
     public void render(float delta) {
-        update(delta);
-        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        game.batch.setProjectionMatrix(camera.combined);
+        testKeyboard();
+        if (!pause) {
+            update(delta);
+            Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            game.batch.setProjectionMatrix(camera.combined);
 
-        game.batch.begin();
-        worldRenderer.draw(game.batch);
+            game.batch.begin();
+            worldRenderer.draw(game.batch);
 
-        player.render(game.batch);
-        for (Enemy tmp : enemies) {
-            tmp.render(game.batch);
+            player.render(game.batch);
+            for (Enemy tmp : enemies) {
+                tmp.render(game.batch);
+            }
+            for (Island tmp : islands) {
+                tmp.render(game.batch);
+            }
+
+            for (Hole tmp : holes)
+                tmp.render(game.batch);
+
+            game.batch.end();
+
+            hud.render();
+            physics.renderDebug(camera);
         }
-        for (Island tmp : islands) {
-            tmp.render(game.batch);
-        }
-
-        for (Hole tmp : holes)
-            tmp.render(game.batch);
-
-        game.batch.end();
-
-        hud.render();
-//        physics.renderDebug(camera);
-
     }
 
     @Override

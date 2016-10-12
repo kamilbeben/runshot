@@ -38,14 +38,6 @@ public abstract class Enemy extends Sprite {
     protected World world;
     public Body body;
 
-    public Enemy(World world, float x, float y, TextureAtlas.AtlasRegion atlasRegion) {
-        super(atlasRegion);
-        this.world = world;
-        setPosition(x, y);
-        currentState = State.WALKING;
-        previousState = State.WALKING;
-    }
-
     public Enemy(World world, float x, float y, Texture texture) {
         super(texture);
         this.world = world;
@@ -93,6 +85,7 @@ public abstract class Enemy extends Sprite {
             tmp.setFilterData(filter);
             tmp.setFriction(0.5f); //Prevent from sliding
         }
+        body.setUserData(null);
     }
 
 
@@ -101,15 +94,6 @@ public abstract class Enemy extends Sprite {
             justGotShot = false;
             return true;
         } else return false;
-    }
-
-
-
-
-    public void disposeIfOutOfMap(World world) { //TODO dont work dunno why
-//        if (body.getPosition().y < 0) {
-//            dispose(world);
-//        }
     }
 
     public void dispose(World world) {

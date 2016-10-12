@@ -54,7 +54,7 @@ public class Car extends Enemy {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(getTexture(), i * 161, 0, 161, 64));
         }
-        carRiding = new Animation(0.1f, frames); //TODO adjust
+        carRiding = new Animation(0.1f, frames);
         frames.clear();
 
         setSize(getWidth() * 1.5f, getHeight() * 1.5f);

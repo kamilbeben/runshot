@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.HolePosition;
-import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -13,23 +12,20 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class HoleLong extends Hole {
 
-
-
     public HoleLong(World world, float x, float y, int speedLevel) {
         super(new Texture("hole_long.png"), speedLevel);
         setSize(getWidth() / Zombie.PPM, getHeight() / Zombie.PPM);
-        this.world = world;
-        setupBody(x, y);
+        setupBody(x, y, world);
         updateSpritePosition();
     }
 
     @Override
-    protected void setupBody(float x, float y) {
+    protected void setupBody(float x, float y, World world) {
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(40 / Zombie.PPM, 1 / Zombie.PPM);
+        shape.setAsBox(45 / Zombie.PPM, 1 / Zombie.PPM);
 
-        createBody(x, y, shape);
+        createBody(x, y, shape, world);
     }
 
 
