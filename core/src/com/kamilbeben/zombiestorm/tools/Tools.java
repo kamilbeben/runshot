@@ -3,16 +3,20 @@ package com.kamilbeben.zombiestorm.tools;
 import java.util.Random;
 
 /**
- * Created by bezik on 25.09.16.
+ * Created by bezik on 12.10.16.
  */
 public class Tools {
 
-    private float timerGeneral = 0f;
-    private float timerLastEnemySpawn = 0f;
-    private float timerBetweenEnemies = 0f;
+    public static final float speedMultiplier_1= 1f;
+    public static final float speedMultiplier_2= 1.2f;
+    public static final float speedMultiplier_3= 1.4f;
+    public static final float speedMultiplier_4= 1.6f;
+    public static final float speedMultiplier_5= 1.8f;
+    public static final float speedMultiplier_6= 2f;
 
-    private float timerLastShot = 0f;
-    private float timerBetweenShots = 1.5f;
+    public Tools() {
+
+    }
 
     public static int randomFrom1To10() {
         return new Random().nextInt(9) + 1; //minimum + rn.nextInt(maxValue - minvalue + 1)
@@ -26,57 +30,29 @@ public class Tools {
         }
     }
 
-    public void updateTimer(float delta) {
-        timerGeneral += delta;
-    }
-
-    public float getTime() {
-        return timerGeneral;
-    }
-
-    public boolean isItTimeToSpawnNewObstacleOrEnemy() {
-        if (timerGeneral > timerLastEnemySpawn + timerBetweenEnemies) {
-            randomizeTimerBetweenEnemies();
-            timerLastEnemySpawn = timerGeneral;
-            return true;
-        } else {
-            return false;
+    public static float getStaticObjectsSpeedLevel(int speedLevel) {
+        float speed = 150f;
+        switch (speedLevel) {
+            default:
+            case 1:
+                speed = speed * speedMultiplier_1;
+                break;
+            case 2:
+                speed = speed * speedMultiplier_2;
+                break;
+            case 3:
+                speed = speed * speedMultiplier_3;
+                break;
+            case 4:
+                speed = speed * speedMultiplier_4;
+                break;
+            case 5:
+                speed = speed * speedMultiplier_5;
+                break;
+            case 6:
+                speed = speed * speedMultiplier_6;
+                break;
         }
+        return speed;
     }
-
-    private void randomizeTimerBetweenEnemies() {
-        int random = randomFrom1To10();
-        if (random > 8) {
-            timerBetweenEnemies = 1.5f;
-        } else if (random > 4) {
-            timerBetweenEnemies = 3f;
-        } else if (random > 0) {
-            timerBetweenEnemies = 3.5f;
-        }
-    }
-
-    public static final float randomizeMonkeyJumpTime() {
-        int random = randomFrom1To10();
-        if (random > 5) {
-            return 1.5f;
-        } else if (random > 8) {
-            return 2f;
-        } else {
-            return 6f;
-        }
-    }
-
-
-    public boolean isItTimeToShootSomething() {
-        if (timerGeneral > timerLastShot + timerBetweenShots) {
-            timerLastShot = timerGeneral;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-
-
 }

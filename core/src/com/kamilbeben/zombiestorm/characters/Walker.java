@@ -3,15 +3,14 @@ package com.kamilbeben.zombiestorm.characters;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
  * Created by bezik on 18.09.16.
@@ -23,12 +22,12 @@ public class Walker extends Enemy {
 
     private Animation walkerWalking;
 
-    public Walker(World world, float x, float y, float timer) {
+    public Walker(World world, float x, float y, int speedLevel) {
         super(world, x, y, new Texture("walker.png"));
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();
-        calculateSpeed(timer);
+        setSpeedLevel(speedLevel);
     }
 
     @Override
@@ -64,6 +63,11 @@ public class Walker extends Enemy {
     }
 
     @Override
+    public void setSpeedLevel(int speedLevel) {
+        speed = Tools.getStaticObjectsSpeedLevel(speedLevel) * 1.2f;
+    }
+
+    @Override
     public void dead() {
         Gdx.app.log("Walker", "Im dead now");
     }
@@ -72,7 +76,7 @@ public class Walker extends Enemy {
     public void update(float delta) {
         updateSpritePosition();
         setRegion(getFrame(delta));
-        walk(speed, delta);
+        move(speed, delta);
     }
 
     public TextureRegion getFrame(float delta) {
@@ -92,13 +96,6 @@ public class Walker extends Enemy {
         }
     }
 
-    private void calculateSpeed(float timer) {
-        speed = 8f + 1 * timer / 25f;
-    }
-
-    public void render(SpriteBatch batch) {
-        draw(batch);
-    }
 
     private void updateSpritePosition() {
         setPosition(body.getPosition().x - getHeight() / 2 + 10 / Zombie.PPM, body.getPosition().y - 50 / Zombie.PPM);

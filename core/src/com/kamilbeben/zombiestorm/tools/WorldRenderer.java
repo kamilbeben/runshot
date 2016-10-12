@@ -23,6 +23,7 @@ public class WorldRenderer {
         renderGround = new boolean[25];
         resetGround();
         setupAnimations();
+        setSpeedLevel(1);
     }
 
     private void setupAnimations() {
@@ -77,9 +78,29 @@ public class WorldRenderer {
 
     }
 
-    public void nextSpeedLevel(float timer) {
-        float speed = 0.05f; //TODO
-        animation.setFrameDuration(speed);
+    public void setSpeedLevel(int speedLevel) {
+        float levelOne = 0.033f;
+        switch (speedLevel) {
+            default:
+            case 1:
+                animation.setFrameDuration(levelOne / Tools.speedMultiplier_1);
+                break;
+            case 2:
+                animation.setFrameDuration(levelOne / Tools.speedMultiplier_2);
+                break;
+            case 3:
+                animation.setFrameDuration(levelOne / Tools.speedMultiplier_3);
+                break;
+            case 4:
+                animation.setFrameDuration(levelOne / Tools.speedMultiplier_4);
+                break;
+            case 5:
+                animation.setFrameDuration(levelOne / Tools.speedMultiplier_5);
+                break;
+            case 6:
+                animation.setFrameDuration(levelOne / Tools.speedMultiplier_6);
+                break;
+        }
     }
 
     public void stopAnimating() {

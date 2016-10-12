@@ -116,6 +116,10 @@ public class Player {
         return bullets;
     }
 
+    public void setSpeedLevel(int speedLevel) {
+        playerRenderer.setSpeedLevel(speedLevel);
+    }
+
     public void dead() {
         alive = false;
     }

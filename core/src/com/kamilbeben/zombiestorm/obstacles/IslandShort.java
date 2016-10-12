@@ -14,8 +14,8 @@ import com.kamilbeben.zombiestorm.Zombie;
  */
 public class IslandShort extends Island {
 
-    public IslandShort(World world, float x, float y, float timer) {
-        super(new Texture("island_short.png"), timer);
+    public IslandShort(World world, float x, float y, int speedLevel) {
+        super(new Texture("island_short.png"), speedLevel);
         setSize(getWidth() / Zombie.PPM, 16f / Zombie.PPM);
         this.world = world;
         setupBody(x, y);

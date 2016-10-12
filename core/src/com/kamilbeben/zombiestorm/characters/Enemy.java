@@ -34,6 +34,7 @@ public abstract class Enemy extends Sprite {
     protected boolean justGotShot = false;
 
 
+
     protected World world;
     public Body body;
 
@@ -55,18 +56,20 @@ public abstract class Enemy extends Sprite {
 
     protected  abstract void setupBody(float x, float y);
 
-    public void walk(float speed, float delta) {
+    public void move(float speed, float delta) {
         float calculatedSpeed = speed * delta;
-        if (body.getLinearVelocity().x >= -(speed / 3f)) {
-            body.applyLinearImpulse(new Vector2(-calculatedSpeed*2, 0f), body.getWorldCenter(), true);
-        }
+        body.setLinearVelocity(new Vector2(-calculatedSpeed, body.getLinearVelocity().y));
     }
 
     public float getX() {
         return body.getPosition().x;
     }
 
-    public abstract void render(SpriteBatch batch);
+    public void render(SpriteBatch batch) {
+        if (isEnemyOnScreen()) {
+            draw(batch);
+        }
+    }
 
     public abstract void update(float delta);
 
@@ -113,6 +116,16 @@ public abstract class Enemy extends Sprite {
         world.destroyBody(body);
         getTexture().dispose();
     }
+
+
+    protected boolean isEnemyOnScreen() {
+        if (body.getPosition().x > -100 / Zombie.PPM && body.getPosition().x < 900 / Zombie.PPM) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public abstract void setSpeedLevel(int level);
 
     public Vector2 getPosition() {
         return body.getPosition();

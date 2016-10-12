@@ -3,18 +3,15 @@ package com.kamilbeben.zombiestorm.characters;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
-import com.kamilbeben.zombiestorm.screens.Playscreen;
+import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -25,19 +22,19 @@ public class Monkey extends Enemy {
     private float speed = 10f;
     private static final float jumpForce = 5f;
 
-    private float randomJumptimer = Tools.randomizeMonkeyJumpTime();
+    private float randomJumptimer = Timer.randomizeMonkeyJumpTime();
 
     private Animation running;
     private Animation jumping;
     private Animation dying;
 
 
-    public Monkey(World world, float x, float y, float timer) {
+    public Monkey(World world, float x, float y, int speedLevel) {
         super(world, x, y, new Texture("monkey.png"));
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();
-        calculateSpeed(timer);
+        setSpeedLevel(speedLevel);
     }
 
     @Override
@@ -77,6 +74,11 @@ public class Monkey extends Enemy {
     }
 
     @Override
+    public void setSpeedLevel(int speedLevel) {
+        speed = Tools.getStaticObjectsSpeedLevel(speedLevel) * 1.4f;
+    }
+
+    @Override
     public void dead() {
         Gdx.app.log("Monkey", "Im dead now");
     }
@@ -86,7 +88,7 @@ public class Monkey extends Enemy {
         setRegion(getFrame(delta));
 
         if (alive) {
-            walk(speed, delta);
+            move(speed, delta);
             jumpTimer += delta;
             if (jumpTimer > randomJumptimer) {
                 currentState = State.JUMPING;
@@ -132,14 +134,6 @@ public class Monkey extends Enemy {
         }
     }
 
-
-    private void calculateSpeed(float timer) {
-        speed = 10f + 1 * timer / 15f;
-    }
-
-    public void render(SpriteBatch batch) {
-        draw(batch);
-    }
 
     private void updateSpritePosition() {
         setPosition(body.getPosition().x - getWidth() / 2 + 10 / Zombie.PPM, body.getPosition().y - 40 / Zombie.PPM);

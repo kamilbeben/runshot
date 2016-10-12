@@ -1,14 +1,11 @@
 package com.kamilbeben.zombiestorm.obstacles;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.HolePosition;
+import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -18,8 +15,8 @@ public class HoleLong extends Hole {
 
 
 
-    public HoleLong(World world, float x, float y, float timer) {
-        super(new Texture("hole_long.png"), timer);
+    public HoleLong(World world, float x, float y, int speedLevel) {
+        super(new Texture("hole_long.png"), speedLevel);
         setSize(getWidth() / Zombie.PPM, getHeight() / Zombie.PPM);
         this.world = world;
         setupBody(x, y);

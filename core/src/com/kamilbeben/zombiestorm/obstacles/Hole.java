@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.HolePosition;
+import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
  * Created by bezik on 30.09.16.
@@ -21,13 +22,14 @@ public abstract class Hole extends Sprite {
     private float speed = 7f;
 
     private boolean isPlayerAboveHole = false;
+    private boolean holeIsOnScreen = false;
 
     protected World world;
     public Body body;
 
-    public Hole(Texture texture, float timer) {
+    public Hole(Texture texture, int speedLevel) {
         super(texture);
-        calculateSpeed(timer);
+        setSpeedLevel(speedLevel);
     }
 
     protected abstract void setupBody(float x, float y);
@@ -42,20 +44,22 @@ public abstract class Hole extends Sprite {
 
     public void move(float delta) {
         float calculatedSpeed = speed * delta;
-        if (body.getLinearVelocity().x >= -(speed / 3f)) {
-            body.applyLinearImpulse(new Vector2(-calculatedSpeed*2, 0f), body.getWorldCenter(), true);
-        }
+//        if (body.getLinearVelocity().x >= -(speed / 3f)) {
+//            body.applyLinearImpulse(new Vector2(-calculatedSpeed*2, 0f), body.getWorldCenter(), true);
+//        }
+        body.setLinearVelocity(new Vector2(-calculatedSpeed, 0f));
     }
 
     protected void updateSpritePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2 - 8f / Zombie.PPM,
-                body.getPosition().y - getHeight() - (2f / Zombie.PPM));
+        setPosition(body.getPosition().x - getWidth() / 2 - 7f / Zombie.PPM,
+                body.getPosition().y - getHeight() - (3f / Zombie.PPM));
     }
 
     public void render(SpriteBatch batch) {
-        draw(batch);
+        if (holeIsOnScreen) {
+            draw(batch);
+        }
     }
-
 
 
     public void collisionOff() {
@@ -69,8 +73,10 @@ public abstract class Hole extends Sprite {
 
     public boolean isHoleOnScreen() {
         if (body.getPosition().x > -100 / Zombie.PPM && body.getPosition().x < 900 / Zombie.PPM) {
+            holeIsOnScreen = true;
             return true;
         } else {
+            holeIsOnScreen = false;
             return false;
         }
     }
@@ -103,8 +109,8 @@ public abstract class Hole extends Sprite {
         body.createFixture(fixtureDef);
     }
 
-    private void calculateSpeed(float timer) {
-        speed = 7f + 1 * timer / 15f;
+    public void setSpeedLevel(int speedLevel) {
+        speed = Tools.getStaticObjectsSpeedLevel(speedLevel);
     }
 
 

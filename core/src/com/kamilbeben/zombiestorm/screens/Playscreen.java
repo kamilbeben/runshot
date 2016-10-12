@@ -20,7 +20,9 @@ import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Island;
 import com.kamilbeben.zombiestorm.obstacles.HoleLong;
 import com.kamilbeben.zombiestorm.obstacles.HoleShort;
-import com.kamilbeben.zombiestorm.tools.Tools;
+import com.kamilbeben.zombiestorm.obstacles.IslandLong;
+import com.kamilbeben.zombiestorm.obstacles.IslandShort;
+import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.WorldRenderer;
 
 import java.util.ArrayList;
@@ -44,12 +46,15 @@ public class Playscreen implements Screen {
     private List<Hole> holes;
     private List<Island> islands;
     private ObjectSpawner objectSpawner;
+    private Timer timer = new Timer();
 
+    private int speedlLevel = 1;
     private float score = 0f;
     private float distance = 0f;
-    private Tools timer = new Tools();
-    private boolean playerIsFalling = false;
+    private boolean playerIsFallingThroughHole = false;
     private boolean gameOver = false;
+
+
 
     public Playscreen(Zombie game) {
         this.game = game;
@@ -75,13 +80,14 @@ public class Playscreen implements Screen {
     }
 
     private void update(float delta) {
+        updateSpeedLevel();
         physics.update(delta);
         handleInput();
         if (physics.playerCollidesWithLeftWall()) {
             player.dead();
         }
-        if (playerIsFalling) {
-            player.collisionsOff();
+        if (playerIsFallingThroughHole) { //TODO OFFCOLLISIONS
+//            player.collisionsOff();
         }
 
         player.update(delta);
@@ -96,7 +102,28 @@ public class Playscreen implements Screen {
         worldRenderer.updateAnimation(timer.getTime());
         camera.update();
         checkForGameOver();
-        objectSpawner.update(timer);
+//        objectSpawner.update(timer);
+    }
+
+    private void updateSpeedLevel() {
+        if (speedlLevel != timer.getSpeedLevel()) {
+            speedlLevel = timer.getSpeedLevel();
+            updateObjectsSpeed();
+        }
+    }
+
+    private void updateObjectsSpeed() {
+        for (Enemy tmp : enemies) {
+            tmp.setSpeedLevel(speedlLevel);
+        }
+        for (Hole tmp : holes) {
+            tmp.setSpeedLevel(speedlLevel);
+        }
+        for (Island tmp : islands) {
+            tmp.setSpeedLevel(speedlLevel);
+        }
+        player.setSpeedLevel(speedlLevel);
+        worldRenderer.setSpeedLevel(speedlLevel);
     }
 
     private void updateEnemies(float delta) {
@@ -113,7 +140,7 @@ public class Playscreen implements Screen {
         for (Hole tmp : holes) {
             tmp.update(delta);
             if (tmp.isPlayerAboveHole()) {
-                playerIsFalling = true;
+                playerIsFallingThroughHole = true;
             }
             if (tmp.isHoleOnScreen()) {
                 worldRenderer.updateGround(tmp.getStartTileAndNumberOfTiles());
@@ -148,32 +175,41 @@ public class Playscreen implements Screen {
             shotgunShot((int) (Gdx.input.getY() * (Zombie.HEIGHT)) / viewport.getScreenHeight());
         }
         if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.justTouched() &&
-                Gdx.input.getX() < Gdx.graphics.getWidth()/2) ) && physics.canPlayerJump() && !playerIsFalling) {
+                Gdx.input.getX() < Gdx.graphics.getWidth()/2) ) && physics.canPlayerJump() && !playerIsFallingThroughHole) {
             player.jump();
         }
         if ((Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.justTouched()) && gameOver) {
             game.setScreen(new Playscreen(game));
         }
-        testEnemiesSpawnWithKeyboard();
+        testKeyboard();
     }
 
-    private void testEnemiesSpawnWithKeyboard() {
+    private void testKeyboard() {
         float enemiesPosition = 700;
-        float holesPosition = 500;
+        float holesPosition = 900;
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getTime()));
+            enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel()));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            enemies.add(new Monkey(physics.world, enemiesPosition, 200, timer.getTime()));
+            enemies.add(new Monkey(physics.world, enemiesPosition, 200, timer.getSpeedLevel()));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            enemies.add(new Car(physics.world, enemiesPosition, 200, timer.getTime()));
+            enemies.add(new Car(physics.world, enemiesPosition, 200, timer.getSpeedLevel()));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-            holes.add(new HoleShort(physics.world, holesPosition, 200, timer.getTime()));
+            holes.add(new HoleShort(physics.world, holesPosition, 100, timer.getSpeedLevel()));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            holes.add(new HoleLong(physics.world, holesPosition, 200, timer.getTime()));
+            holes.add(new HoleLong(physics.world, holesPosition, 100, timer.getSpeedLevel()));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+            islands.add(new IslandLong(physics.world, holesPosition, 260, timer.getSpeedLevel()));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
+            islands.add(new IslandShort(physics.world, holesPosition, 260, timer.getSpeedLevel()));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
+            timer.addTenSeconds();
         }
     }
 
@@ -208,7 +244,7 @@ public class Playscreen implements Screen {
         game.batch.end();
 
         hud.render();
-        physics.renderDebug(camera);
+//        physics.renderDebug(camera);
 
     }
 

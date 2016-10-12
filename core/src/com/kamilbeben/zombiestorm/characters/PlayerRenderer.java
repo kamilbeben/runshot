@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
  * Created by bezik on 07.10.16.
@@ -81,6 +82,43 @@ public class PlayerRenderer {
 
         animationJumpingLowerBody = new Animation(0.1f, frames);
         frames.clear();
+    }
+
+    public void setSpeedLevel(int speedLevel) {
+        float levelOne = 0.1f;
+        switch (speedLevel) {
+            default:
+            case 1:
+                animationRunningLowerBody.setFrameDuration(levelOne / Tools.speedMultiplier_1);
+                animationRunningUpperBody.setFrameDuration(levelOne / Tools.speedMultiplier_1);
+                animationShootingUppderBody.setFrameDuration(levelOne / Tools.speedMultiplier_1);
+                break;
+            case 2:
+                animationRunningLowerBody.setFrameDuration(levelOne / Tools.speedMultiplier_2);
+                animationRunningUpperBody.setFrameDuration(levelOne / Tools.speedMultiplier_2);
+                animationShootingUppderBody.setFrameDuration(levelOne / Tools.speedMultiplier_2);
+                break;
+            case 3:
+                animationRunningLowerBody.setFrameDuration(levelOne / Tools.speedMultiplier_3);
+                animationRunningUpperBody.setFrameDuration(levelOne / Tools.speedMultiplier_3);
+                animationShootingUppderBody.setFrameDuration(levelOne / Tools.speedMultiplier_3);
+                break;
+            case 4:
+                animationRunningLowerBody.setFrameDuration(levelOne / Tools.speedMultiplier_4);
+                animationRunningUpperBody.setFrameDuration(levelOne / Tools.speedMultiplier_4);
+                animationShootingUppderBody.setFrameDuration(levelOne / Tools.speedMultiplier_4);
+                break;
+            case 5:
+                animationRunningLowerBody.setFrameDuration(levelOne / Tools.speedMultiplier_5);
+                animationRunningUpperBody.setFrameDuration(levelOne / Tools.speedMultiplier_5);
+                animationShootingUppderBody.setFrameDuration(levelOne / Tools.speedMultiplier_5);
+                break;
+            case 6:
+                animationRunningLowerBody.setFrameDuration(levelOne / Tools.speedMultiplier_6);
+                animationRunningUpperBody.setFrameDuration(levelOne / Tools.speedMultiplier_6);
+                animationShootingUppderBody.setFrameDuration(levelOne / Tools.speedMultiplier_6);
+                break;
+        }
     }
 
     public void update(float delta, Boolean shooting, Boolean jumping, Body body) {

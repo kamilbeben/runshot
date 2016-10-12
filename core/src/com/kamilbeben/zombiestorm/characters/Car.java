@@ -3,7 +3,6 @@ package com.kamilbeben.zombiestorm.characters;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
  * Created by bezik on 27.09.16.
@@ -20,11 +20,11 @@ public class Car extends Enemy {
 
     private Animation carRiding;
 
-    public Car(World world, float x, float y, float timer) {
+    public Car(World world, float x, float y, int speedLevel) {
         super(world, x, y, new Texture("car.png"));
         setupBody(x, y);
         setupLooks();
-        calculateSpeed(timer);
+        setSpeedLevel(speedLevel);
     }
 
     @Override
@@ -60,6 +60,11 @@ public class Car extends Enemy {
         setSize(getWidth() * 1.5f, getHeight() * 1.5f);
     }
 
+    @Override
+    public void setSpeedLevel(int speedLevel) {
+        speed = Tools.getStaticObjectsSpeedLevel(speedLevel) * 1.6f;
+    }
+
 
     @Override
     public void dead() {
@@ -70,7 +75,7 @@ public class Car extends Enemy {
     public void update(float delta) {
         updatePosition();
         setRegion(getFrame(delta));
-        walk(speed, delta);
+        move(speed, delta);
     }
 
     public TextureRegion getFrame(float delta) {
@@ -81,17 +86,10 @@ public class Car extends Enemy {
     }
 
 
-    public void render(SpriteBatch batch) {
-        draw(batch);
-    }
-
     private void updatePosition() {
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - 48 / Zombie.PPM);
     }
 
-    private void calculateSpeed(float timer) {
-        speed = 12f + 1 * timer / 25f;
-    }
 
     @Override
     public void killEnemy() {

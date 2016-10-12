@@ -11,6 +11,7 @@ import com.kamilbeben.zombiestorm.obstacles.HoleShort;
 import com.kamilbeben.zombiestorm.obstacles.Island;
 import com.kamilbeben.zombiestorm.obstacles.IslandLong;
 import com.kamilbeben.zombiestorm.obstacles.IslandShort;
+import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 import java.util.List;
@@ -34,13 +35,13 @@ public class ObjectSpawner {
         this.world = world;
     }
 
-    public void update(Tools timer) {
+    public void update(Timer timer) {
         if (timer.isItTimeToSpawnNewObstacleOrEnemy()) {
             chooseBetweenObstacleAndEnemy(timer);
         }
     }
 
-    private void chooseBetweenObstacleAndEnemy(Tools timer) {
+    private void chooseBetweenObstacleAndEnemy(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 7 || lastRandomWasAnObstacle) {
             enemies.add(randomizeEnemy(timer));
@@ -50,7 +51,7 @@ public class ObjectSpawner {
         }
     }
 
-    private void chooseBetweenHoleAndIsland(Tools timer) {
+    private void chooseBetweenHoleAndIsland(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random > 5) {
             addHole(timer);
@@ -59,46 +60,46 @@ public class ObjectSpawner {
         }
     }
 
-    private void addHole(Tools timer) {
+    private void addHole(Timer timer) {
         holes.add(randomizeHole(timer));
         lastRandomWasAnObstacle = true;
     }
 
-    private void addIsland(Tools timer) {
+    private void addIsland(Timer timer) {
         islands.add(randomizeIsland(timer));
         lastRandomWasAnObstacle = true;
     }
 
-    private Island randomizeIsland(Tools timer) {
+    private Island randomizeIsland(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new IslandShort(world, 1200, 260, timer.getTime());
+            return new IslandShort(world, 1200, 260, timer.getSpeedLevel());
         } else {
-            return new IslandLong(world, 1200, 260, timer.getTime());
+            return new IslandLong(world, 1200, 260, timer.getSpeedLevel());
         }
     }
 
-    private Hole randomizeHole(Tools timer) {
+    private Hole randomizeHole(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new HoleShort(world, 1200, 200, timer.getTime());
+            return new HoleShort(world, 1200, 200, timer.getSpeedLevel());
         } else {
-            return new HoleLong(world, 1200, 200, timer.getTime()) {
+            return new HoleLong(world, 1200, 200, timer.getSpeedLevel()) {
             };
         }
     }
 
-    private Enemy randomizeEnemy(Tools timer) {
+    private Enemy randomizeEnemy(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new Walker(world, 1200, 200, timer.getTime());
+            return new Walker(world, 1200, 200, timer.getSpeedLevel());
         } else if (random < 8) {
-            return new Monkey(world, 1200, 200, timer.getTime());
+            return new Monkey(world, 1200, 200, timer.getSpeedLevel());
         } else if (!lastRandomWasAnObstacle && !lastRandomWasACar){
             lastRandomWasACar = true;
-            return new Car(world, 1200, 200, timer.getTime());
+            return new Car(world, 1200, 200, timer.getSpeedLevel());
         } else {
-            return new Monkey(world, 1200, 200, timer.getTime());
+            return new Monkey(world, 1200, 200, timer.getSpeedLevel());
         }
     }
 }
