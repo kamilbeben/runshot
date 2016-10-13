@@ -15,6 +15,7 @@ import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
+import com.kamilbeben.zombiestorm.gamelogic.ShadowRenderer;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Island;
@@ -39,6 +40,7 @@ public class Playscreen implements Screen {
     private Viewport viewport;
     private WorldRenderer worldRenderer;
     private HudPlayscreen hud;
+    private ShadowRenderer shadowRenderer;
 
     private Physics physics;
     private Player player;
@@ -71,6 +73,7 @@ public class Playscreen implements Screen {
         holes = new ArrayList<Hole>();
         islands = new ArrayList<Island>();
         objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world, game.assets.textureHolder);
+        shadowRenderer = new ShadowRenderer(physics.world);
     }
 
     private void setupCamera() {
@@ -264,8 +267,10 @@ public class Playscreen implements Screen {
 
                 game.batch.end();
 
+                shadowRenderer.render(camera);
                 hud.render(game.batch);
-                physics.renderDebug(camera);
+
+//                physics.renderDebug(camera);
 
             }
             else {
@@ -302,5 +307,6 @@ public class Playscreen implements Screen {
             tmp.dispose(physics.world);
         }
         physics.dispose();
+        shadowRenderer.dispose();
     }
 }
