@@ -23,8 +23,8 @@ public class TextPlayscreen {
     private final float padding = 20f;
     private Label timer;
     private Label score;
-    private Label ammoLeft;
     private Label gameOver;
+    private Label fps;
 
 
     public TextPlayscreen(Stage stage) {
@@ -38,6 +38,9 @@ public class TextPlayscreen {
         timer = new Label("0", new Label.LabelStyle(font, Color.WHITE));
         timer.setPosition(padding, Zombie.HEIGHT - padding - textHeight(timer.getText().toString()));
 
+        fps = new Label("0", new Label.LabelStyle(font, Color.WHITE));
+        fps.setPosition(padding, padding + 32f);
+
         score = new Label("0", new Label.LabelStyle(font, Color.WHITE));
         score.setPosition(Zombie.WIDTH - padding - textWidth(score.getText().toString()),
                 Zombie.HEIGHT - padding - textHeight(score.getText().toString()));
@@ -47,12 +50,15 @@ public class TextPlayscreen {
                 (Zombie.HEIGHT - textHeight(gameOver.getText().toString()))/2);
 
         stage.addActor(timer);
+        stage.addActor(fps);
         stage.addActor(score);
     }
 
     public void update(float timerFloat, float scoreFloat) {
         timer.setText(String.format("%1.1f", timerFloat));
         timer.setPosition(padding, Zombie.HEIGHT - padding - textHeight(timer.getText().toString()));
+
+        fps.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()));
 
         score.setText(String.format("%1.0f", scoreFloat));
         score.setPosition(Zombie.WIDTH - padding - textWidth(score.getText().toString()),

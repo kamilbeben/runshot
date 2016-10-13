@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kamilbeben.zombiestorm.Zombie;
@@ -16,6 +17,8 @@ import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
 import com.kamilbeben.zombiestorm.gamelogic.ShadowRenderer;
+import com.kamilbeben.zombiestorm.graphicalfireworks.Fireflies;
+import com.kamilbeben.zombiestorm.graphicalfireworks.GDXRenderer;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Island;
@@ -41,12 +44,14 @@ public class Playscreen implements Screen {
     private WorldRenderer worldRenderer;
     private HudPlayscreen hud;
     private ShadowRenderer shadowRenderer;
+    private GDXRenderer gdxRenderer;
 
     private Physics physics;
     private Player player;
     private List<Enemy> enemies;
     private List<Hole> holes;
     private List<Island> islands;
+    private List <Fireflies> fireflies;
     private ObjectSpawner objectSpawner;
     private Timer timer = new Timer();
 
@@ -58,6 +63,8 @@ public class Playscreen implements Screen {
 
     private boolean pause = false;
     private boolean debugMode = false;
+    private boolean shaders = true;
+
 
 
 
@@ -72,8 +79,12 @@ public class Playscreen implements Screen {
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
         islands = new ArrayList<Island>();
+        fireflies = new ArrayList<Fireflies>();
         objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world, game.assets.textureHolder);
         shadowRenderer = new ShadowRenderer(physics.world);
+        gdxRenderer = new GDXRenderer(fireflies, physics.world, game.assets.textureHolder);
+        Gdx.input.setCatchBackKey(true);
+
     }
 
     private void setupCamera() {
@@ -88,9 +99,9 @@ public class Playscreen implements Screen {
     }
 
     private void update(float delta) {
+        handleInput();
         updateSpeedLevel();
         physics.update(delta);
-        handleInput();
         if (physics.playerCollidesWithLeftWall()) {
             player.dead();
         }
@@ -111,6 +122,7 @@ public class Playscreen implements Screen {
         camera.update();
         checkForGameOver();
         objectSpawner.update(timer);
+        gdxRenderer.update(delta);
     }
 
     private void updateSpeedLevel() {
@@ -232,6 +244,13 @@ public class Playscreen implements Screen {
                 debugMode = true;
             }
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            if (debugMode) {
+                shaders = false;
+            } else {
+                shaders = true;
+            }
+        }
     }
 
     private void shotgunShot( int yAxis) {
@@ -265,9 +284,12 @@ public class Playscreen implements Screen {
                 for (Hole tmp : holes)
                     tmp.render(game.batch);
 
+                gdxRenderer.render(game.batch);
                 game.batch.end();
 
-                shadowRenderer.render(camera);
+                if (shaders) {
+                    shadowRenderer.render(camera);
+                }
                 hud.render(game.batch);
 
 //                physics.renderDebug(camera);
@@ -275,6 +297,7 @@ public class Playscreen implements Screen {
             }
             else {
                 physics.renderDebug(camera);
+                hud.render(game.batch);
             }
         }
     }
@@ -307,6 +330,6 @@ public class Playscreen implements Screen {
             tmp.dispose(physics.world);
         }
         physics.dispose();
-        shadowRenderer.dispose();
+//        shadowRenderer.dispose();
     }
 }

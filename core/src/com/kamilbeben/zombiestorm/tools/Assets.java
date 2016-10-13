@@ -32,6 +32,7 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Obstacles/hole_short.png", Texture.class);
         manager.load("Playscreen/Obstacles/island_long.png", Texture.class);
         manager.load("Playscreen/Obstacles/island_short.png", Texture.class);
+        manager.load("Playscreen/Extras/firefly.png", Texture.class);
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Playscreen/Hud/ammoBG.png", Texture.class),
@@ -46,7 +47,8 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Obstacles/hole_long.png", Texture.class),
                 manager.get("Playscreen/Obstacles/hole_short.png", Texture.class),
                 manager.get("Playscreen/Obstacles/island_long.png", Texture.class),
-                manager.get("Playscreen/Obstacles/island_short.png", Texture.class)
+                manager.get("Playscreen/Obstacles/island_short.png", Texture.class),
+                manager.get("Playscreen/Extras/firefly.png", Texture.class)
         );
     }
 

@@ -16,26 +16,20 @@ import box2dLight.RayHandler;
 public class ShadowRenderer {
 
     private RayHandler rayHandler;
-    private Firefly firefly;
 
 
     public ShadowRenderer(World world) {
-        rayHandler = new RayHandler(new World(new Vector2(0, 0), true), 800, 480);
+        rayHandler = new RayHandler(new World(new Vector2(0, 0), true), 200, 120);
         rayHandler.setShadows(true);
         rayHandler.setAmbientLight(new Color(0, 0.05f, 0.07f, 1));
-        firefly = new Firefly(rayHandler);
 
     }
 
-    public void render(OrthographicCamera camera) {
-        updateFireflies();
+    public void render(OrthographicCamera camera) { //TODO check if i can improve perrformance. If not, delete this
         rayHandler.setCombinedMatrix(camera);
         rayHandler.updateAndRender();
     }
 
-    private void updateFireflies() {
-        firefly.update();
-    }
 
     public void dispose() {
         rayHandler.dispose();
