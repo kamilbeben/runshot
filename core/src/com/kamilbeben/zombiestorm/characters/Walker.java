@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -21,6 +22,7 @@ public class Walker extends Enemy {
 
     private static final float bodyRadius = 40 / Zombie.PPM;
     private float speed = 8f;
+    private boolean justGotHeadShot = false;
 
     private Animation walkerWalking;
 
@@ -47,7 +49,7 @@ public class Walker extends Enemy {
 
     private void defineBody(float x, float y) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
+        bodyDef.position.set(x / Zombie.PPM, y / Zombie.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
     }
@@ -57,7 +59,8 @@ public class Walker extends Enemy {
         shape.setAsBox(10 / Zombie.PPM, 50 / Zombie.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT |
+                Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
         shape.dispose();
     }
@@ -97,13 +100,24 @@ public class Walker extends Enemy {
     }
 
     public void headShot() { //TODO falling head or etc
+        killEnemy();
+        justGotHeadShot = true;
         System.out.println("HeadShot!");
     }
 
-    public void update(float delta) {
+    public void update(float delta, Playscreen playscreen) {
         updateSpritePosition();
         setRegion(getFrame(delta));
-        move(speed, delta);
+        if (alive) {
+            move(speed, delta);
+        }
+        if (justGotShot) {
+            playscreen.hud.zombieGotShot();
+            justGotShot = false;
+        }  else if (justGotHeadShot) {
+            playscreen.hud.zombieGotHeadShot();
+            justGotHeadShot = false;
+        }
     }
 
     public TextureRegion getFrame(float delta) {

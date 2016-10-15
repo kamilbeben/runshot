@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Enemy;
+import com.kamilbeben.zombiestorm.characters.Monkey;
 import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.objects.AmmoPack;
@@ -39,6 +40,7 @@ public class WorldContactListener implements ContactListener {
         checkForCollisionBetweenPlayerAndGround(contact.getFixtureA(), contact.getFixtureB());
         checkForCollisionBetweenZombieAndCar(contact.getFixtureA(), contact.getFixtureB());
         checkIfPlayerCollidesWithLeftWall(contact.getFixtureA(), contact.getFixtureB());
+        checkIfShotgunShellCollidesWithRightWall(contact.getFixtureA(), contact.getFixtureB());
     }
 
     private void checkForCollisionsBetweeenPlayerAndHoles(Body a, Body b) {
@@ -68,9 +70,19 @@ public class WorldContactListener implements ContactListener {
     }
 
     private void checkIfPlayerCollidesWithLeftWall(Fixture a, Fixture b) {
-        if ((a.getFilterData().categoryBits == Zombie.PLAYER_BIT && b.getFilterData().categoryBits == Zombie.LEFT_CORNER) ||
-                (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.LEFT_CORNER)) {
+        if ((a.getFilterData().categoryBits == Zombie.PLAYER_BIT && b.getFilterData().categoryBits == Zombie.WALLS_BIT) ||
+                (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.WALLS_BIT)) {
             playerCollidesWithLeftWall = true;
+        }
+    }
+
+    private void checkIfShotgunShellCollidesWithRightWall(Fixture a, Fixture b) {
+        Body shotgunShell = (a.getFilterData().categoryBits == Zombie.SHOTGUN_BIT) ? a.getBody() : b.getBody();
+        if ((a.getFilterData().categoryBits == Zombie.SHOTGUN_BIT && b.getFilterData().categoryBits == Zombie.WALLS_BIT) ||
+                (b.getFilterData().categoryBits == Zombie.SHOTGUN_BIT && a.getFilterData().categoryBits == Zombie.WALLS_BIT)) {
+            if (shotgunShell.getUserData() instanceof ShotgunShell) {
+                ((ShotgunShell) shotgunShell.getUserData()).setToHarmless();
+            }
         }
     }
 
@@ -88,6 +100,8 @@ public class WorldContactListener implements ContactListener {
             Fixture head = (a.getFilterData().categoryBits == Zombie.CAR_BIT) ? b : a;
             if (head.getBody().getUserData() instanceof Walker) {
                 ((Walker) head.getBody().getUserData()).headShot();
+            } else if (head.getBody().getUserData() instanceof Monkey) {
+                ((Monkey) head.getBody().getUserData()).shotgunShot();
             }
         }
     }

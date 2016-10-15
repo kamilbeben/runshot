@@ -22,6 +22,9 @@ public class Fireflies {
     private static BodyDef bodyDef;
     private static CircleShape shape;
 
+    private boolean isTurningRight = true;
+    private float turningSpeed;
+
 
     private Sprite sprite;
 
@@ -31,6 +34,7 @@ public class Fireflies {
         sprite.setSize(32 / Zombie.PPM, 32 / Zombie.PPM);
         sprite.setOrigin(16f / Zombie.PPM, 16f / Zombie.PPM);
         updateSpritePosition();
+        randomTurning();
     }
 
     private void setupBody(World world) {
@@ -39,7 +43,6 @@ public class Fireflies {
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         fixtureDef = new FixtureDef();
-        fixtureDef.filter.categoryBits = Zombie.DEAD_BIT;
         fixtureDef.density = 1f;
         fixtureDef.friction = 1f;
         bodyDef.position.set(randomFireflyPosition());
@@ -55,19 +58,23 @@ public class Fireflies {
         sprite.setPosition(body.getPosition().x, body.getPosition().y);
     }
 
-    public void rotate() {
-        sprite.rotate(1);
+    public void rotate(){
+        if (isTurningRight) {
+            sprite.rotate(turningSpeed);
+        } else {
+            sprite.rotate(-turningSpeed);
+        }
     }
 
     public void update() {
         if (body.getPosition().y > 480 / Zombie.PPM) {
-            body.applyLinearImpulse(new Vector2(1f / Zombie.PPM, -3f / Zombie.PPM), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0.5f / Zombie.PPM, -1f / Zombie.PPM), body.getWorldCenter(), true);
         } else if (body.getPosition().y < 0 / Zombie.PPM) {
-            body.applyLinearImpulse(new Vector2(-1f / Zombie.PPM, 3f / Zombie.PPM), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(-0.5f / Zombie.PPM, 1f / Zombie.PPM), body.getWorldCenter(), true);
         } else if (body.getPosition().x < 0 / Zombie.PPM) {
-            body.applyLinearImpulse(new Vector2(3f / Zombie.PPM, 1f / Zombie.PPM), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(1f / Zombie.PPM, 0f / Zombie.PPM), body.getWorldCenter(), true);
         } else if (body.getPosition().x > 800 / Zombie.PPM) {
-            body.applyLinearImpulse(new Vector2(-3f / Zombie.PPM, -1f / Zombie.PPM), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(-1f / Zombie.PPM, -0.5f / Zombie.PPM), body.getWorldCenter(), true);
         }
     }
 
@@ -83,13 +90,13 @@ public class Fireflies {
     private Vector2 randomDirectionImpulse() {
         int random = Tools.randomFrom1To10();
         if (random < 3) {
-            return new Vector2(2f / Zombie.PPM, 1f / Zombie.PPM);
+            return new Vector2(1f / Zombie.PPM, 0.5f / Zombie.PPM);
         } else if (random < 5) {
-            return new Vector2(-2f / Zombie.PPM, 1f / Zombie.PPM);
+            return new Vector2(-1f / Zombie.PPM, 0.5f / Zombie.PPM);
         } else if (random < 7) {
-            return new Vector2(0f / Zombie.PPM, 2f / Zombie.PPM);
+            return new Vector2(0f / Zombie.PPM, 1f / Zombie.PPM);
         } else {
-            return new Vector2(0f / Zombie.PPM, -2f / Zombie.PPM);
+            return new Vector2(0f / Zombie.PPM, -1f / Zombie.PPM);
         }
     }
 
@@ -97,5 +104,23 @@ public class Fireflies {
         float positionX = Tools.randomFrom1To10() * 70 / Zombie.PPM;
         float positionY = 100 / Zombie.PPM + Tools.randomFrom1To10() * 30 / Zombie.PPM;
         return new Vector2(positionX, positionY);
+    }
+
+    private void randomTurning() {
+        int random = Tools.randomFrom1To10();
+        if (random < 5) {
+            isTurningRight = true;
+        } else {
+            isTurningRight = false;
+        }
+
+        random = Tools.randomFrom1To10();
+        if (random < 4) {
+            turningSpeed = 2f;
+        } else if (random < 7) {
+            turningSpeed = 4f;
+        } else {
+            turningSpeed = 7f;
+        }
     }
 }

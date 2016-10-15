@@ -17,8 +17,10 @@ public class Assets implements Disposable {
 
     }
 
-    public void loadPlayscreenAssets() {
-        manager.clear();
+    public void loadPlayscreenAssets(boolean clearManager) {
+        if (clearManager) {
+            manager.clear();
+        }
         manager.load("Playscreen/Hud/ammoBG.png", Texture.class);
         manager.load("Playscreen/Hud/ammoOFF.png", Texture.class);
         manager.load("Playscreen/Hud/ammoON.png", Texture.class);
@@ -33,6 +35,9 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Obstacles/island_long.png", Texture.class);
         manager.load("Playscreen/Obstacles/island_short.png", Texture.class);
         manager.load("Playscreen/Extras/firefly.png", Texture.class);
+        manager.load("Playscreen/Extras/firefly_blue.png", Texture.class);
+        manager.load("Playscreen/Extras/firefly_transparent.png", Texture.class);
+        manager.load("Playscreen/Extras/palette.png", Texture.class);
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Playscreen/Hud/ammoBG.png", Texture.class),
@@ -48,7 +53,10 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Obstacles/hole_short.png", Texture.class),
                 manager.get("Playscreen/Obstacles/island_long.png", Texture.class),
                 manager.get("Playscreen/Obstacles/island_short.png", Texture.class),
-                manager.get("Playscreen/Extras/firefly.png", Texture.class)
+                manager.get("Playscreen/Extras/firefly.png", Texture.class),
+                manager.get("Playscreen/Extras/firefly_blue.png", Texture.class),
+                manager.get("Playscreen/Extras/firefly_transparent.png", Texture.class),
+                manager.get("Playscreen/Extras/palette.png", Texture.class)
         );
     }
 

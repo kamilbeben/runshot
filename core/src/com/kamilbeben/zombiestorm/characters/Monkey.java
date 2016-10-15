@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
@@ -39,11 +41,21 @@ public class Monkey extends Enemy {
 
     @Override
     protected void setupBody(float x, float y) {
+        defineBody(x, y);
+        FixtureDef fixtureDef = new FixtureDef();
+        setupMainBody(fixtureDef);
+        setupHead(fixtureDef);
+        body.setUserData(this);
+    }
+
+    private void defineBody(float x, float y) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
+        bodyDef.position.set(x / Zombie.PPM, y / Zombie.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
+    }
+
+    private void setupMainBody(FixtureDef fixtureDef) {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(20 / Zombie.PPM, 40 / Zombie.PPM);
         fixtureDef.shape = shape;
@@ -51,9 +63,20 @@ public class Monkey extends Enemy {
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
-
-        body.setUserData(this);
     }
+
+    private void setupHead(FixtureDef fixtureDef) {
+        CircleShape shape = new CircleShape();
+        shape.setRadius(15 / Zombie.PPM);
+        shape.setPosition(new Vector2(0 / Zombie.PPM, 55 / Zombie.PPM));
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.HEAD_BIT;
+        fixtureDef.filter.maskBits = Zombie.SHOTGUN_BIT;
+        body.createFixture(fixtureDef);
+        shape.dispose();
+    }
+
 
     private void setupLooks() {
 
@@ -83,7 +106,7 @@ public class Monkey extends Enemy {
         Gdx.app.log("Monkey", "Im dead now");
     }
 
-    public void update(float delta) {
+    public void update(float delta, Playscreen playscreen) {
         updateSpritePosition();
         setRegion(getFrame(delta));
 
@@ -94,6 +117,11 @@ public class Monkey extends Enemy {
                 currentState = State.JUMPING;
                 jumpOnce();
             }
+        }
+
+        if (justGotShot) {
+            playscreen.hud.zombieGotShot();
+            justGotShot = false;
         }
     }
 

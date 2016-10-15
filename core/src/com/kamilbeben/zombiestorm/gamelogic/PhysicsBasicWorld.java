@@ -27,7 +27,7 @@ public class PhysicsBasicWorld {
 
         createFloor(body, fixtureDef, line);
         createJumpSensor(body, fixtureDef, line);
-        createLeftWallSensor(body, fixtureDef, line);
+        createLeftAndRightWall(body, fixtureDef, line);
 
         line.dispose();
     }
@@ -49,9 +49,15 @@ public class PhysicsBasicWorld {
         body.createFixture(fixtureDef);
     }
 
-    private void createLeftWallSensor(Body body, FixtureDef fixtureDef, EdgeShape line) {
-        line.set(new Vector2(25 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(25 / Zombie.PPM, 600 / Zombie.PPM));
-        fixtureDef.filter.categoryBits = Zombie.LEFT_CORNER;
+    private void createLeftAndRightWall(Body body, FixtureDef fixtureDef, EdgeShape line) {
+        line.set(new Vector2(15 / Zombie.PPM, 0 / Zombie.PPM), new Vector2(15 / Zombie.PPM, 600 / Zombie.PPM));
+        fixtureDef.filter.categoryBits = Zombie.WALLS_BIT;
+        fixtureDef.shape = line;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+
+        line.set(new Vector2((Zombie.WIDTH - 15) / Zombie.PPM, 0 / Zombie.PPM), new Vector2((Zombie.WIDTH - 15) / Zombie.PPM, 600 / Zombie.PPM));
+        fixtureDef.filter.categoryBits = Zombie.WALLS_BIT;
         fixtureDef.shape = line;
         fixtureDef.isSensor = true;
         body.createFixture(fixtureDef);

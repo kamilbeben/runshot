@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.screens.Playscreen;
 
 /**
  * Created by bezik on 18.09.16.
@@ -63,7 +64,7 @@ public abstract class Enemy extends Sprite {
         }
     }
 
-    public abstract void update(float delta);
+    public abstract void update(float delta, Playscreen playscreen);
 
 
     public abstract void dead();
@@ -75,6 +76,15 @@ public abstract class Enemy extends Sprite {
         dead();
     }
 
+    public void shotgunShot() {
+        killEnemy();
+        applyShotgunForceToBody();
+    }
+
+    private void applyShotgunForceToBody() {
+        body.applyLinearImpulse(new Vector2(500f / Zombie.PPM, 20f / Zombie.PPM), body.getWorldCenter(), true);
+    }
+
     public void carAccident() {
         killEnemy();
     }
@@ -84,21 +94,13 @@ public abstract class Enemy extends Sprite {
         Filter filter;
         for (Fixture tmp : fixtures) {
             filter = tmp.getFilterData();
-            filter.categoryBits = Zombie.DEAD_BIT; //Disable collisions
+            filter.categoryBits = Zombie.DEAD_BIT;
             filter.maskBits = Zombie.ENEMY_BIT;
             tmp.setFilterData(filter);
-            tmp.setFriction(0.5f); //Prevent from sliding
         }
         body.setUserData(null);
     }
 
-
-    public boolean gotShot() {
-        if (justGotShot) {
-            justGotShot = false;
-            return true;
-        } else return false;
-    }
 
     public void dispose(World world) {
         world.destroyBody(body);

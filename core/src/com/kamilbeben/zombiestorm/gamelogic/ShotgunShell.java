@@ -20,7 +20,7 @@ import com.kamilbeben.zombiestorm.Zombie;
  */
 public class ShotgunShell {
 
-    private static final float force = 5f;
+    private static final float force = 10f;
 
     public Body body;
     private FixtureDef fixtureDef;
@@ -35,15 +35,17 @@ public class ShotgunShell {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         fixtureDef = new FixtureDef();
         fixtureDef.filter.categoryBits = Zombie.SHOTGUN_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.HEAD_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.HEAD_BIT | Zombie.WALLS_BIT;
         fixtureDef.density = 80f;
         bodyDef.position.set(64 / Zombie.PPM, playerYPosition);
         body = world.createBody(bodyDef);
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef);
-        body.applyLinearImpulse(new Vector2(force, (480 - yAxis - 20) / Zombie.PPM), body.getWorldCenter(), true);
         body.setUserData(this);
         shape.dispose();
+
+
+        body.applyLinearImpulse(new Vector2(force, (480 - yAxis) / Zombie.PPM), body.getWorldCenter(), true);
     }
 
     public boolean disposeIfOutOfMap(World world) {

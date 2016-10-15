@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -95,7 +96,7 @@ public class Car extends Enemy {
     }
 
 
-    public void update(float delta) {
+    public void update(float delta, Playscreen playscreen) {
         updatePosition();
         setRegion(getFrame(delta));
         move(speed, delta);

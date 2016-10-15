@@ -20,7 +20,7 @@ public class WorldRenderer {
     private Animation animation;
 
     public WorldRenderer(Texture texture) {
-        renderGround = new boolean[25];
+        renderGround = new boolean[27];
         resetGround();
         setupAnimations(texture);
         setSpeedLevel(1);
@@ -50,7 +50,7 @@ public class WorldRenderer {
 
     public void updateGround(HolePosition position) {
         resetGround();
-        int end = (position.end >= 25) ? 25 : position.end;
+        int end = (position.end >= renderGround.length) ? renderGround.length : position.end;
         try {
             for (int i = position.start; i < end; i++) {
                if (i >= 0) {

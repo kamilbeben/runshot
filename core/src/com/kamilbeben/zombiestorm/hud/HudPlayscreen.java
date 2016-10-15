@@ -20,6 +20,11 @@ public class HudPlayscreen {
 
     private TextPlayscreen text;
 
+    private float score = 0f;
+    private float distance = 0f;
+    private int zombieKilled = 0;
+    private int headshots = 0;
+
     public HudPlayscreen(Zombie game) {
         viewport = new FitViewport(Zombie.WIDTH, Zombie.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
@@ -28,9 +33,15 @@ public class HudPlayscreen {
         ammoRenderer = new AmmoRenderer(game.assets.textureHolder);
     }
 
-    public void update(float timer, float score, int bulletAmount) {
+    public void update(float timer, int bulletAmount) {
         text.update(timer, score);
         ammoRenderer.checkHowManyBullets(bulletAmount);
+        setScore(timer);
+    }
+
+    private void setScore(float time) {
+        distance = (3 * time) + ((time * time) / 200);
+        score = distance + (zombieKilled * 10) + (headshots * 50);
     }
 
     public void gameOver() {
@@ -42,6 +53,14 @@ public class HudPlayscreen {
         batch.begin();
         ammoRenderer.render(batch);
         batch.end();
+    }
+
+    public void zombieGotShot() {
+
+    }
+
+    public void zombieGotHeadShot() {
+
     }
 
     public void dispose() {

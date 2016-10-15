@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kamilbeben.zombiestorm.Zombie;
@@ -16,8 +15,6 @@ import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
-import com.kamilbeben.zombiestorm.gamelogic.ShadowRenderer;
-import com.kamilbeben.zombiestorm.graphicalfireworks.Fireflies;
 import com.kamilbeben.zombiestorm.graphicalfireworks.GDXRenderer;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
@@ -42,8 +39,7 @@ public class Playscreen implements Screen {
     private OrthographicCamera camera = new OrthographicCamera();
     private Viewport viewport;
     private WorldRenderer worldRenderer;
-    private HudPlayscreen hud;
-    private ShadowRenderer shadowRenderer;
+    public HudPlayscreen hud;
     private GDXRenderer gdxRenderer;
 
     private Physics physics;
@@ -51,26 +47,23 @@ public class Playscreen implements Screen {
     private List<Enemy> enemies;
     private List<Hole> holes;
     private List<Island> islands;
-    private List <Fireflies> fireflies;
     private ObjectSpawner objectSpawner;
     private Timer timer = new Timer();
 
     private int speedlLevel = 1;
-    private float score = 0f;
-    private float distance = 0f;
     private boolean playerIsFallingThroughHole = false;
     private boolean gameOver = false;
 
     private boolean pause = false;
     private boolean debugMode = false;
-    private boolean shaders = true;
+    private boolean GFXFireworks = true;
 
 
 
 
-    public Playscreen(Zombie game) {
+    public Playscreen(Zombie game, boolean clearManager) {
         this.game = game;
-        game.assets.loadPlayscreenAssets();
+        game.assets.loadPlayscreenAssets(clearManager);
         worldRenderer = new WorldRenderer(game.assets.textureHolder.GAME_EXTRAS_GRASS_ANIMATION);
         hud = new HudPlayscreen(game);
         setupCamera();
@@ -79,12 +72,10 @@ public class Playscreen implements Screen {
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
         islands = new ArrayList<Island>();
-        fireflies = new ArrayList<Fireflies>();
         objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world, game.assets.textureHolder);
-        shadowRenderer = new ShadowRenderer(physics.world);
-        gdxRenderer = new GDXRenderer(fireflies, physics.world, game.assets.textureHolder);
+        gdxRenderer = new GDXRenderer(physics.world, game.assets.textureHolder);
         Gdx.input.setCatchBackKey(true);
-
+        Gdx.input.setCatchMenuKey(true);
     }
 
     private void setupCamera() {
@@ -106,7 +97,7 @@ public class Playscreen implements Screen {
             player.dead();
         }
         if (playerIsFallingThroughHole) {
-            player.collisionsOff();
+            player.playerFallingDown();
         }
 
         player.update(delta);
@@ -114,10 +105,9 @@ public class Playscreen implements Screen {
 
         if (!gameOver) {
             timer.updateTimer(delta);
-            setScore(timer.getTime());
             updateHolesAndIslands(delta);
         }
-        hud.update(timer.getTime(), score, player.getBulletsAmount());
+        hud.update(timer.getTime(), player.getBulletsAmount());
         worldRenderer.updateAnimation(timer.getTime());
         camera.update();
         checkForGameOver();
@@ -148,10 +138,7 @@ public class Playscreen implements Screen {
 
     private void updateEnemies(float delta) {
         for (Enemy tmp : enemies) {
-            tmp.update(delta);
-            if (tmp.gotShot()) {
-                player.zombieGotShot();
-            }
+            tmp.update(delta, this);
         }
     }
 
@@ -168,11 +155,6 @@ public class Playscreen implements Screen {
         for (Island tmp : islands) {
             tmp.update(delta);
         }
-    }
-
-    private void setScore(float time) {
-        distance = (3 * time) + ((time * time) / 200);
-        score = distance + (player.howManyZombiesDidIKilled() * 10);
     }
 
 
@@ -198,13 +180,13 @@ public class Playscreen implements Screen {
             player.jump();
         }
         if ((Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.justTouched()) && gameOver) {
-            game.setScreen(new Playscreen(game));
+            game.setScreen(new Playscreen(game, false));
         }
     }
 
     private void testKeyboard() {
         float enemiesPosition = 700;
-        float holesPosition = 900;
+        float holesPosition = 1200;
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_WALKER));
         }
@@ -230,7 +212,7 @@ public class Playscreen implements Screen {
             timer.addTenSeconds();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P) || Gdx.input.isKeyJustPressed(Input.Keys.MENU)) {
             if (pause) {
                 pause = false;
             } else {
@@ -244,11 +226,11 @@ public class Playscreen implements Screen {
                 debugMode = true;
             }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            if (debugMode) {
-                shaders = false;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+            if (GFXFireworks) {
+                GFXFireworks = false;
             } else {
-                shaders = true;
+                GFXFireworks = true;
             }
         }
     }
@@ -284,12 +266,10 @@ public class Playscreen implements Screen {
                 for (Hole tmp : holes)
                     tmp.render(game.batch);
 
-                gdxRenderer.render(game.batch);
-                game.batch.end();
-
-                if (shaders) {
-                    shadowRenderer.render(camera);
+                if (GFXFireworks) {
+                    gdxRenderer.render(game.batch);
                 }
+                game.batch.end();
                 hud.render(game.batch);
 
 //                physics.renderDebug(camera);

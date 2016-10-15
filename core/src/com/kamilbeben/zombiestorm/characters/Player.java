@@ -26,7 +26,6 @@ public class Player {
     private boolean alive = true;
 
     private static final float jumpForce = 6.5f;
-    private int zombieKilled = 0;
 
     private PlayerRenderer playerRenderer;
 
@@ -51,7 +50,7 @@ public class Player {
         fixtureDef.shape = polygon;
 
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.LEFT_CORNER;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.WALLS_BIT;
 
         fixtureDef.friction = 0.2f;
         body.createFixture(fixtureDef);
@@ -108,12 +107,13 @@ public class Player {
         return body.getPosition();
     }
 
-    public void collisionsOff() {
+    public void playerFallingDown() {
         dead();
         Array<Fixture> fixtures = body.getFixtureList();
         for (Fixture tmp : fixtures) {
             tmp.setSensor(true);
         }
+        body.applyLinearImpulse(new Vector2(5f / Zombie.PPM, 0f / Zombie.PPM), body.getWorldCenter(), true);
     }
 
     public int getBulletsAmount() {
@@ -128,13 +128,6 @@ public class Player {
         alive = false;
     }
 
-    public void zombieGotShot() {
-        zombieKilled++;
-    }
-
-    public int howManyZombiesDidIKilled() {
-        return zombieKilled;
-    }
     public void dispose() {
     }
 }

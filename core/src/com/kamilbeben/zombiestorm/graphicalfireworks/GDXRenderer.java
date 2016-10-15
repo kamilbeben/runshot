@@ -1,9 +1,12 @@
 package com.kamilbeben.zombiestorm.graphicalfireworks;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
+import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.TextureHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,13 +20,26 @@ public class GDXRenderer {
 
     List<Fireflies> fireflies;
 
+    private Sprite palette;
 
-    public GDXRenderer(List<Fireflies> fireflies, World world, TextureHolder textureHolder) {
-        this.fireflies = fireflies;
-        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY));
-        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY));
-        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY));
-        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY));
+
+    public GDXRenderer(World world, TextureHolder textureHolder) {
+        setupFireflies(world, textureHolder);
+        setupColorPalette(textureHolder);
+    }
+
+    private void setupFireflies(World world, TextureHolder textureHolder) {
+        fireflies = new ArrayList<Fireflies>();
+        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_GREEN));
+        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_GREEN));
+        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_TRANSPARENT));
+        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_BLUE));
+        fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_BLUE));
+    }
+
+    private void setupColorPalette(TextureHolder textureHolder) {
+        palette = new Sprite(textureHolder.GAME_EXTRAS_PALETTE);
+        palette.setSize(Zombie.WIDTH / Zombie.PPM, Zombie.HEIGHT / Zombie.PPM);
     }
 
     public void update(float delta) {
@@ -56,6 +72,7 @@ public class GDXRenderer {
     }
 
     public void render(SpriteBatch batch) {
+        palette.draw(batch);
         for (Fireflies tmp : fireflies) {
             tmp.render(batch);
         }
