@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.TextureHolder;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -15,34 +16,46 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class PlayerRenderer {
 
-    public enum State {RUNNING, SHOOTING, JUMPING, STANDING}
+    private enum State {RUNNING, SHOOTING, JUMPING, STANDING, STUMBLE, HIT_BY_CAR}
 
     public boolean gameStarted = true;
 
-    public State currentState;
-    public State previousState;
+    private State currentState;
+    private State previousState;
 
     private float stateTimer_UPPERBODY = 0f;
     private float stateTimer_LOWERBODY = 0f;
+    private float stateTimer_FULLBODY = 0f;
 
     private Sprite upperBody;
     private Sprite lowerBody;
 
-    public Animation animationRunningUpperBody;
-    public Animation animationRunningLowerBody;
-    public Animation animationShootingUppderBody;
-    public Animation animationJumpingUpperBody;
-    public Animation animationJumpingLowerBody;
-    public Animation animationSteadyUpperBody;
-    public Animation animationSteadyLowerBody;
+    private Animation animationRunningUpperBody;
+    private Animation animationRunningLowerBody;
+    private Animation animationShootingUppderBody;
+    private Animation animationJumpingUpperBody;
+    private Animation animationJumpingLowerBody;
+    private Animation animationSteadyUpperBody;
+    private Animation animationSteadyLowerBody;
 
 
-    public PlayerRenderer(Texture playerTextureMap) {
-        upperBody = new Sprite(playerTextureMap);
-        lowerBody = new Sprite(playerTextureMap);
+    private Sprite fullBodyStumble;
+    private Animation animationStumble;
+
+    private Sprite fullBodyCarAccident;
+    private Animation animationCarAccident;
+
+    private boolean stumbling = false;
+
+    public PlayerRenderer(TextureHolder textureHolder) {
+        upperBody = new Sprite(textureHolder.GAME_PLAYER);
+        lowerBody = new Sprite(textureHolder.GAME_PLAYER);
+        fullBodyStumble = new Sprite(textureHolder.GAME_PLAYER_EXTENDED);
+        setupTwoPartedAnimations();
+        setupOnePartedAnimations();
     }
 
-    public void setupLooks() {
+    private void setupTwoPartedAnimations() {
         int yPosition = 0*113;
         upperBody.setBounds(32 / Zombie.PPM, 80 / Zombie.PPM, 101 / Zombie.PPM, 113 / Zombie.PPM);
 
@@ -50,21 +63,21 @@ public class PlayerRenderer {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
         }
-        animationRunningUpperBody = new Animation(0.1f, frames);
+        animationRunningUpperBody = new Animation(0.15f, frames);
         frames.clear();
 
         yPosition = 1*113;
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
         }
-        animationShootingUppderBody = new Animation(0.1f, frames);
+        animationShootingUppderBody = new Animation(0.066f, frames);
         frames.clear();
 
         yPosition = 2*113;
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
         }
-        animationJumpingUpperBody = new Animation(0.1f, frames);
+        animationJumpingUpperBody = new Animation(0.066f, frames);
         frames.clear();
 
         lowerBody.setBounds(32 / Zombie.PPM, 30 / Zombie.PPM, 101 / Zombie.PPM, 67 / Zombie.PPM);
@@ -72,7 +85,7 @@ public class PlayerRenderer {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         }
-        animationRunningLowerBody = new Animation(0.1f, frames);
+        animationRunningLowerBody = new Animation(0.066f, frames);
         frames.clear();
 
         yPosition = 406;
@@ -80,7 +93,7 @@ public class PlayerRenderer {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         };
 
-        animationJumpingLowerBody = new Animation(0.1f, frames);
+        animationJumpingLowerBody = new Animation(0.066f, frames);
         frames.clear();
 
         yPosition = 471;
@@ -88,7 +101,7 @@ public class PlayerRenderer {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 113));
         };
 
-        animationSteadyUpperBody = new Animation(0.1f, frames);
+        animationSteadyUpperBody = new Animation(0.066f, frames);
         frames.clear();
 
         yPosition = 584;
@@ -96,12 +109,30 @@ public class PlayerRenderer {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         };
 
-        animationSteadyLowerBody = new Animation(0.1f, frames);
+        animationSteadyLowerBody = new Animation(0.066f, frames);
+        frames.clear();
+    }
+
+    private void setupOnePartedAnimations() {
+        fullBodyStumble.setBounds(0,0, 267 / Zombie.PPM, 158 / Zombie.PPM);
+
+        Array<TextureRegion> frames = new Array<TextureRegion>();
+        int yPosition = 158;
+
+        for (int k=0; k<3; k++) {
+            for (int i=0; i<7; i++) {
+                frames.add(new TextureRegion(fullBodyStumble.getTexture(), i * 267, k * yPosition, 267, 158));
+            }
+        }
+        for (int i=0; i<3; i++) {
+            frames.add(new TextureRegion(fullBodyStumble.getTexture(), i * 267, 3 * yPosition, 267, 158));
+        }
+        animationStumble = new Animation(0.05f, frames);
         frames.clear();
     }
 
     public void setSpeedLevel(int speedLevel) {
-        float levelOne = 0.1f;
+        float levelOne = 0.08f;
         switch (speedLevel) {
             default:
             case 1:
@@ -139,8 +170,13 @@ public class PlayerRenderer {
 
     public void update(float delta, Boolean shooting, Boolean jumping, Body body) {
         updatePosition(body);
-        upperBody.setRegion(getUpperBodyFrame(delta, shooting, jumping));
-        lowerBody.setRegion(getLowerBodyFrame(delta, shooting, jumping));
+        if (stumbling) {
+            fullBodyStumble.setRegion(animationStumble.getKeyFrame(stateTimer_FULLBODY, false));
+            stateTimer_FULLBODY += delta;
+        } else {
+            upperBody.setRegion(getUpperBodyFrame(delta, shooting, jumping));
+            lowerBody.setRegion(getLowerBodyFrame(delta, shooting, jumping));
+        }
     }
 
 
@@ -215,14 +251,22 @@ public class PlayerRenderer {
 
 
     public void updatePosition(Body body) {
-        upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3, body.getPosition().y - 8 / Zombie.PPM);
-        lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 19 / Zombie.PPM,
-                body.getPosition().y - 58 / Zombie.PPM);
+        if (stumbling) {
+            fullBodyStumble.setPosition(body.getPosition().x, body.getPosition().y - 68f / Zombie.PPM);
+        } else {
+            upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3, body.getPosition().y - 8 / Zombie.PPM);
+            lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 19 / Zombie.PPM,
+                    body.getPosition().y - 58 / Zombie.PPM);
+        }
     }
 
     public void render(SpriteBatch batch) {
-        lowerBody.draw(batch);
-        upperBody.draw(batch);
+        if (stumbling) {
+            fullBodyStumble.draw(batch);
+        } else {
+            lowerBody.draw(batch);
+            upperBody.draw(batch);
+        }
     }
 
     public boolean isShootingOver() {
@@ -239,6 +283,10 @@ public class PlayerRenderer {
         } else {
             return false;
         }
+    }
+
+    public void setStumble() {
+        stumbling = true;
     }
 
 

@@ -38,7 +38,7 @@ public class Car extends Enemy {
 
         setupStaticBody(fixtureDef);
         setupZombieDestroyer(fixtureDef);
-
+        setupStumbleLine(fixtureDef);
         body.setUserData(this);
     }
 
@@ -51,7 +51,7 @@ public class Car extends Enemy {
 
     private void setupStaticBody(FixtureDef fixtureDef) {
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(60f / Zombie.PPM, 35 / Zombie.PPM);
+        shape.setAsBox(100 / Zombie.PPM, 35 / Zombie.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT;
@@ -61,13 +61,24 @@ public class Car extends Enemy {
 
     private void setupZombieDestroyer(FixtureDef fixtureDef) {
         EdgeShape line = new EdgeShape();
-        line.set(new Vector2(-84 / Zombie.PPM, -10 / Zombie.PPM), new Vector2(-84 / Zombie.PPM, 10 / Zombie.PPM));
+        line.set(new Vector2(-104 / Zombie.PPM, -10 / Zombie.PPM), new Vector2(-104 / Zombie.PPM, 10 / Zombie.PPM));
         fixtureDef.shape = line;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.CAR_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT;
         body.createFixture(fixtureDef);
         line.dispose();
+    }
+
+    private void setupStumbleLine(FixtureDef fixtureDef) {
+        EdgeShape edgeShape = new EdgeShape();
+        edgeShape.set(new Vector2(-99 / Zombie.PPM, 39 / Zombie.PPM), new Vector2(99 / Zombie.PPM, 39 / Zombie.PPM));
+        fixtureDef.shape = edgeShape;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
+        body.createFixture(fixtureDef);
+        edgeShape.dispose();
     }
 
     private void setupLooks() {
@@ -111,7 +122,7 @@ public class Car extends Enemy {
 
 
     private void updatePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2 + 65f / Zombie.PPM, body.getPosition().y - 44 / Zombie.PPM);
+        setPosition(body.getPosition().x - getWidth() / 2 + 20f / Zombie.PPM, body.getPosition().y - 44 / Zombie.PPM);
     }
 
 

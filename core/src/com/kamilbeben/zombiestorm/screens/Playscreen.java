@@ -68,7 +68,7 @@ public class Playscreen implements Screen {
         hud = new HudPlayscreen(game);
         setupCamera();
         physics = new Physics();
-        player = new Player(physics.world, game.assets.textureHolder.GAME_PLAYER);
+        player = new Player(physics.world, game.assets.textureHolder);
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
         islands = new ArrayList<Island>();
@@ -165,6 +165,9 @@ public class Playscreen implements Screen {
     }
 
     private void gameOver() {
+        for (Island tmp : islands) {
+            tmp.stopMoving();
+        }
         gameOver = true;
         worldRenderer.stopAnimating();
         hud.gameOver();
@@ -185,7 +188,7 @@ public class Playscreen implements Screen {
     }
 
     private void testKeyboard() {
-        float enemiesPosition = 1200;
+        float enemiesPosition = 900;
         float holesPosition = 1200;
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_WALKER));
@@ -207,6 +210,9 @@ public class Playscreen implements Screen {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
             islands.add(new IslandShort(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
+            player.pickAmmo();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
             timer.addTenSeconds();
@@ -272,7 +278,7 @@ public class Playscreen implements Screen {
                 game.batch.end();
                 hud.render(game.batch);
 
-//                physics.renderDebug(camera);
+                physics.renderDebug(camera);
 
             }
             else {

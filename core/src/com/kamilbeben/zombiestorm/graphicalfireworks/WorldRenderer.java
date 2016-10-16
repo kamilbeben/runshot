@@ -20,8 +20,9 @@ public class WorldRenderer {
     private boolean gameOver = false;
 
     private Sprite staticBackground;
-    private ParallaxBackground parallaxMountains;
-    private ParallaxBackground parallaxTrees;
+    private ParallaxBackground parallaxFar;
+    private ParallaxBackground parallaxMiddle;
+    private ParallaxBackground parallaxClose;
     private Sprite spriteAnimation;
     private Animation animation;
 
@@ -29,10 +30,11 @@ public class WorldRenderer {
         renderGround = new boolean[27];
         resetGround();
         setupAnimations(textureHolder.GAME_EXTRAS_GRASS_ANIMATION);
-        setSpeedLevel(1);
         setupStaticBackground(textureHolder.GAME_EXTRAS_BACKGROUND);
-        parallaxMountains = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS, 0.5f);
-        parallaxMountains = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS, 0.7f);
+        parallaxFar = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_FAR, 0.5f);
+        parallaxMiddle = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_FOG, 0.75f);
+        parallaxClose = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_CLOSE, 1f);
+        setSpeedLevel(1);
     }
 
     private void setupAnimations(Texture texture) {
@@ -54,7 +56,9 @@ public class WorldRenderer {
 
     public void draw(SpriteBatch batch) {
         staticBackground.draw(batch);
-        parallaxMountains.render(batch);
+        parallaxFar.render(batch);
+        parallaxMiddle.render(batch);
+        parallaxClose.render(batch);
         for (int i=0; i<renderGround.length; i++) {
             if (renderGround[i]) {
                 spriteAnimation.setPosition(i * (32 / Zombie.PPM), 0);
@@ -84,7 +88,9 @@ public class WorldRenderer {
             TextureRegion region;
             region = animation.getKeyFrame(timer, true);
             spriteAnimation.setRegion(region);
-            parallaxMountains.update(delta);
+            parallaxFar.update(delta);
+            parallaxMiddle.update(delta);
+            parallaxClose.update(delta);
         }
     }
 
@@ -96,6 +102,9 @@ public class WorldRenderer {
     }
 
     public void setSpeedLevel(int speedLevel) {
+        parallaxFar.setSpeedLevel(speedLevel);
+        parallaxMiddle.setSpeedLevel(speedLevel);
+        parallaxClose.setSpeedLevel(speedLevel);
         float levelOne = 0.033f;
         switch (speedLevel) {
             default:

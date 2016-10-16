@@ -31,7 +31,9 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Extras/firefly_transparent.png", Texture.class);
         manager.load("Playscreen/Extras/palette.png", Texture.class);
         manager.load("Playscreen/Extras/background.jpg", Texture.class);
-        manager.load("Playscreen/Extras/parallax.png", Texture.class);
+        manager.load("Playscreen/Extras/parallax_far.png", Texture.class);
+        manager.load("Playscreen/Extras/parallax_middle.png", Texture.class);
+        manager.load("Playscreen/Extras/parallax_fog.png", Texture.class);
         manager.load("Playscreen/Characters/car.png", Texture.class);
         manager.load("Playscreen/Characters/monkey.png", Texture.class);
         manager.load("Playscreen/Characters/walker.png", Texture.class);
@@ -53,7 +55,9 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Extras/firefly_transparent.png", Texture.class),
                 manager.get("Playscreen/Extras/palette.png", Texture.class),
                 manager.get("Playscreen/Extras/background.jpg", Texture.class),
-                manager.get("Playscreen/Extras/parallax.png", Texture.class),
+                manager.get("Playscreen/Extras/parallax_far.png", Texture.class),
+                manager.get("Playscreen/Extras/parallax_middle.png", Texture.class),
+                manager.get("Playscreen/Extras/parallax_fog.png", Texture.class),
                 manager.get("Playscreen/Characters/car.png", Texture.class),
                 manager.get("Playscreen/Characters/monkey.png", Texture.class),
                 manager.get("Playscreen/Characters/walker.png", Texture.class),

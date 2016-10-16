@@ -22,6 +22,7 @@ public abstract class Island extends Sprite {
     protected AmmoPack ammoPack;
     protected PolygonShape islandShape = new PolygonShape();
     protected EdgeShape jumpLine = new EdgeShape();
+    protected EdgeShape  stumbleLine= new EdgeShape();
 
     private float speed = 7f;
 
@@ -34,12 +35,12 @@ public abstract class Island extends Sprite {
 
     protected abstract void setupBody(float x, float y, World world);
 
-    protected void createBody(float x, float y, PolygonShape islandShape, EdgeShape jumpLine, World world) {
+    protected void createBody(float x, float y, World world) {
         defineBody(x, y, world);
         FixtureDef fixtureDef = new FixtureDef();
 
-        createIslandKinematicBody(fixtureDef, islandShape);
-        createJumpSensor(fixtureDef, jumpLine);
+        createIslandKinematicBody(fixtureDef);
+        createJumpSensor(fixtureDef);
     }
 
     private void defineBody(float x, float y, World world) {
@@ -49,7 +50,7 @@ public abstract class Island extends Sprite {
         body = world.createBody(bodyDef);
     }
 
-    private void createIslandKinematicBody(FixtureDef fixtureDef, PolygonShape islandShape) {
+    private void createIslandKinematicBody(FixtureDef fixtureDef) {
         fixtureDef.shape = islandShape;
         fixtureDef.friction = 0f;
         fixtureDef.filter.categoryBits = Zombie.STATIC_BIT;
@@ -57,7 +58,7 @@ public abstract class Island extends Sprite {
         body.createFixture(fixtureDef);
     }
 
-    private void createJumpSensor(FixtureDef fixtureDef, EdgeShape jumpLine) {
+    private void createJumpSensor(FixtureDef fixtureDef) {
         fixtureDef.filter.categoryBits = Zombie.GROUND_BIT;
         fixtureDef.shape = jumpLine;
         fixtureDef.isSensor = true;
@@ -69,6 +70,11 @@ public abstract class Island extends Sprite {
         move(delta);
         updateSpritePosition();
         ammoPack.updateSpritePosition();
+    }
+
+    public void stopMoving() {
+        body.setAwake(false);
+        ammoPack.body.setAwake(false);
     }
 
 

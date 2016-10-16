@@ -27,7 +27,7 @@ public class Physics {
     }
 
     public void update(float delta) {
-        world.step(delta, 6, 2);
+        world.step(delta, 48, 16);
         for (int i = 0; i< shotgunShells.size(); i++) {
             if (shotgunShells.get(i).disposeIfOutOfMap(world)) {
                 shotgunShells.remove(i);

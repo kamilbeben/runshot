@@ -116,7 +116,7 @@ public abstract class Enemy extends Sprite {
 
 
     public boolean isEnemyOnScreen() {
-        if (body.getPosition().x > -100 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {
+        if (body.getPosition().x > -200 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {
             return true;
         } else {
             return false;

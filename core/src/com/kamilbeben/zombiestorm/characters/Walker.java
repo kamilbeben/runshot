@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -46,6 +47,7 @@ public class Walker extends Enemy {
 
         setupHead(fixtureDef);
 
+        setupStumbleLine(fixtureDef);
     }
 
     private void defineBody(float x, float y) {
@@ -57,7 +59,7 @@ public class Walker extends Enemy {
 
     private void setupMainBody(FixtureDef fixtureDef) {
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(10 / Zombie.PPM, 50 / Zombie.PPM);
+        shape.setAsBox(20 / Zombie.PPM, 50 / Zombie.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT |
@@ -68,14 +70,25 @@ public class Walker extends Enemy {
 
     private void setupHead(FixtureDef fixtureDef) {
         CircleShape shape = new CircleShape();
-        shape.setRadius(15 / Zombie.PPM);
-        shape.setPosition(new Vector2(-7 / Zombie.PPM, 65 / Zombie.PPM));
+        shape.setRadius(20 / Zombie.PPM);
+        shape.setPosition(new Vector2(-15 / Zombie.PPM, 70 / Zombie.PPM));
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.HEAD_BIT;
         fixtureDef.filter.maskBits = Zombie.SHOTGUN_BIT;
         body.createFixture(fixtureDef);
         shape.dispose();
+    }
+
+    private void setupStumbleLine(FixtureDef fixtureDef) {
+        EdgeShape edgeShape = new EdgeShape();
+        edgeShape.set(new Vector2(-5 / Zombie.PPM, 55 / Zombie.PPM), new Vector2(5 / Zombie.PPM, 55 / Zombie.PPM));
+        fixtureDef.shape = edgeShape;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
+        body.createFixture(fixtureDef);
+        edgeShape.dispose();
     }
 
     private void setupLooks() {
@@ -86,19 +99,19 @@ public class Walker extends Enemy {
         for (int i=0; i<11; i++) {
             frames.add(new TextureRegion(getTexture(), i * 110, 0, 110, 156));
         }
-        walking = new Animation(0.15f, frames);
+        walking = new Animation(0.12f, frames);
         frames.clear();
 
         for (int i=0; i<6; i++) {
             frames.add(new TextureRegion(getTexture(), i * 110, 158, 110, 156));
         }
-        gotHitByCar = new Animation(0.15f, frames);
+        gotHitByCar = new Animation(0.12f, frames);
         frames.clear();
 
         for (int i=0; i<6; i++) {
             frames.add(new TextureRegion(getTexture(), i * 110, 158 * 2, 110, 156));
         }
-        gotShot = new Animation(0.15f, frames);
+        gotShot = new Animation(0.12f, frames);
         frames.clear();
 
     }
@@ -110,14 +123,9 @@ public class Walker extends Enemy {
 
     @Override
     public void dead() {
-        Gdx.app.log("Walker", "Im dead now");
+
     }
 
-    public void headShot() {
-        killEnemy();
-        justGotHeadShot = true;
-        System.out.println("HeadShot!");
-    }
 
     public void update(float delta, Playscreen playscreen) {
         updateSpritePosition();

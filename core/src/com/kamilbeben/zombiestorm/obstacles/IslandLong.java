@@ -27,7 +27,7 @@ public class IslandLong extends Island {
         islandShape.setAsBox(200f / Zombie.PPM, 12f / Zombie.PPM);
         jumpLine.set(new Vector2(-205 / Zombie.PPM, 28 / Zombie.PPM), new Vector2(210 / Zombie.PPM, 28 / Zombie.PPM));
 
-        createBody(x, y, islandShape, jumpLine, world);
+        createBody(x, y,world);
     }
 
     protected void addAmmoPack(World world, float x, float y, Texture texture) {

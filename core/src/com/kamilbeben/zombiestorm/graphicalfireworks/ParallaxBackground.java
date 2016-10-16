@@ -39,6 +39,7 @@ public class ParallaxBackground {
                 left.setX(Zombie.WIDTH / Zombie.PPM);
                 left.setX(left.getX() - speed * delta);
                 leftPositionHasntBeenUpdatedJet = false;
+                drawLeft = true;
             }
         } else {
             leftPositionHasntBeenUpdatedJet = true;
@@ -49,9 +50,18 @@ public class ParallaxBackground {
                 right.setX(Zombie.WIDTH / Zombie.PPM);
                 right.setX(right.getX() - speed * delta);
                 rightPositionHasntBeenUpdatedJet = false;
+                drawRight = true;
             }
         } else {
             rightPositionHasntBeenUpdatedJet = true;
+        }
+
+        if (right.getX() < -(Zombie.WIDTH * 3 / Zombie.PPM)) {
+            drawRight = false;
+        }
+
+        if (left.getX() < -(Zombie.WIDTH * 3 / Zombie.PPM)) {
+            drawLeft = false;
         }
 
         left.setX(left.getX() - speed * delta);

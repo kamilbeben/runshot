@@ -18,7 +18,7 @@ public class AmmoPack {
 
     private static PolygonShape shape = new PolygonShape();
     private Sprite sprite;
-    private Body body;
+    public Body body;
     private boolean render = true;
 
     public AmmoPack(World world, float x, float y,Texture texture) {

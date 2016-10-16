@@ -5,12 +5,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.TextureHolder;
 
 /**
  * Created by bezik on 17.09.16.
@@ -32,10 +34,9 @@ public class Player {
     private int bullets = 6;
 
 
-    public Player(World world, Texture texture) {
+    public Player(World world, TextureHolder textureHolder) {
         setupBody(world);
-        playerRenderer = new PlayerRenderer(texture);
-        playerRenderer.setupLooks();
+        playerRenderer = new PlayerRenderer(textureHolder);
     }
 
     private void setupBody(World world) {
@@ -50,7 +51,7 @@ public class Player {
         fixtureDef.shape = polygon;
 
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.WALLS_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.WALLS_BIT | Zombie.STUMBLE_BIT;
 
         fixtureDef.friction = 0.2f;
         body.createFixture(fixtureDef);
@@ -61,7 +62,18 @@ public class Player {
         fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK_BIT;
         body.createFixture(fixtureDef);
 
+        CircleShape circle = new CircleShape();
+        circle.setRadius(28f / Zombie.PPM);
+        circle.setPosition(new Vector2(0, -15 / Zombie.PPM));
+        fixtureDef.shape = circle;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
+        fixtureDef.filter.maskBits = Zombie.STUMBLE_BIT;
+        body.createFixture(fixtureDef);
+
         body.setUserData(this);
+
+        polygon.dispose();
     }
 
     public boolean shotgunShot() {
@@ -88,10 +100,21 @@ public class Player {
         }
     }
 
+    public void hitByCar() {
+        System.out.println("Got hit by car");
+    }
+
 
     public void jump() {
         body.applyLinearImpulse(new Vector2(0, jumpForce), body.getWorldCenter(), true);
         jumping = true;
+    }
+
+
+    public void stumble() {
+        dead();
+        playerRenderer.setStumble();
+        body.applyLinearImpulse(new Vector2(3.5f, 2f), new Vector2(body.getWorldCenter().x + 20f / Zombie.PPM, body.getWorldCenter().y), true);
     }
 
 

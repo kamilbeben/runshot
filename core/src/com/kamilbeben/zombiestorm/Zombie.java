@@ -23,6 +23,7 @@ public class Zombie extends Game {
 	public static final short AMMO_PACK_BIT = 256;
 	public static final short CAR_BIT = 512;
 	public static final short HEAD_BIT = 1024;
+	public static final short STUMBLE_BIT = 2048;
 
 
 	public Assets assets = new Assets();

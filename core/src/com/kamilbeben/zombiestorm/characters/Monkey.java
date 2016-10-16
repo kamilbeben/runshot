@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -44,8 +45,9 @@ public class Monkey extends Enemy {
         defineBody(x, y);
         FixtureDef fixtureDef = new FixtureDef();
         setupMainBody(fixtureDef);
-        setupHead(fixtureDef);
+        setupAdditionalHitbox(fixtureDef);
         body.setUserData(this);
+        setupStumbleLine(fixtureDef);
     }
 
     private void defineBody(float x, float y) {
@@ -65,7 +67,7 @@ public class Monkey extends Enemy {
         body.createFixture(fixtureDef);
     }
 
-    private void setupHead(FixtureDef fixtureDef) {
+    private void setupAdditionalHitbox(FixtureDef fixtureDef) {
         CircleShape shape = new CircleShape();
         shape.setRadius(15 / Zombie.PPM);
         shape.setPosition(new Vector2(0 / Zombie.PPM, 55 / Zombie.PPM));
@@ -77,6 +79,16 @@ public class Monkey extends Enemy {
         shape.dispose();
     }
 
+    private void setupStumbleLine(FixtureDef fixtureDef) {
+        EdgeShape edgeShape = new EdgeShape();
+        edgeShape.set(new Vector2(0 / Zombie.PPM, 50 / Zombie.PPM), new Vector2(10 / Zombie.PPM, 50 / Zombie.PPM));
+        fixtureDef.shape = edgeShape;
+        fixtureDef.isSensor = true;
+        fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
+        body.createFixture(fixtureDef);
+        edgeShape.dispose();
+    }
 
     private void setupLooks() {
 
@@ -86,19 +98,19 @@ public class Monkey extends Enemy {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(getTexture(), i * 128, 0, 128, 148));
         }
-        running = new Animation(0.1f, frames);
+        running = new Animation(0.075f, frames);
         frames.clear();
 
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(getTexture(), i * 128, 148, 128, 148));
         }
-        jumping = new Animation(0.1f, frames);
+        jumping = new Animation(0.075f, frames);
         frames.clear();
 
         for (int i=0; i<6; i++) {
             frames.add(new TextureRegion(getTexture(), i * 128, 148 * 2, 128, 148));
         }
-        shot = new Animation(0.1f, frames);
+        shot = new Animation(0.075f, frames);
         frames.clear();
     }
 
