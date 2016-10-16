@@ -24,7 +24,7 @@ import com.kamilbeben.zombiestorm.obstacles.HoleShort;
 import com.kamilbeben.zombiestorm.obstacles.IslandLong;
 import com.kamilbeben.zombiestorm.obstacles.IslandShort;
 import com.kamilbeben.zombiestorm.tools.Timer;
-import com.kamilbeben.zombiestorm.tools.WorldRenderer;
+import com.kamilbeben.zombiestorm.graphicalfireworks.WorldRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class Playscreen implements Screen {
     public Playscreen(Zombie game, boolean clearManager) {
         this.game = game;
         game.assets.loadPlayscreenAssets(clearManager);
-        worldRenderer = new WorldRenderer(game.assets.textureHolder.GAME_EXTRAS_GRASS_ANIMATION);
+        worldRenderer = new WorldRenderer(game.assets.textureHolder);
         hud = new HudPlayscreen(game);
         setupCamera();
         physics = new Physics();
@@ -108,10 +108,10 @@ public class Playscreen implements Screen {
             updateHolesAndIslands(delta);
         }
         hud.update(timer.getTime(), player.getBulletsAmount());
-        worldRenderer.updateAnimation(timer.getTime());
+        worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
         camera.update();
         checkForGameOver();
-        objectSpawner.update(timer);
+//        objectSpawner.update(timer);
         gdxRenderer.update(delta);
     }
 
@@ -185,7 +185,7 @@ public class Playscreen implements Screen {
     }
 
     private void testKeyboard() {
-        float enemiesPosition = 700;
+        float enemiesPosition = 1200;
         float holesPosition = 1200;
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_WALKER));

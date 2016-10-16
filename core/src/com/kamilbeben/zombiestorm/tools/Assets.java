@@ -26,18 +26,21 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Hud/ammoON.png", Texture.class);
         manager.load("Playscreen/Extras/ammopack.png", Texture.class);
         manager.load("Playscreen/Extras/grass_animation.png", Texture.class);
-        manager.load("Playscreen/Characters/car.png", Texture.class);
-        manager.load("Playscreen/Characters/monkey.png", Texture.class);
-        manager.load("Playscreen/Characters/walker.png", Texture.class);
-        manager.load("Playscreen/Characters/player.png", Texture.class);
-        manager.load("Playscreen/Obstacles/hole_long.png", Texture.class);
-        manager.load("Playscreen/Obstacles/hole_short.png", Texture.class);
-        manager.load("Playscreen/Obstacles/island_long.png", Texture.class);
-        manager.load("Playscreen/Obstacles/island_short.png", Texture.class);
         manager.load("Playscreen/Extras/firefly.png", Texture.class);
         manager.load("Playscreen/Extras/firefly_blue.png", Texture.class);
         manager.load("Playscreen/Extras/firefly_transparent.png", Texture.class);
         manager.load("Playscreen/Extras/palette.png", Texture.class);
+        manager.load("Playscreen/Extras/background.jpg", Texture.class);
+        manager.load("Playscreen/Extras/parallax.png", Texture.class);
+        manager.load("Playscreen/Characters/car.png", Texture.class);
+        manager.load("Playscreen/Characters/monkey.png", Texture.class);
+        manager.load("Playscreen/Characters/walker.png", Texture.class);
+        manager.load("Playscreen/Characters/player.png", Texture.class);
+        manager.load("Playscreen/Characters/player_ext.png", Texture.class);
+        manager.load("Playscreen/Obstacles/hole_long.png", Texture.class);
+        manager.load("Playscreen/Obstacles/hole_short.png", Texture.class);
+        manager.load("Playscreen/Obstacles/island_long.png", Texture.class);
+        manager.load("Playscreen/Obstacles/island_short.png", Texture.class);
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Playscreen/Hud/ammoBG.png", Texture.class),
@@ -45,18 +48,21 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Hud/ammoOFF.png", Texture.class),
                 manager.get("Playscreen/Extras/ammopack.png", Texture.class),
                 manager.get("Playscreen/Extras/grass_animation.png", Texture.class),
+                manager.get("Playscreen/Extras/firefly.png", Texture.class),
+                manager.get("Playscreen/Extras/firefly_blue.png", Texture.class),
+                manager.get("Playscreen/Extras/firefly_transparent.png", Texture.class),
+                manager.get("Playscreen/Extras/palette.png", Texture.class),
+                manager.get("Playscreen/Extras/background.jpg", Texture.class),
+                manager.get("Playscreen/Extras/parallax.png", Texture.class),
                 manager.get("Playscreen/Characters/car.png", Texture.class),
                 manager.get("Playscreen/Characters/monkey.png", Texture.class),
                 manager.get("Playscreen/Characters/walker.png", Texture.class),
                 manager.get("Playscreen/Characters/player.png", Texture.class),
+                manager.get("Playscreen/Characters/player_ext.png", Texture.class),
                 manager.get("Playscreen/Obstacles/hole_long.png", Texture.class),
                 manager.get("Playscreen/Obstacles/hole_short.png", Texture.class),
                 manager.get("Playscreen/Obstacles/island_long.png", Texture.class),
-                manager.get("Playscreen/Obstacles/island_short.png", Texture.class),
-                manager.get("Playscreen/Extras/firefly.png", Texture.class),
-                manager.get("Playscreen/Extras/firefly_blue.png", Texture.class),
-                manager.get("Playscreen/Extras/firefly_transparent.png", Texture.class),
-                manager.get("Playscreen/Extras/palette.png", Texture.class)
+                manager.get("Playscreen/Obstacles/island_short.png", Texture.class)
         );
     }
 

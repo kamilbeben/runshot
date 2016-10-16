@@ -24,7 +24,7 @@ import com.kamilbeben.zombiestorm.screens.Playscreen;
 public abstract class Enemy extends Sprite {
 
 
-    protected enum State {WALKING, JUMPING, DEAD }
+    protected enum State {WALKING, JUMPING, DEAD, SHOT, HIT_BY_CAR }
 
     protected State currentState;
     protected State previousState;
@@ -33,6 +33,7 @@ public abstract class Enemy extends Sprite {
     protected float stateTimer = 0f;
     protected boolean alive = true;
     protected boolean justGotShot = false;
+    protected boolean justGotHitByCar = false;
 
 
 
@@ -71,12 +72,12 @@ public abstract class Enemy extends Sprite {
 
     public void killEnemy() {
         alive = false;
-        justGotShot = true;
         disableBodyCollisions();
         dead();
     }
 
     public void shotgunShot() {
+        justGotShot = true;
         killEnemy();
         applyShotgunForceToBody();
     }
@@ -86,7 +87,13 @@ public abstract class Enemy extends Sprite {
     }
 
     public void carAccident() {
+        justGotHitByCar = true;
         killEnemy();
+        applyCarForceToBody();
+    }
+
+    private void applyCarForceToBody() {
+        body.applyLinearImpulse(new Vector2(300f / Zombie.PPM, 300f / Zombie.PPM), body.getWorldCenter(), true);
     }
 
     public void disableBodyCollisions() {

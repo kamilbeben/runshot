@@ -15,7 +15,9 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class PlayerRenderer {
 
-    public enum State {RUNNING, SHOOTING, JUMPING}
+    public enum State {RUNNING, SHOOTING, JUMPING, STANDING}
+
+    public boolean gameStarted = true;
 
     public State currentState;
     public State previousState;
@@ -31,6 +33,8 @@ public class PlayerRenderer {
     public Animation animationShootingUppderBody;
     public Animation animationJumpingUpperBody;
     public Animation animationJumpingLowerBody;
+    public Animation animationSteadyUpperBody;
+    public Animation animationSteadyLowerBody;
 
 
     public PlayerRenderer(Texture playerTextureMap) {
@@ -39,48 +43,60 @@ public class PlayerRenderer {
     }
 
     public void setupLooks() {
-        int yPosition = 0*105;
-        upperBody.setBounds(32 / Zombie.PPM, 80 / Zombie.PPM, 116 / Zombie.PPM, 105 / Zombie.PPM);
+        int yPosition = 0*113;
+        upperBody.setBounds(32 / Zombie.PPM, 80 / Zombie.PPM, 101 / Zombie.PPM, 113 / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i=0; i<8; i++) {
-            frames.add(new TextureRegion(upperBody.getTexture(), i * 116, yPosition, 116, 105));
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
         }
         animationRunningUpperBody = new Animation(0.1f, frames);
         frames.clear();
 
-        yPosition = 1*105;
-        for (int i=0; i<8; i++) {
-            frames.add(new TextureRegion(upperBody.getTexture(), i * 116, yPosition, 116, 105));
+        yPosition = 1*113;
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
         }
         animationShootingUppderBody = new Animation(0.1f, frames);
         frames.clear();
 
-        yPosition = 3*105;
-        for (int i=0; i<8; i++) {
-            frames.add(new TextureRegion(upperBody.getTexture(), i * 116, yPosition, 116, 105));
+        yPosition = 2*113;
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
         }
         animationJumpingUpperBody = new Animation(0.1f, frames);
         frames.clear();
 
-        lowerBody.setBounds(32 / Zombie.PPM, 30 / Zombie.PPM, 116 / Zombie.PPM, 105 / Zombie.PPM);
-        yPosition = 2*105;
-        for (int i=0; i<8; i++) {
-            frames.add(new TextureRegion(lowerBody.getTexture(), i * 116, yPosition, 116, 105));
+        lowerBody.setBounds(32 / Zombie.PPM, 30 / Zombie.PPM, 101 / Zombie.PPM, 67 / Zombie.PPM);
+        yPosition = 339;
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         }
         animationRunningLowerBody = new Animation(0.1f, frames);
         frames.clear();
 
-        yPosition = 4*105;
-        for (int i=0; i<6; i++) {
-            frames.add(new TextureRegion(lowerBody.getTexture(), i * 116, yPosition, 116, 105));
-        }
-        for (int i=0; i<16; i++) {
-            frames.add(new TextureRegion(lowerBody.getTexture(), 6 * 116, yPosition, 116, 105));
-        }
-        frames.add(new TextureRegion(lowerBody.getTexture(), 7 * 116, yPosition, 116, 105));
+        yPosition = 406;
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
+        };
 
         animationJumpingLowerBody = new Animation(0.1f, frames);
+        frames.clear();
+
+        yPosition = 471;
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 113));
+        };
+
+        animationSteadyUpperBody = new Animation(0.1f, frames);
+        frames.clear();
+
+        yPosition = 584;
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
+        };
+
+        animationSteadyLowerBody = new Animation(0.1f, frames);
         frames.clear();
     }
 
@@ -132,7 +148,14 @@ public class PlayerRenderer {
         currentState = getState(shooting, jumping);
         TextureRegion region;
 
+        stateTimer_UPPERBODY = currentState == previousState ? stateTimer_UPPERBODY + delta : 0;
+
+        previousState = currentState;
+
         switch(currentState) {
+            case STANDING:
+                region = animationSteadyUpperBody.getKeyFrame(stateTimer_UPPERBODY, true);
+                break;
             case JUMPING:
                 region = animationJumpingUpperBody.getKeyFrame(stateTimer_UPPERBODY, true);
                 break;
@@ -145,9 +168,6 @@ public class PlayerRenderer {
                 break;
         }
 
-        stateTimer_UPPERBODY = currentState == previousState ? stateTimer_UPPERBODY + delta : 0;
-
-        previousState = currentState;
         return region;
     }
 
@@ -155,7 +175,13 @@ public class PlayerRenderer {
         currentState = getState(shooting, jumping);
         TextureRegion region;
 
+        stateTimer_LOWERBODY = currentState == previousState ? stateTimer_LOWERBODY + delta : 0;
+        previousState = currentState;
+
         switch(currentState) {
+            case STANDING:
+                region = animationSteadyLowerBody.getKeyFrame(stateTimer_LOWERBODY, true);
+                break;
             case JUMPING:
                 region = animationJumpingLowerBody.getKeyFrame(stateTimer_LOWERBODY, true);
                 break;
@@ -166,30 +192,31 @@ public class PlayerRenderer {
                 break;
         }
 
-        stateTimer_LOWERBODY = currentState == previousState ? stateTimer_LOWERBODY + delta : 0;
-
-        previousState = currentState;
         return region;
     }
 
 
     public State getState(boolean shooting, boolean jumping) {
         State state = State.RUNNING;
-        if (shooting) {
-            state = State.SHOOTING;
-        } else if (jumping) {
-            state = State.JUMPING;
-        }
-        if (!shooting && !jumping) {
-            state = State.RUNNING;
+        if (gameStarted) {
+            if (shooting) {
+                state = State.SHOOTING;
+            } else if (jumping) {
+                state = State.JUMPING;
+            }
+            if (!shooting && !jumping) {
+                state = State.RUNNING;
+            }
+        } else {
+            state = State.STANDING;
         }
         return state;
     }
 
 
     public void updatePosition(Body body) {
-        upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3, body.getPosition().y - 12 / Zombie.PPM);
-        lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 44 / Zombie.PPM,
+        upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3, body.getPosition().y - 8 / Zombie.PPM);
+        lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 19 / Zombie.PPM,
                 body.getPosition().y - 58 / Zombie.PPM);
     }
 

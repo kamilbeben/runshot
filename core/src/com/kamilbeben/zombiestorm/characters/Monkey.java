@@ -28,7 +28,7 @@ public class Monkey extends Enemy {
 
     private Animation running;
     private Animation jumping;
-    private Animation dying;
+    private Animation shot;
 
 
     public Monkey(World world, float x, float y, int speedLevel, Texture texture) {
@@ -80,19 +80,25 @@ public class Monkey extends Enemy {
 
     private void setupLooks() {
 
-        setBounds(0, 0, 119 / Zombie.PPM, 134 / Zombie.PPM);
+        setBounds(0, 0, 128 / Zombie.PPM, 148 / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i=0; i<14; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 134, 0, 134, 119));
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 128, 0, 128, 148));
         }
-        running = new Animation(0.05f, frames);
+        running = new Animation(0.1f, frames);
         frames.clear();
 
-        for (int i=4; i<13; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 134, 0, 134, 119));
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 128, 148, 128, 148));
         }
-        jumping = new Animation(0.3f, frames);
+        jumping = new Animation(0.1f, frames);
+        frames.clear();
+
+        for (int i=0; i<6; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 128, 148 * 2, 128, 148));
+        }
+        shot = new Animation(0.1f, frames);
         frames.clear();
     }
 
@@ -135,30 +141,44 @@ public class Monkey extends Enemy {
         currentState = getState();
         TextureRegion region;
 
-        switch(currentState) {
-            case WALKING:
-                region = running.getKeyFrame(stateTimer, true);
-                break;
-            case JUMPING:
-                region = jumping.getKeyFrame(stateTimer, true);
-                break;
-            default:
-                region = running.getKeyFrame(stateTimer, true);
-                break;
-        }
+        region = getAnimation().getKeyFrame(stateTimer, true);
 
         stateTimer = currentState == previousState ? stateTimer + delta : 0;
         previousState = currentState;
         return region;
     }
 
+    private Animation getAnimation() {
+        switch(currentState) {
+            default:
+            case WALKING:
+                return running;
+            case JUMPING:
+                return jumping;
+            case DEAD:
+            case SHOT:
+            case HIT_BY_CAR:
+                return shot;
+        }
+    }
+
     public State getState() {
-        if (!alive) {
-            return State.DEAD;
-        } else if (body.getPosition().y > 2.325) {
-            return State.JUMPING;
+        if (currentState != State.HIT_BY_CAR && currentState != State.SHOT) {
+            if (!alive) {
+                if (justGotShot) {
+                    return State.SHOT;
+                } else if (justGotHitByCar) {
+                    return State.HIT_BY_CAR;
+                } else {
+                    return State.DEAD;
+                }
+            } else if (body.getPosition().y > 2.325) {
+                return State.JUMPING;
+            } else {
+                return State.WALKING;
+            }
         } else {
-            return State.WALKING;
+            return currentState;
         }
     }
 

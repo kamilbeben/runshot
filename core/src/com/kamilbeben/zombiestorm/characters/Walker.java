@@ -20,11 +20,12 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class Walker extends Enemy {
 
-    private static final float bodyRadius = 40 / Zombie.PPM;
     private float speed = 8f;
     private boolean justGotHeadShot = false;
 
-    private Animation walkerWalking;
+    private Animation walking;
+    private Animation gotShot;
+    private Animation gotHitByCar;
 
     public Walker(World world, float x, float y, int speedLevel, Texture texture) {
         super(world, x, y, texture);
@@ -79,14 +80,27 @@ public class Walker extends Enemy {
 
     private void setupLooks() {
 
-        setBounds(0, 0, 110 / Zombie.PPM, 148 / Zombie.PPM);
+        setBounds(0, 0, 110 / Zombie.PPM, 156 / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i=0; i<11; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 110, 0, 110, 148));
+            frames.add(new TextureRegion(getTexture(), i * 110, 0, 110, 156));
         }
-        walkerWalking = new Animation(0.15f, frames);
+        walking = new Animation(0.15f, frames);
         frames.clear();
+
+        for (int i=0; i<6; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 110, 158, 110, 156));
+        }
+        gotHitByCar = new Animation(0.15f, frames);
+        frames.clear();
+
+        for (int i=0; i<6; i++) {
+            frames.add(new TextureRegion(getTexture(), i * 110, 158 * 2, 110, 156));
+        }
+        gotShot = new Animation(0.15f, frames);
+        frames.clear();
+
     }
 
     @Override
@@ -99,7 +113,7 @@ public class Walker extends Enemy {
         Gdx.app.log("Walker", "Im dead now");
     }
 
-    public void headShot() { //TODO falling head or etc
+    public void headShot() {
         killEnemy();
         justGotHeadShot = true;
         System.out.println("HeadShot!");
@@ -123,17 +137,37 @@ public class Walker extends Enemy {
     public TextureRegion getFrame(float delta) {
         currentState = getState();
         TextureRegion region;
-        region = walkerWalking.getKeyFrame(stateTimer, true);
+        region = getAnimation().getKeyFrame(stateTimer, true);
         stateTimer = (currentState == previousState) ? stateTimer + delta : 0;
         previousState = currentState;
         return region;
     }
 
     public State getState() {
-        if (alive) {
-            return State.WALKING;
+        if (currentState == State.WALKING) {
+            if (alive) {
+                return State.WALKING;
+            } else if (justGotHitByCar) {
+                return State.HIT_BY_CAR;
+            } else if (justGotShot) {
+                return State.SHOT;
+            } else {
+                return State.DEAD;
+            }
         } else {
-            return State.DEAD;
+            return currentState;
+        }
+    }
+
+    private Animation getAnimation() {
+        switch (currentState) {
+            case WALKING:
+            default:
+                return walking;
+            case SHOT:
+                return gotShot;
+            case HIT_BY_CAR:
+                return gotHitByCar;
         }
     }
 

@@ -72,11 +72,11 @@ public class Car extends Enemy {
 
     private void setupLooks() {
 
-        setBounds(0, 98, 161 / Zombie.PPM, 64 / Zombie.PPM);
+        setBounds(0, 98, 202 / Zombie.PPM, 70 / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i=0; i<12; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 161, 0, 161, 64));
+            frames.add(new TextureRegion(getTexture(), i * 202, 0, 202, 70));
         }
         carRiding = new Animation(0.1f, frames);
         frames.clear();
@@ -92,7 +92,7 @@ public class Car extends Enemy {
 
     @Override
     public void dead() {
-        Gdx.app.log("Walker", "Im dead now");
+        Gdx.app.log("Car", "Im dead now");
     }
 
 
@@ -111,7 +111,7 @@ public class Car extends Enemy {
 
 
     private void updatePosition() {
-        setPosition(body.getPosition().x - getWidth() / 2 + 40f / Zombie.PPM, body.getPosition().y - 48 / Zombie.PPM);
+        setPosition(body.getPosition().x - getWidth() / 2 + 65f / Zombie.PPM, body.getPosition().y - 44 / Zombie.PPM);
     }
 
 
