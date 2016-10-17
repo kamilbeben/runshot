@@ -254,9 +254,9 @@ public class PlayerRenderer {
         if (stumbling) {
             fullBodyStumble.setPosition(body.getPosition().x, body.getPosition().y - 68f / Zombie.PPM);
         } else {
-            upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3, body.getPosition().y - 8 / Zombie.PPM);
-            lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 19 / Zombie.PPM,
-                    body.getPosition().y - 58 / Zombie.PPM);
+            upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3 + 9 / Zombie.PPM, body.getPosition().y - 16 / Zombie.PPM);
+            lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 10 / Zombie.PPM,
+                    body.getPosition().y - 64 / Zombie.PPM);
         }
     }
 

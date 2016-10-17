@@ -1,6 +1,8 @@
 package com.kamilbeben.zombiestorm.gamelogic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,8 +29,10 @@ public class ShotgunShell {
     private BodyDef bodyDef;
     private CircleShape shape;
 
+    private Sprite sprite;
 
-    public ShotgunShell(World world, int yAxis, float playerYPosition) {
+
+    public ShotgunShell(World world, Texture texture, int yAxis, float playerYPosition) {
         shape = new CircleShape();
         shape.setRadius(4 / Zombie.PPM);
         bodyDef = new BodyDef();
@@ -44,8 +48,10 @@ public class ShotgunShell {
         body.setUserData(this);
         shape.dispose();
 
-
         body.applyLinearImpulse(new Vector2(force, (480 - yAxis) / Zombie.PPM), body.getWorldCenter(), true);
+
+        sprite = new Sprite(texture);
+        sprite.setSize(sprite.getWidth() / Zombie.PPM, sprite.getHeight() / Zombie.PPM);
     }
 
     public boolean disposeIfOutOfMap(World world) {
@@ -60,7 +66,12 @@ public class ShotgunShell {
     }
 
     public void render(SpriteBatch batch) {
+        updateSprite();
+        sprite.draw(batch);
+    }
 
+    private void updateSprite() {
+        sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2);
     }
 
     public void setToHarmless() {

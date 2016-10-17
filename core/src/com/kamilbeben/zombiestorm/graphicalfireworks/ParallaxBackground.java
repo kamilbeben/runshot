@@ -17,10 +17,7 @@ public class ParallaxBackground {
     private Sprite left;
     private Sprite right;
 
-    private boolean drawLeft = true;
     private boolean drawRight = true;
-    private boolean leftPositionHasntBeenUpdatedJet = true;
-    private boolean rightPositionHasntBeenUpdatedJet = true;
 
     public ParallaxBackground(Texture texture, float speed) {
         basicSpeed = speed;
@@ -30,49 +27,24 @@ public class ParallaxBackground {
         right.setSize(Zombie.WIDTH * 3 / Zombie.PPM, Zombie.HEIGHT / Zombie.PPM);
         setSpeedLevel(1);
         left.setX(0);
-        right.setX(Zombie.WIDTH * 3 / Zombie.PPM);
     }
 
     public void update(float delta) {
-        if (right.getX() <= -(Zombie.WIDTH * 2 / Zombie.PPM)) {
-            if (leftPositionHasntBeenUpdatedJet) {
-                left.setX(Zombie.WIDTH / Zombie.PPM);
-                left.setX(left.getX() - speed * delta);
-                leftPositionHasntBeenUpdatedJet = false;
-                drawLeft = true;
-            }
-        } else {
-            leftPositionHasntBeenUpdatedJet = true;
+        left.setX(left.getX() - speed * delta);
+        if ((left.getX() + Zombie.WIDTH * 3 / Zombie.PPM) <= 0) {
+           left.setX(0);
         }
 
-        if (left.getX() <= -(Zombie.WIDTH * 2 / Zombie.PPM)) {
-            if (rightPositionHasntBeenUpdatedJet) {
-                right.setX(Zombie.WIDTH / Zombie.PPM);
-                right.setX(right.getX() - speed * delta);
-                rightPositionHasntBeenUpdatedJet = false;
-                drawRight = true;
-            }
+        if (left.getX() + (Zombie.WIDTH * 2 / Zombie.PPM) <= 0) {
+            drawRight = true;
         } else {
-            rightPositionHasntBeenUpdatedJet = true;
-        }
-
-        if (right.getX() < -(Zombie.WIDTH * 3 / Zombie.PPM)) {
             drawRight = false;
         }
-
-        if (left.getX() < -(Zombie.WIDTH * 3 / Zombie.PPM)) {
-            drawLeft = false;
-        }
-
-        left.setX(left.getX() - speed * delta);
-        right.setX(right.getX() - speed * delta);
+        right.setX(left.getX() + left.getWidth());
     }
 
     public void render(SpriteBatch batch) {
         left.draw(batch);
-        if (drawLeft) {
-            left.draw(batch);
-        }
         if (drawRight) {
             right.draw(batch);
         }

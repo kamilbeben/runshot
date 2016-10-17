@@ -47,7 +47,7 @@ public class Player {
         FixtureDef fixtureDef = new FixtureDef();
 
         PolygonShape polygon = new PolygonShape();
-        polygon.setAsBox(25 / Zombie.PPM, 55 / Zombie.PPM);
+        polygon.setAsBox(15 / Zombie.PPM, 55 / Zombie.PPM);
         fixtureDef.shape = polygon;
 
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;

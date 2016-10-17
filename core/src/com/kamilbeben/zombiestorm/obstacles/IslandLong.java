@@ -15,7 +15,7 @@ public class IslandLong extends Island {
 
     public IslandLong(World world, float x, float y, int speedLevel, TextureHolder textureHolder) {
         super(textureHolder.GAME_OBSTACLE_ISLAND_LONG, speedLevel);
-        setSize(getWidth() * 2 / Zombie.PPM, 16f / Zombie.PPM);
+        setSize(getWidth() / Zombie.PPM, getHeight() / Zombie.PPM);
         setupBody(x, y, world);
         addAmmoPack(world, x, y, textureHolder.GAME_EXTRAS_AMMOPACK);
         updateSpritePosition();

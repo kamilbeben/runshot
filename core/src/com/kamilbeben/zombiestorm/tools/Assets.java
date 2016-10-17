@@ -24,6 +24,7 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Hud/ammoBG.png", Texture.class);
         manager.load("Playscreen/Hud/ammoOFF.png", Texture.class);
         manager.load("Playscreen/Hud/ammoON.png", Texture.class);
+        manager.load("Playscreen/Extras/shell.png", Texture.class);
         manager.load("Playscreen/Extras/ammopack.png", Texture.class);
         manager.load("Playscreen/Extras/grass_animation.png", Texture.class);
         manager.load("Playscreen/Extras/firefly.png", Texture.class);
@@ -48,6 +49,7 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Hud/ammoBG.png", Texture.class),
                 manager.get("Playscreen/Hud/ammoON.png", Texture.class),
                 manager.get("Playscreen/Hud/ammoOFF.png", Texture.class),
+                manager.get("Playscreen/Extras/shell.png", Texture.class),
                 manager.get("Playscreen/Extras/ammopack.png", Texture.class),
                 manager.get("Playscreen/Extras/grass_animation.png", Texture.class),
                 manager.get("Playscreen/Extras/firefly.png", Texture.class),

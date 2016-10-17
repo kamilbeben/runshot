@@ -55,8 +55,9 @@ public class Playscreen implements Screen {
     private boolean gameOver = false;
 
     private boolean pause = false;
+    private boolean spawnEnemies = true;
     private boolean debugMode = false;
-    private boolean GFXFireworks = true;
+    private boolean debugAndNormal = false;
 
 
 
@@ -67,7 +68,7 @@ public class Playscreen implements Screen {
         worldRenderer = new WorldRenderer(game.assets.textureHolder);
         hud = new HudPlayscreen(game);
         setupCamera();
-        physics = new Physics();
+        physics = new Physics(game.assets.textureHolder.GAME_EXTRAS_SHOTGUN_SHELL);
         player = new Player(physics.world, game.assets.textureHolder);
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
@@ -111,7 +112,9 @@ public class Playscreen implements Screen {
         worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
         camera.update();
         checkForGameOver();
-//        objectSpawner.update(timer);
+        if (spawnEnemies) {
+            objectSpawner.update(timer);
+        }
         gdxRenderer.update(delta);
     }
 
@@ -225,6 +228,13 @@ public class Playscreen implements Screen {
                 pause = true;
             }
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            if (spawnEnemies) {
+                spawnEnemies = false;
+            } else {
+                spawnEnemies = true;
+            }
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
             if (debugMode) {
                 debugMode = false;
@@ -233,10 +243,10 @@ public class Playscreen implements Screen {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            if (GFXFireworks) {
-                GFXFireworks = false;
+            if (debugAndNormal) {
+                debugAndNormal = false;
             } else {
-                GFXFireworks = true;
+                debugAndNormal = true;
             }
         }
     }
@@ -272,13 +282,15 @@ public class Playscreen implements Screen {
                 for (Hole tmp : holes)
                     tmp.render(game.batch);
 
-                if (GFXFireworks) {
-                    gdxRenderer.render(game.batch);
-                }
+                physics.renderShells(game.batch);
+
+                gdxRenderer.render(game.batch);
                 game.batch.end();
                 hud.render(game.batch);
 
-                physics.renderDebug(camera);
+                if (debugAndNormal) {
+                    physics.renderDebug(camera);
+                }
 
             }
             else {

@@ -7,7 +7,7 @@ import com.kamilbeben.zombiestorm.Zombie;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 800;
+		config.width = 854;
 		config.height = 480;
 		config.resizable = true;
 		new LwjglApplication(new Zombie(), config);

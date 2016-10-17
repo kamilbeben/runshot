@@ -32,7 +32,7 @@ public class WorldRenderer {
         setupAnimations(textureHolder.GAME_EXTRAS_GRASS_ANIMATION);
         setupStaticBackground(textureHolder.GAME_EXTRAS_BACKGROUND);
         parallaxFar = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_FAR, 0.5f);
-        parallaxMiddle = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_FOG, 0.75f);
+        parallaxMiddle = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_FOG, 1.2f);
         parallaxClose = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_CLOSE, 1f);
         setSpeedLevel(1);
     }
