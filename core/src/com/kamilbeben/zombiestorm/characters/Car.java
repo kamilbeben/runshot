@@ -101,13 +101,7 @@ public class Car extends Enemy {
     }
 
 
-    @Override
-    public void dead() {
-        Gdx.app.log("Car", "Im dead now");
-    }
-
-
-    public void update(float delta, Playscreen playscreen) {
+    public void update(float delta) {
         updatePosition();
         setRegion(getFrame(delta));
         move(speed, delta);

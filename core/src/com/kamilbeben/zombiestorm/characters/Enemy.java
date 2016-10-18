@@ -65,15 +65,13 @@ public abstract class Enemy extends Sprite {
         }
     }
 
-    public abstract void update(float delta, Playscreen playscreen);
+    public abstract void update(float delta);
 
 
-    public abstract void dead();
 
     public void killEnemy() {
         alive = false;
         disableBodyCollisions();
-        dead();
     }
 
     public void shotgunShot() {
@@ -105,7 +103,6 @@ public abstract class Enemy extends Sprite {
             filter.maskBits = Zombie.ENEMY_BIT;
             tmp.setFilterData(filter);
         }
-        body.setUserData(null);
     }
 
 
@@ -116,10 +113,10 @@ public abstract class Enemy extends Sprite {
 
 
     public boolean isEnemyOnScreen() {
-        if (body.getPosition().x > -200 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {
+        if (getX() > -200 / Zombie.PPM && getX() < 1300 / Zombie.PPM) {
             return true;
         } else {
-            return false;
+            return true;
         }
     }
     public abstract void setSpeedLevel(int level);

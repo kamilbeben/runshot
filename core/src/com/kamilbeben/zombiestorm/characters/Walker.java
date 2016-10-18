@@ -22,7 +22,6 @@ import com.kamilbeben.zombiestorm.tools.Tools;
 public class Walker extends Enemy {
 
     private float speed = 8f;
-    private boolean justGotHeadShot = false;
 
     private Animation walking;
     private Animation gotShot;
@@ -45,8 +44,6 @@ public class Walker extends Enemy {
 
         body.setUserData(this);
 
-        setupHead(fixtureDef);
-
         setupStumbleLine(fixtureDef);
     }
 
@@ -64,18 +61,6 @@ public class Walker extends Enemy {
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT |
                 Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
-        body.createFixture(fixtureDef);
-        shape.dispose();
-    }
-
-    private void setupHead(FixtureDef fixtureDef) {
-        CircleShape shape = new CircleShape();
-        shape.setRadius(20 / Zombie.PPM);
-        shape.setPosition(new Vector2(-15 / Zombie.PPM, 70 / Zombie.PPM));
-        fixtureDef.shape = shape;
-        fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = Zombie.HEAD_BIT;
-        fixtureDef.filter.maskBits = Zombie.SHOTGUN_BIT;
         body.createFixture(fixtureDef);
         shape.dispose();
     }
@@ -121,24 +106,13 @@ public class Walker extends Enemy {
         speed = Tools.getStaticObjectsSpeedLevel(speedLevel) * 1.2f;
     }
 
-    @Override
-    public void dead() {
-
-    }
 
 
-    public void update(float delta, Playscreen playscreen) {
+    public void update(float delta) {
         updateSpritePosition();
         setRegion(getFrame(delta));
         if (alive) {
             move(speed, delta);
-        }
-        if (justGotShot) {
-            playscreen.hud.zombieGotShot();
-            justGotShot = false;
-        }  else if (justGotHeadShot) {
-            playscreen.hud.zombieGotHeadShot();
-            justGotHeadShot = false;
         }
     }
 

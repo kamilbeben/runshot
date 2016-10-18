@@ -35,12 +35,12 @@ public class Timer {
 
     private void randomizeTimerBetweenEnemies() {
         int random = Tools.randomFrom1To10();
-        if (random > 8) {
-            timerBetweenEnemies = 1.5f;
-        } else if (random > 4) {
-            timerBetweenEnemies = 3f;
+        if (random > 7) {
+            timerBetweenEnemies = 2.5f;
+        } else if (random > 2) {
+            timerBetweenEnemies = 1.75f;
         } else if (random > 0) {
-            timerBetweenEnemies = 3.5f;
+            timerBetweenEnemies = 1.0f;
         }
     }
 

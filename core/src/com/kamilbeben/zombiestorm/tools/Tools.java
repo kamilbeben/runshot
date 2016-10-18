@@ -7,12 +7,12 @@ import java.util.Random;
  */
 public class Tools {
 
-    public static final float speedMultiplier_1= 1f;
-    public static final float speedMultiplier_2= 1.2f;
-    public static final float speedMultiplier_3= 1.4f;
-    public static final float speedMultiplier_4= 1.6f;
-    public static final float speedMultiplier_5= 1.8f;
-    public static final float speedMultiplier_6= 2f;
+    public static final float speedMultiplier_1= 1.3f;
+    public static final float speedMultiplier_2= 1.5f;
+    public static final float speedMultiplier_3= 1.7f;
+    public static final float speedMultiplier_4= 1.9f;
+    public static final float speedMultiplier_5= 2.1f;
+    public static final float speedMultiplier_6= 2.3f;
 
     public Tools() {
 

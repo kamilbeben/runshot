@@ -55,11 +55,5 @@ public class PhysicsBasicWorld {
         fixtureDef.shape = line;
         fixtureDef.isSensor = true;
         body.createFixture(fixtureDef);
-
-        line.set(new Vector2((Zombie.WIDTH - 15) / Zombie.PPM, 0 / Zombie.PPM), new Vector2((Zombie.WIDTH - 15) / Zombie.PPM, 600 / Zombie.PPM));
-        fixtureDef.filter.categoryBits = Zombie.WALLS_BIT;
-        fixtureDef.shape = line;
-        fixtureDef.isSensor = true;
-        body.createFixture(fixtureDef);
     }
 }

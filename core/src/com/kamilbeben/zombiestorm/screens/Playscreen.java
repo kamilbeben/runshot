@@ -15,6 +15,7 @@ import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
+import com.kamilbeben.zombiestorm.gamelogic.Shotgun;
 import com.kamilbeben.zombiestorm.graphicalfireworks.GDXRenderer;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
@@ -50,6 +51,8 @@ public class Playscreen implements Screen {
     private ObjectSpawner objectSpawner;
     private Timer timer = new Timer();
 
+    private Shotgun shotgun = new Shotgun();
+
     private int speedlLevel = 1;
     private boolean playerIsFallingThroughHole = false;
     private boolean gameOver = false;
@@ -68,7 +71,7 @@ public class Playscreen implements Screen {
         worldRenderer = new WorldRenderer(game.assets.textureHolder);
         hud = new HudPlayscreen(game);
         setupCamera();
-        physics = new Physics(game.assets.textureHolder.GAME_EXTRAS_SHOTGUN_SHELL);
+        physics = new Physics();
         player = new Player(physics.world, game.assets.textureHolder);
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
@@ -141,7 +144,7 @@ public class Playscreen implements Screen {
 
     private void updateEnemies(float delta) {
         for (Enemy tmp : enemies) {
-            tmp.update(delta, this);
+            tmp.update(delta);
         }
     }
 
@@ -177,9 +180,9 @@ public class Playscreen implements Screen {
     }
 
     private void handleInput() {
-        if (Gdx.input.justTouched() && timer.isItTimeToShootSomething() &&
+        if (Gdx.input.justTouched() &&
                 Gdx.input.getX() > Gdx.graphics.getWidth()/2) {
-            shotgunShot((int) (Gdx.input.getY() * (Zombie.HEIGHT)) / viewport.getScreenHeight());
+            shotgunShot();
         }
         if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.justTouched() &&
                 Gdx.input.getX() < Gdx.graphics.getWidth()/2) ) && physics.canPlayerJump() && !playerIsFallingThroughHole) {
@@ -191,7 +194,7 @@ public class Playscreen implements Screen {
     }
 
     private void testKeyboard() {
-        float enemiesPosition = 900;
+        float enemiesPosition = 1200;
         float holesPosition = 1200;
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
             enemies.add(new Walker(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_WALKER));
@@ -251,9 +254,9 @@ public class Playscreen implements Screen {
         }
     }
 
-    private void shotgunShot( int yAxis) {
+    private void shotgunShot() {
         if (player.shotgunShot()) {
-            physics.shotgunShot(yAxis, player.getPosition().y);
+            shotgun.shot(enemies, player);
         }
     }
 
@@ -282,7 +285,7 @@ public class Playscreen implements Screen {
                 for (Hole tmp : holes)
                     tmp.render(game.batch);
 
-                physics.renderShells(game.batch);
+                shotgun.render(game.batch);
 
                 gdxRenderer.render(game.batch);
                 game.batch.end();

@@ -127,7 +127,7 @@ public class PlayerRenderer {
         for (int i=0; i<3; i++) {
             frames.add(new TextureRegion(fullBodyStumble.getTexture(), i * 267, 3 * yPosition, 267, 158));
         }
-        animationStumble = new Animation(0.05f, frames);
+        animationStumble = new Animation(0.03f, frames);
         frames.clear();
     }
 

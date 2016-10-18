@@ -33,17 +33,16 @@ public class WorldContactListener implements ContactListener {
     public void beginContact(Contact contact) {
         Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
-        checkForHeadshot(contact.getFixtureA(), contact.getFixtureB());
-        checkForCollisionBetweenZombieAndShotgunShell(a, b);
+
         checkForCollisionsBetweeenPlayerAndHoles(a, b);
         checkForCollisionsBetweeenPlayerAndAmmoPacks(a, b);
-        checkForCollisionsBetweeenZombiesAndHoles(a, b);
         checkForCollisionsBetweeenPlayerAndCar(a, b);
         checkForCollisionBetweenPlayerAndGround(contact.getFixtureA(), contact.getFixtureB());
-        checkForCollisionBetweenZombieAndCar(contact.getFixtureA(), contact.getFixtureB());
         checkIfPlayerCollidesWithLeftWall(contact.getFixtureA(), contact.getFixtureB());
-        checkIfShotgunShellCollidesWithRightWall(contact.getFixtureA(), contact.getFixtureB());
         checkForCollisionsBetweenPlayerAndStumbleLines(contact.getFixtureA(), contact.getFixtureB());
+
+        checkForCollisionsBetweeenZombiesAndHoles(a, b);
+        checkForCollisionBetweenZombieAndCar(contact.getFixtureA(), contact.getFixtureB());
     }
 
     private void checkForCollisionsBetweenPlayerAndStumbleLines(Fixture a, Fixture b) {
@@ -98,44 +97,11 @@ public class WorldContactListener implements ContactListener {
         }
     }
 
-    private void checkIfShotgunShellCollidesWithRightWall(Fixture a, Fixture b) {
-        Body shotgunShell = (a.getFilterData().categoryBits == Zombie.SHOTGUN_BIT) ? a.getBody() : b.getBody();
-        if ((a.getFilterData().categoryBits == Zombie.SHOTGUN_BIT && b.getFilterData().categoryBits == Zombie.WALLS_BIT) ||
-                (b.getFilterData().categoryBits == Zombie.SHOTGUN_BIT && a.getFilterData().categoryBits == Zombie.WALLS_BIT)) {
-            if (shotgunShell.getUserData() instanceof ShotgunShell) {
-                ((ShotgunShell) shotgunShell.getUserData()).setToHarmless();
-            }
-        }
-    }
-
     private void checkForCollisionBetweenZombieAndCar(Fixture a, Fixture b) {
         if ((a.getFilterData().categoryBits == Zombie.ENEMY_BIT && b.getFilterData().categoryBits == Zombie.CAR_BIT) ||
                 (b.getFilterData().categoryBits == Zombie.ENEMY_BIT && a.getFilterData().categoryBits == Zombie.CAR_BIT)) {
             Fixture zombie = (a.getFilterData().categoryBits == Zombie.CAR_BIT) ? b : a;
             ((Enemy) zombie.getBody().getUserData()).carAccident();
-        }
-    }
-
-    private void checkForHeadshot(Fixture a, Fixture b) {
-        if ((a.getFilterData().categoryBits == Zombie.HEAD_BIT && b.getFilterData().categoryBits == Zombie.SHOTGUN_BIT) ||
-                (b.getFilterData().categoryBits == Zombie.HEAD_BIT && a.getFilterData().categoryBits == Zombie.SHOTGUN_BIT)) {
-            Fixture head = (a.getFilterData().categoryBits == Zombie.CAR_BIT) ? b : a;
-            if (head.getBody().getUserData() instanceof Monkey) {
-                ((Monkey) head.getBody().getUserData()).shotgunShot();
-            }
-            if (head.getBody().getUserData() instanceof Walker) {
-                ((Walker) head.getBody().getUserData()).shotgunShot();
-            }
-        }
-    }
-
-    private void checkForCollisionBetweenZombieAndShotgunShell(Body a, Body b) {
-        Body shotgunShell = (a.getUserData() instanceof ShotgunShell) ? a : b;
-        Body enemy = (a.getUserData() instanceof Enemy) ? a : b;
-
-        if (enemy.getUserData() instanceof Enemy && shotgunShell.getUserData() instanceof ShotgunShell) {
-            ((Enemy) enemy.getUserData()).killEnemy();
-            ((ShotgunShell) shotgunShell.getUserData()).setToHarmless();
         }
     }
 

@@ -45,7 +45,6 @@ public class Monkey extends Enemy {
         defineBody(x, y);
         FixtureDef fixtureDef = new FixtureDef();
         setupMainBody(fixtureDef);
-        setupAdditionalHitbox(fixtureDef);
         body.setUserData(this);
         setupStumbleLine(fixtureDef);
     }
@@ -65,18 +64,6 @@ public class Monkey extends Enemy {
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT | Zombie.HOLE_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
-    }
-
-    private void setupAdditionalHitbox(FixtureDef fixtureDef) {
-        CircleShape shape = new CircleShape();
-        shape.setRadius(15 / Zombie.PPM);
-        shape.setPosition(new Vector2(0 / Zombie.PPM, 55 / Zombie.PPM));
-        fixtureDef.shape = shape;
-        fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = Zombie.HEAD_BIT;
-        fixtureDef.filter.maskBits = Zombie.SHOTGUN_BIT;
-        body.createFixture(fixtureDef);
-        shape.dispose();
     }
 
     private void setupStumbleLine(FixtureDef fixtureDef) {
@@ -119,12 +106,8 @@ public class Monkey extends Enemy {
         speed = Tools.getStaticObjectsSpeedLevel(speedLevel) * 1.4f;
     }
 
-    @Override
-    public void dead() {
-        Gdx.app.log("Monkey", "Im dead now");
-    }
 
-    public void update(float delta, Playscreen playscreen) {
+    public void update(float delta) {
         updateSpritePosition();
         setRegion(getFrame(delta));
 
@@ -135,11 +118,6 @@ public class Monkey extends Enemy {
                 currentState = State.JUMPING;
                 jumpOnce();
             }
-        }
-
-        if (justGotShot) {
-            playscreen.hud.zombieGotShot();
-            justGotShot = false;
         }
     }
 

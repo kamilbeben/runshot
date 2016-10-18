@@ -21,32 +21,17 @@ public class Physics {
     public WorldContactListener contactListener;
     public Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
-    private List<ShotgunShell> shotgunShells;
-    private Texture textureShell;
 
-    public Physics(Texture texture) {
-        textureShell = texture;
+    public Physics() {
         initializeCollisionDetection();
-        shotgunShells = new ArrayList<ShotgunShell>();
     }
 
     public void update(float delta) {
-        world.step(delta, 6, 2);
-        for (int i = 0; i< shotgunShells.size(); i++) {
-            if (shotgunShells.get(i).disposeIfOutOfMap(world)) {
-                shotgunShells.remove(i);
-            }
-        }
+        world.step(delta, 8, 3);
     }
 
     public boolean playerCollidesWithLeftWall() {
         return contactListener.playerCollidesWithLeftWall;
-    }
-
-    public void renderShells(SpriteBatch batch) {
-        for (ShotgunShell tmp : shotgunShells) {
-            tmp.render(batch);
-        }
     }
 
     public void renderDebug(OrthographicCamera camera) {
@@ -57,10 +42,6 @@ public class Physics {
     private void initializeCollisionDetection() {
         contactListener = new WorldContactListener(world);
         world.setContactListener(contactListener);
-    }
-
-    public void shotgunShot(int yAxis, float playerYPosition) {
-        shotgunShells.add(new ShotgunShell(world, textureShell, yAxis, playerYPosition));
     }
 
     public boolean canPlayerJump() {
