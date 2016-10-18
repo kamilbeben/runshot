@@ -24,7 +24,7 @@ public class Shotgun {
     public void shot(List <Enemy> enemies, Player player) {
         isSomeoneOnScreen = false;
 
-        if (isEnemyOnScreen(enemies, 0)) {
+        if (!enemies.isEmpty() && isEnemyOnScreen(enemies, 0)) {
             closestIndex = 0;
             closestPosition = enemies.get(0).getX();
             isSomeoneOnScreen = true;

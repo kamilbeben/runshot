@@ -1,6 +1,5 @@
 package com.kamilbeben.zombiestorm.characters;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,7 +26,9 @@ public class Player {
 
     private boolean alive = true;
 
-    private static final float jumpForce = 6.5f;
+    private static final float firstJumpForce = 5f;
+    private static final float secondJumpForce = 3f;
+    private int jumpCounter = 0;
 
     private PlayerRenderer playerRenderer;
 
@@ -97,7 +98,13 @@ public class Player {
         }
         if (jumping) {
             jumping = !playerRenderer.isJumpingOver();
+        } else {
+            jumpCounter = 0;
         }
+    }
+
+    public void startMoving() {
+        playerRenderer.startMoving();
     }
 
     public void hitByCar() {
@@ -105,9 +112,23 @@ public class Player {
     }
 
 
-    public void jump() {
-        body.applyLinearImpulse(new Vector2(0, jumpForce), body.getWorldCenter(), true);
-        jumping = true;
+    public void jumpFirst() {
+        if (alive) {
+            body.applyLinearImpulse(new Vector2(0, firstJumpForce), body.getWorldCenter(), true);
+            jumping = true;
+            jumpCounter = 1;
+        }
+    }
+
+    public void jumpSecond() {
+        if (jumpCounter == 1) {
+            body.applyLinearImpulse(new Vector2(0, secondJumpForce), body.getWorldCenter(), true);
+            jumpCounter = 2;
+        }
+    }
+
+    public boolean isJumping() {
+        return jumping;
     }
 
 
@@ -136,7 +157,7 @@ public class Player {
         for (Fixture tmp : fixtures) {
             tmp.setSensor(true);
         }
-        body.applyLinearImpulse(new Vector2(5f / Zombie.PPM, 0f / Zombie.PPM), body.getWorldCenter(), true);
+        body.applyLinearImpulse(new Vector2(25f / Zombie.PPM, 0f / Zombie.PPM), body.getWorldCenter(), true);
     }
 
     public int getBulletsAmount() {

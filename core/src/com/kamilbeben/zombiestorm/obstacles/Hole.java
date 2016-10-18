@@ -23,8 +23,6 @@ public abstract class Hole extends Sprite {
 
     private float speed = 7f;
 
-    private boolean isPlayerAboveHole = false;
-
     protected World world;
     public Body body;
 
@@ -59,15 +57,6 @@ public abstract class Hole extends Sprite {
         }
     }
 
-
-    public void collisionOff() {
-        isPlayerAboveHole = true;
-    }
-
-
-    public boolean isPlayerAboveHole() {
-        return isPlayerAboveHole;
-    }
 
     public boolean isHoleOnScreen() {
         if (body.getPosition().x > -100 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {

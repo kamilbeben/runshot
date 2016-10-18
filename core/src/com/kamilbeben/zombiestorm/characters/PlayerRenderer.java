@@ -18,7 +18,7 @@ public class PlayerRenderer {
 
     private enum State {RUNNING, SHOOTING, JUMPING, STANDING, STUMBLE, HIT_BY_CAR}
 
-    public boolean gameStarted = true;
+    public boolean gameStarted = false;
 
     private State currentState;
     private State previousState;
@@ -53,6 +53,7 @@ public class PlayerRenderer {
         fullBodyStumble = new Sprite(textureHolder.GAME_PLAYER_EXTENDED);
         setupTwoPartedAnimations();
         setupOnePartedAnimations();
+        currentState = State.STANDING;
     }
 
     private void setupTwoPartedAnimations() {
@@ -101,7 +102,7 @@ public class PlayerRenderer {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 113));
         };
 
-        animationSteadyUpperBody = new Animation(0.066f, frames);
+        animationSteadyUpperBody = new Animation(0.1f, frames);
         frames.clear();
 
         yPosition = 584;
@@ -109,7 +110,7 @@ public class PlayerRenderer {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         };
 
-        animationSteadyLowerBody = new Animation(0.066f, frames);
+        animationSteadyLowerBody = new Animation(0.1f, frames);
         frames.clear();
     }
 
@@ -283,6 +284,10 @@ public class PlayerRenderer {
         } else {
             return false;
         }
+    }
+
+    public void startMoving() {
+        gameStarted = true;
     }
 
     public void setStumble() {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.kamilbeben.zombiestorm.characters.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,11 @@ public class Physics {
         initializeCollisionDetection();
     }
 
-    public void update(float delta) {
+    public void update(float delta, Player player) {
         world.step(delta, 8, 3);
+        if (playerCollidesWithLeftWall()) {
+            player.dead();
+        }
     }
 
     public boolean playerCollidesWithLeftWall() {

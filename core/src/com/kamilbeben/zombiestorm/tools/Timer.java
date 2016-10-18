@@ -11,9 +11,6 @@ public class Timer {
     private float timerLastEnemySpawn = 0f;
     private float timerBetweenEnemies = 0f;
 
-    private float timerLastShot = 0f;
-    private float timerBetweenShots = 1.5f;
-
 
     public void updateTimer(float delta) {
         timerGeneral += delta;
@@ -48,15 +45,6 @@ public class Timer {
         return 1f + (Tools.randomFrom1To10() / 4f);
     }
 
-
-    public boolean isItTimeToShootSomething() {
-        if (timerGeneral > timerLastShot + timerBetweenShots) {
-            timerLastShot = timerGeneral;
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public int getSpeedLevel() {
         if (timerGeneral < 15f) {

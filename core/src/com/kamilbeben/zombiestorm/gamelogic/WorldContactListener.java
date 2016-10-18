@@ -60,7 +60,7 @@ public class WorldContactListener implements ContactListener {
         Body hole = (a.getUserData() instanceof Hole) ? a : b;
 
         if (hole.getUserData() instanceof Hole && player.getUserData() instanceof Player) {
-            ((Hole) hole.getUserData()).collisionOff();
+            ((Player) player.getUserData()).playerFallingDown();
         }
     }
 
@@ -111,7 +111,7 @@ public class WorldContactListener implements ContactListener {
 
         if (ammo.getUserData() instanceof AmmoPack && player.getUserData() instanceof Player) {
             ((AmmoPack) ammo.getUserData()).stopRendering();
-            ((Player) player.getUserData()).pickAmmo(); //TODO sound here
+            ((Player) player.getUserData()).pickAmmo();
         }
     }
 

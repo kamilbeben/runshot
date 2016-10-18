@@ -17,7 +17,7 @@ public class ParallaxBackground {
     private Sprite left;
     private Sprite right;
 
-    private boolean drawRight = true;
+    private boolean drawRight = false;
 
     public ParallaxBackground(Texture texture, float speed) {
         basicSpeed = speed;

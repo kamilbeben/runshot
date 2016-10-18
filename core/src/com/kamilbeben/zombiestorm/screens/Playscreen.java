@@ -54,10 +54,12 @@ public class Playscreen implements Screen {
     private Shotgun shotgun = new Shotgun();
 
     private int speedlLevel = 1;
-    private boolean playerIsFallingThroughHole = false;
     private boolean gameOver = false;
 
     private boolean pause = false;
+    private boolean standStill = true;
+
+    //TEST ONLY
     private boolean spawnEnemies = true;
     private boolean debugMode = false;
     private boolean debugAndNormal = false;
@@ -95,15 +97,7 @@ public class Playscreen implements Screen {
 
     private void update(float delta) {
         handleInput();
-        updateSpeedLevel();
-        physics.update(delta);
-        if (physics.playerCollidesWithLeftWall()) {
-            player.dead();
-        }
-        if (playerIsFallingThroughHole) {
-            player.playerFallingDown();
-        }
-
+        physics.update(delta, player);
         player.update(delta);
         updateEnemies(delta);
 
@@ -111,14 +105,17 @@ public class Playscreen implements Screen {
             timer.updateTimer(delta);
             updateHolesAndIslands(delta);
         }
-        hud.update(timer.getTime(), player.getBulletsAmount());
-        worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
-        camera.update();
         checkForGameOver();
-        if (spawnEnemies) {
-            objectSpawner.update(timer);
+        updateSpeedLevel();
+        hud.update(timer.getTime(), player.getBulletsAmount());
+        if (!standStill) {
+            worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
+            gdxRenderer.update(delta);
+            if (spawnEnemies) {
+                objectSpawner.update(timer);
+            }
         }
-        gdxRenderer.update(delta);
+        camera.update();
     }
 
     private void updateSpeedLevel() {
@@ -151,9 +148,6 @@ public class Playscreen implements Screen {
     private void updateHolesAndIslands(float delta) {
         for (Hole tmp : holes) {
             tmp.update(delta);
-            if (tmp.isPlayerAboveHole()) {
-                playerIsFallingThroughHole = true;
-            }
             if (tmp.isHoleOnScreen()) {
                 worldRenderer.updateGround(tmp.getStartTileAndNumberOfTiles());
             }
@@ -179,17 +173,77 @@ public class Playscreen implements Screen {
         hud.gameOver();
     }
 
+    private void shotgunShot() {
+        if (player.shotgunShot()) {
+            shotgun.shot(enemies, player);
+        }
+    }
+
+
+    @Override
+    public void render(float delta) {
+        testKeyboard();
+        if (!pause) {
+            update(delta);
+            Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            game.batch.setProjectionMatrix(camera.combined);
+
+            if (!debugMode) {
+                game.batch.begin();
+                worldRenderer.draw(game.batch);
+
+                player.render(game.batch);
+                for (Enemy tmp : enemies) {
+                    tmp.render(game.batch);
+                }
+                for (Island tmp : islands) {
+                    tmp.render(game.batch);
+                }
+
+                for (Hole tmp : holes)
+                    tmp.render(game.batch);
+
+                shotgun.render(game.batch);
+
+                gdxRenderer.render(game.batch);
+                game.batch.end();
+                hud.render(game.batch);
+
+                if (debugAndNormal) {
+                    physics.renderDebug(camera);
+                }
+
+            }
+            else {
+                physics.renderDebug(camera);
+                hud.render(game.batch);
+            }
+        }
+    }
+
     private void handleInput() {
-        if (Gdx.input.justTouched() &&
-                Gdx.input.getX() > Gdx.graphics.getWidth()/2) {
-            shotgunShot();
-        }
-        if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.justTouched() &&
-                Gdx.input.getX() < Gdx.graphics.getWidth()/2) ) && physics.canPlayerJump() && !playerIsFallingThroughHole) {
-            player.jump();
-        }
+
         if ((Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.justTouched()) && gameOver) {
             game.setScreen(new Playscreen(game, false));
+        }
+
+        if (standStill && Gdx.input.justTouched()) {
+            standStill = false;
+            player.startMoving();
+        } else {
+            if (Gdx.input.justTouched() &&
+                    Gdx.input.getX() > Gdx.graphics.getWidth() / 2) {
+                shotgunShot();
+            }
+
+            if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.justTouched() &&
+                    Gdx.input.getX() < Gdx.graphics.getWidth() / 2)) && physics.canPlayerJump()) {
+                player.jumpFirst();
+            } else if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.justTouched() &&
+                    Gdx.input.getX() < Gdx.graphics.getWidth() / 2)) && player.isJumping()) {
+                player.jumpSecond();
+            }
         }
     }
 
@@ -250,55 +304,6 @@ public class Playscreen implements Screen {
                 debugAndNormal = false;
             } else {
                 debugAndNormal = true;
-            }
-        }
-    }
-
-    private void shotgunShot() {
-        if (player.shotgunShot()) {
-            shotgun.shot(enemies, player);
-        }
-    }
-
-
-    @Override
-    public void render(float delta) {
-        testKeyboard();
-        if (!pause) {
-            update(delta);
-            Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            game.batch.setProjectionMatrix(camera.combined);
-
-            if (!debugMode) {
-                game.batch.begin();
-                worldRenderer.draw(game.batch);
-
-                player.render(game.batch);
-                for (Enemy tmp : enemies) {
-                    tmp.render(game.batch);
-                }
-                for (Island tmp : islands) {
-                    tmp.render(game.batch);
-                }
-
-                for (Hole tmp : holes)
-                    tmp.render(game.batch);
-
-                shotgun.render(game.batch);
-
-                gdxRenderer.render(game.batch);
-                game.batch.end();
-                hud.render(game.batch);
-
-                if (debugAndNormal) {
-                    physics.renderDebug(camera);
-                }
-
-            }
-            else {
-                physics.renderDebug(camera);
-                hud.render(game.batch);
             }
         }
     }
