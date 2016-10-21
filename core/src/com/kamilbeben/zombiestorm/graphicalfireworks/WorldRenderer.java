@@ -16,7 +16,6 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class WorldRenderer {
 
-    private boolean renderGround[];
     private boolean gameOver = false;
 
     private Sprite staticBackground;
@@ -27,14 +26,13 @@ public class WorldRenderer {
     private Animation animation;
 
     public WorldRenderer(TextureHolder textureHolder) {
-        renderGround = new boolean[27];
-        resetGround();
         setupAnimations(textureHolder.GAME_EXTRAS_GRASS_ANIMATION);
         setupStaticBackground(textureHolder.GAME_EXTRAS_BACKGROUND);
-        parallaxFar = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_FAR, 0.5f);
-        parallaxMiddle = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_FOG, 1.2f);
-        parallaxClose = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_CLOSE, 1f);
+        parallaxFar = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_FAR, 0.5f, true);
+        parallaxMiddle = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_FOG, 1.2f, true);
+        parallaxClose = new ParallaxBackground(textureHolder.GAME_EXTRAS_PARALLAX_MOUNTAINS_CLOSE, 1f, true);
         setSpeedLevel(1);
+        updateGroundAndBackgroundAnimation(0f, 0f);
     }
 
     private void setupAnimations(Texture texture) {
@@ -59,29 +57,12 @@ public class WorldRenderer {
         parallaxFar.render(batch);
         parallaxMiddle.render(batch);
         parallaxClose.render(batch);
-        for (int i=0; i<renderGround.length; i++) {
-            if (renderGround[i]) {
-                spriteAnimation.setPosition(i * (32 / Zombie.PPM), 0);
-                spriteAnimation.draw(batch);
-            }
+        for (int i=0; i<27; i++) {
+            spriteAnimation.setPosition(i * (32 / Zombie.PPM), 0);
+            spriteAnimation.draw(batch);
         }
     }
 
-
-    public void updateGround(HolePosition position) {
-        resetGround();
-        int end = (position.end >= renderGround.length) ? renderGround.length : position.end;
-        try {
-            for (int i = position.start; i < end; i++) {
-               if (i >= 0) {
-                   renderGround[i] = false;
-                   renderGround[i+1] = false;
-                }
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-
-        }
-    }
 
     public void updateGroundAndBackgroundAnimation(float timer, float delta) {
         if (!gameOver) {
@@ -92,13 +73,6 @@ public class WorldRenderer {
             parallaxMiddle.update(delta);
             parallaxClose.update(delta);
         }
-    }
-
-    private void resetGround() {
-        for (int i = 0; i < renderGround.length; i++) {
-            renderGround[i] = true;
-        }
-
     }
 
     public void setSpeedLevel(int speedLevel) {

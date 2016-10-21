@@ -26,6 +26,7 @@ public class IslandShort extends Island {
 
         islandShape.setAsBox(100f / Zombie.PPM, 12f / Zombie.PPM);
         jumpLine.set(new Vector2(-105 / Zombie.PPM, 28 / Zombie.PPM), new Vector2(110 / Zombie.PPM, 28 / Zombie.PPM));
+        accidentLine.set(new Vector2(-102 / Zombie.PPM, 5 / Zombie.PPM), new Vector2(-102 / Zombie.PPM, -5 / Zombie.PPM));
 
         createBody(x, y, world);
     }

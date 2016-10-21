@@ -13,11 +13,13 @@ import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Monkey;
 import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.characters.Walker;
+import com.kamilbeben.zombiestorm.gamelogic.GameState;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
 import com.kamilbeben.zombiestorm.gamelogic.Shotgun;
 import com.kamilbeben.zombiestorm.graphicalfireworks.GDXRenderer;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
+import com.kamilbeben.zombiestorm.objects.Parachute;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Island;
 import com.kamilbeben.zombiestorm.obstacles.HoleLong;
@@ -43,6 +45,8 @@ public class Playscreen implements Screen {
     public HudPlayscreen hud;
     private GDXRenderer gdxRenderer;
 
+    public GameState state = new GameState();
+
     private Physics physics;
     private Player player;
     private List<Enemy> enemies;
@@ -54,10 +58,6 @@ public class Playscreen implements Screen {
     private Shotgun shotgun = new Shotgun();
 
     private int speedlLevel = 1;
-    private boolean gameOver = false;
-
-    private boolean pause = false;
-    private boolean standStill = true;
 
     //TEST ONLY
     private boolean spawnEnemies = true;
@@ -90,27 +90,24 @@ public class Playscreen implements Screen {
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
     }
 
-    @Override
-    public void show() {
-
-    }
-
     private void update(float delta) {
         handleInput();
         physics.update(delta, player);
         player.update(delta);
         updateEnemies(delta);
 
-        if (!gameOver) {
+        if (state.isGoing()) {
             timer.updateTimer(delta);
             updateHolesAndIslands(delta);
         }
         checkForGameOver();
         updateSpeedLevel();
         hud.update(timer.getTime(), player.getBulletsAmount());
-        if (!standStill) {
+
+        gdxRenderer.update(delta);
+
+        if (state.isGoing()) {
             worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
-            gdxRenderer.update(delta);
             if (spawnEnemies) {
                 objectSpawner.update(timer);
             }
@@ -148,9 +145,6 @@ public class Playscreen implements Screen {
     private void updateHolesAndIslands(float delta) {
         for (Hole tmp : holes) {
             tmp.update(delta);
-            if (tmp.isHoleOnScreen()) {
-                worldRenderer.updateGround(tmp.getStartTileAndNumberOfTiles());
-            }
         }
         for (Island tmp : islands) {
             tmp.update(delta);
@@ -165,10 +159,10 @@ public class Playscreen implements Screen {
     }
 
     private void gameOver() {
+        state.setOver();
         for (Island tmp : islands) {
             tmp.stopMoving();
         }
-        gameOver = true;
         worldRenderer.stopAnimating();
         hud.gameOver();
     }
@@ -181,9 +175,14 @@ public class Playscreen implements Screen {
 
 
     @Override
+    public void show() {
+
+    }
+
+    @Override
     public void render(float delta) {
         testKeyboard();
-        if (!pause) {
+        if (!state.isPause()) {
             update(delta);
             Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -193,7 +192,6 @@ public class Playscreen implements Screen {
                 game.batch.begin();
                 worldRenderer.draw(game.batch);
 
-                player.render(game.batch);
                 for (Enemy tmp : enemies) {
                     tmp.render(game.batch);
                 }
@@ -205,6 +203,8 @@ public class Playscreen implements Screen {
                     tmp.render(game.batch);
 
                 shotgun.render(game.batch);
+
+                player.render(game.batch);
 
                 gdxRenderer.render(game.batch);
                 game.batch.end();
@@ -224,15 +224,13 @@ public class Playscreen implements Screen {
 
     private void handleInput() {
 
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.R) || Gdx.input.justTouched()) && gameOver) {
+        if (state.isOver() && (Gdx.input.justTouched())) {
             game.setScreen(new Playscreen(game, false));
-        }
-
-        if (standStill && Gdx.input.justTouched()) {
-            standStill = false;
+        } else if (state.isNotReady() && Gdx.input.justTouched()) {
+            state.setGoing();
             player.startMoving();
-        } else {
-            if (Gdx.input.justTouched() &&
+        } else if (state.isGoing()) {
+            if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))&&
                     Gdx.input.getX() > Gdx.graphics.getWidth() / 2) {
                 shotgunShot();
             }
@@ -257,7 +255,7 @@ public class Playscreen implements Screen {
             enemies.add(new Monkey(physics.world, enemiesPosition, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_MONKEY));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-            enemies.add(new Car(physics.world, enemiesPosition + 100, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_CAR));
+            enemies.add(new Car(physics.world, enemiesPosition + 100, 200, timer.getSpeedLevel(), game.assets.textureHolder.GAME_ENEMY_CAR, game.assets.textureHolder.GAME_ENEMY_CAR_LIGHTS));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
             holes.add(new HoleShort(physics.world, holesPosition, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_SHORT));
@@ -271,18 +269,18 @@ public class Playscreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
             islands.add(new IslandShort(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
-            player.pickAmmo();
-        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
             timer.addTenSeconds();
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            player.pickAmmo();
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) || Gdx.input.isKeyJustPressed(Input.Keys.MENU)) {
-            if (pause) {
-                pause = false;
+            if (state.isPause()) {
+                state.unpause();
             } else {
-                pause = true;
+                state.setPause();
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {

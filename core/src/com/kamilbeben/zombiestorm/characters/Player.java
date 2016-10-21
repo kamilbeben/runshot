@@ -52,7 +52,7 @@ public class Player {
         fixtureDef.shape = polygon;
 
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.WALLS_BIT | Zombie.STUMBLE_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.WALLS_BIT | Zombie.STUMBLE_BIT | Zombie.CAR_BIT;
 
         fixtureDef.friction = 0.2f;
         body.createFixture(fixtureDef);
@@ -60,7 +60,7 @@ public class Player {
 
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK_BIT;
+        fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
 
         CircleShape circle = new CircleShape();
@@ -108,7 +108,9 @@ public class Player {
     }
 
     public void hitByCar() {
-        System.out.println("Got hit by car");
+        playerRenderer.setCarAccident();
+        body.applyLinearImpulse(new Vector2(-0.5f, 0), new Vector2(body.getWorldCenter().x + 20f / Zombie.PPM, body.getWorldCenter().y), true);
+        collisionsOff();
     }
 
 
@@ -153,11 +155,15 @@ public class Player {
 
     public void playerFallingDown() {
         dead();
+        body.applyLinearImpulse(new Vector2(25f / Zombie.PPM, 0f / Zombie.PPM), body.getWorldCenter(), true);
+        collisionsOff();
+    }
+
+    private void collisionsOff() {
         Array<Fixture> fixtures = body.getFixtureList();
         for (Fixture tmp : fixtures) {
             tmp.setSensor(true);
         }
-        body.applyLinearImpulse(new Vector2(25f / Zombie.PPM, 0f / Zombie.PPM), body.getWorldCenter(), true);
     }
 
     public int getBulletsAmount() {

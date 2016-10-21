@@ -27,12 +27,13 @@ public class ObjectSpawner {
     private List<Island> islands;
     private World world;
     private boolean lastRandomWasAnObstacle = false;
-    private boolean lastRandomWasACar = false;
     private boolean[] lastRandomWasAMonkey;
     private boolean[] lastRandomWasAWalker;
     private TextureHolder textureHolder;
 
     float lastHole = -3f;
+    float lastIsland = -3f;
+
 
     public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Island> islands, World world, TextureHolder textureHolder) {
         this.enemies = enemies;
@@ -50,10 +51,14 @@ public class ObjectSpawner {
     }
 
     public void update(Timer timer) {
-        if (timer.isItTimeToSpawnNewObstacleOrEnemy() && ((lastHole + 3f < timer.getTime()))) {
-            chooseBetweenObstacleAndEnemy(timer);
-        }
         clearArrays();
+        if (timer.isItTimeToSpawnNewObstacleOrEnemy() && ((lastHole + 3f < timer.getTime()))) {
+            if (lastIsland + 15f < timer.getTime()) {
+                addIsland(timer);
+            } else  {
+                chooseBetweenObstacleAndEnemy(timer);
+            }
+        }
     }
 
     private void clearArrays() {
@@ -110,7 +115,6 @@ public class ObjectSpawner {
     private void chooseBetweenHoleAndIsland(Timer timer) {
         resetWalkerBoolean();
         resetMonkeyBoolean();
-        resetCarBoolean();
         lastRandomWasAnObstacle = true;
         int random = Tools.randomFrom1To10();
         if (random > 5) {
@@ -124,12 +128,15 @@ public class ObjectSpawner {
         if (lastHole + 3f < (timer.getTime())) {
             holes.add(randomizeHole(timer));
             lastHole = timer.getTime();
+            lastRandomWasAnObstacle = true;
         } else {
             islands.add(randomizeIsland(timer));
         }
     }
 
+
     private void addIsland(Timer timer) {
+        lastIsland = timer.getTime();
         islands.add(randomizeIsland(timer));
     }
 
@@ -153,13 +160,13 @@ public class ObjectSpawner {
         }
     }
 
+
     private Enemy randomizeEnemy(Timer timer) {
         int random = Tools.randomFrom1To10();
-        lastRandomWasAnObstacle = false;
         if (random < 5) {
             if (!lastRandomWasAWalker[1]) {
                 resetMonkeyBoolean();
-                resetCarBoolean();
+                resetObstacleBoolean();
                 return newWalker(timer);
             } else {
                 return randomizeEnemy(timer);
@@ -167,16 +174,16 @@ public class ObjectSpawner {
         } else if (random < 8) {
             if (!lastRandomWasAMonkey[1]) {
                 resetWalkerBoolean();
-                resetCarBoolean();
+                resetObstacleBoolean();
                 return newMonkey(timer);
             } else {
                 return randomizeEnemy(timer);
             }
-        } else if (!lastRandomWasACar && lastHole + 2f < timer.getTime()){
+        } else if (!lastRandomWasAnObstacle){
             resetWalkerBoolean();
             resetMonkeyBoolean();
-            lastRandomWasACar = true;
-            return new Car(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_CAR);
+            lastRandomWasAnObstacle = true;
+            return new Car(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_CAR, textureHolder.GAME_ENEMY_CAR_LIGHTS);
         } else {
             return randomizeEnemy(timer);
         }
@@ -192,8 +199,8 @@ public class ObjectSpawner {
         lastRandomWasAMonkey[1] = false;
     }
 
-    private void resetCarBoolean() {
-        lastRandomWasACar = false;
+    private void resetObstacleBoolean() {
+        lastRandomWasAnObstacle = false;
     }
 
     private Enemy newWalker(Timer timer) {
@@ -204,7 +211,7 @@ public class ObjectSpawner {
         }
         lastRandomWasAMonkey[0] = false;
         lastRandomWasAMonkey[1] = false;
-        lastRandomWasACar = false;
+        lastRandomWasAnObstacle = false;
         return new Walker(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_WALKER);
     }
 
@@ -216,7 +223,7 @@ public class ObjectSpawner {
         }
         lastRandomWasAWalker[0] = false;
         lastRandomWasAWalker[1] = false;
-        lastRandomWasACar = false;
+        lastRandomWasAnObstacle = false;
         return new Monkey(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_MONKEY);
     }
 }

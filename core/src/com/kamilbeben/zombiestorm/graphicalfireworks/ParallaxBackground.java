@@ -11,6 +11,7 @@ import com.kamilbeben.zombiestorm.tools.Tools;
  */
 public class ParallaxBackground {
 
+    private float world_scale;
     private float speed;
     private float basicSpeed;
 
@@ -19,23 +20,28 @@ public class ParallaxBackground {
 
     private boolean drawRight = false;
 
-    public ParallaxBackground(Texture texture, float speed) {
+    public ParallaxBackground(Texture texture, float speed, boolean scaleWorld) {
+        if (scaleWorld) {
+            world_scale = Zombie.PPM;
+        } else {
+            world_scale = 1;
+        }
         basicSpeed = speed;
         left = new Sprite(texture);
         right = new Sprite(texture);
-        left.setSize(Zombie.WIDTH * 3 / Zombie.PPM, Zombie.HEIGHT / Zombie.PPM);
-        right.setSize(Zombie.WIDTH * 3 / Zombie.PPM, Zombie.HEIGHT / Zombie.PPM);
+        left.setSize(Zombie.WIDTH * 3 / world_scale, Zombie.HEIGHT / world_scale);
+        right.setSize(Zombie.WIDTH * 3 / world_scale, Zombie.HEIGHT / world_scale);
         setSpeedLevel(1);
         left.setX(0);
     }
 
     public void update(float delta) {
         left.setX(left.getX() - speed * delta);
-        if ((left.getX() + Zombie.WIDTH * 3 / Zombie.PPM) <= 0) {
+        if ((left.getX() + Zombie.WIDTH * 3 / world_scale) <= 0) {
            left.setX(0);
         }
 
-        if (left.getX() + (Zombie.WIDTH * 2 / Zombie.PPM) <= 0) {
+        if (left.getX() + (Zombie.WIDTH * 2 / world_scale) <= 0) {
             drawRight = true;
         } else {
             drawRight = false;

@@ -3,6 +3,8 @@ package com.kamilbeben.zombiestorm.characters;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -23,10 +25,12 @@ public class Car extends Enemy {
 
     private Animation carRiding;
 
-    public Car(World world, float x, float y, int speedLevel, Texture texture) {
+    private Sprite carLights;
+
+    public Car(World world, float x, float y, int speedLevel, Texture texture, Texture carLightsTexture) {
         super(world, x, y, texture);
         setupBody(x, y);
-        setupLooks();
+        setupLooks(carLightsTexture);
         setSpeedLevel(speedLevel);
     }
 
@@ -54,7 +58,7 @@ public class Car extends Enemy {
         shape.setAsBox(100 / Zombie.PPM, 35 / Zombie.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Zombie.ENEMY_BIT;
-        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT | Zombie.SHOTGUN_BIT;
+        fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.PLAYER_BIT;
         body.createFixture(fixtureDef);
         shape.dispose();
     }
@@ -72,7 +76,7 @@ public class Car extends Enemy {
 
     private void setupStumbleLine(FixtureDef fixtureDef) {
         EdgeShape edgeShape = new EdgeShape();
-        edgeShape.set(new Vector2(-99 / Zombie.PPM, 39 / Zombie.PPM), new Vector2(99 / Zombie.PPM, 39 / Zombie.PPM));
+        edgeShape.set(new Vector2(-95 / Zombie.PPM, 39 / Zombie.PPM), new Vector2(99 / Zombie.PPM, 39 / Zombie.PPM));
         fixtureDef.shape = edgeShape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;
@@ -81,7 +85,7 @@ public class Car extends Enemy {
         edgeShape.dispose();
     }
 
-    private void setupLooks() {
+    private void setupLooks(Texture carLightsTexture) {
 
         setBounds(0, 98, 202 / Zombie.PPM, 70 / Zombie.PPM);
 
@@ -93,6 +97,9 @@ public class Car extends Enemy {
         frames.clear();
 
         setSize(getWidth() * 1.5f, getHeight() * 1.5f);
+
+        carLights = new Sprite(carLightsTexture);
+        carLights.setSize(carLights.getTexture().getWidth() / Zombie.PPM, carLights.getTexture().getHeight() / Zombie.PPM);
     }
 
     @Override
@@ -117,8 +124,16 @@ public class Car extends Enemy {
 
     private void updatePosition() {
         setPosition(body.getPosition().x - getWidth() / 2 + 20f / Zombie.PPM, body.getPosition().y - 44 / Zombie.PPM);
+        carLights.setPosition(body.getPosition().x - 405f / Zombie.PPM, body.getPosition().y - 16 / Zombie.PPM);
     }
 
+    @Override
+    public void render(SpriteBatch batch) {
+        if (isEnemyOnScreen()) {
+            carLights.draw(batch);
+            draw(batch);
+        }
+    }
 
     @Override
     public void killEnemy() {

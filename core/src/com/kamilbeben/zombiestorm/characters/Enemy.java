@@ -75,9 +75,9 @@ public abstract class Enemy extends Sprite {
     }
 
     public void shotgunShot() {
-        justGotShot = true;
-        killEnemy();
         applyShotgunForceToBody();
+        killEnemy();
+        justGotShot = true;
     }
 
     private void applyShotgunForceToBody() {
@@ -85,9 +85,9 @@ public abstract class Enemy extends Sprite {
     }
 
     public void carAccident() {
+        applyCarForceToBody();
         justGotHitByCar = true;
         killEnemy();
-        applyCarForceToBody();
     }
 
     private void applyCarForceToBody() {
@@ -100,7 +100,7 @@ public abstract class Enemy extends Sprite {
         for (Fixture tmp : fixtures) {
             filter = tmp.getFilterData();
             filter.categoryBits = Zombie.DEAD_BIT;
-            filter.maskBits = Zombie.ENEMY_BIT;
+            filter.maskBits = -1;
             tmp.setFilterData(filter);
         }
     }
@@ -119,6 +119,11 @@ public abstract class Enemy extends Sprite {
             return true;
         }
     }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
     public abstract void setSpeedLevel(int level);
 
     public Vector2 getPosition() {

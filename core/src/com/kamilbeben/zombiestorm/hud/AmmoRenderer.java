@@ -2,6 +2,7 @@ package com.kamilbeben.zombiestorm.hud;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.TextureHolder;
 
 /**
@@ -19,7 +20,7 @@ public class AmmoRenderer {
         background = new Sprite(textureHolder.HUD_AMMO_BACKGROUND);
         ammoON = new Sprite(textureHolder.HUD_AMMO_ON);
         ammoOFF = new Sprite(textureHolder.HUD_AMMO_OFF);
-        background.setPosition(16, 16);
+        background.setPosition(Zombie.WIDTH / 2 - background.getWidth() / 2, 16);
         renderBullet = new boolean[6];
 
     }

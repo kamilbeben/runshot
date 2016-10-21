@@ -18,6 +18,9 @@ public class GDXRenderer {
     private float lastDirectionChange = 0f;
     private float timer = 0f;
 
+    private ParallaxBackground cloudsFar;
+    private ParallaxBackground cloudsClose;
+
     List<Fireflies> fireflies;
 
     private Sprite palette;
@@ -35,6 +38,7 @@ public class GDXRenderer {
         fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_TRANSPARENT));
         fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_BLUE));
         fireflies.add(new Fireflies(world, textureHolder.GAME_EXTRAS_FIREFLY_BLUE));
+
     }
 
     private void setupColorPalette(TextureHolder textureHolder) {
@@ -56,6 +60,7 @@ public class GDXRenderer {
             tmp.update();
         }
     }
+
 
     private void changeFirefliesDirection() {
         lastDirectionChange = timer;

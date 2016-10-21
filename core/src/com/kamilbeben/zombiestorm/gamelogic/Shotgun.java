@@ -2,6 +2,7 @@ package com.kamilbeben.zombiestorm.gamelogic;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.characters.Car;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Player;
 
@@ -24,13 +25,10 @@ public class Shotgun {
     public void shot(List <Enemy> enemies, Player player) {
         isSomeoneOnScreen = false;
 
-        if (!enemies.isEmpty() && isEnemyOnScreen(enemies, 0)) {
-            closestIndex = 0;
-            closestPosition = enemies.get(0).getX();
-            isSomeoneOnScreen = true;
-        }
+        closestPosition = Zombie.WIDTH + 1;
+
         for (int i=0; i<enemies.size(); i++) {
-            if (isEnemyOnScreen(enemies, i)) {
+            if (isEnemyOnScreen(enemies, i) && (enemies.get(i).isAlive()) && enemyIsNotACar(enemies.get(i))) {
                 if ((enemies.get(i).getX() < closestPosition)) {
                     closestIndex = i;
                     closestPosition = enemies.get(i).getX();
@@ -41,6 +39,14 @@ public class Shotgun {
         if (isPlayerLowEnough(player) && isSomeoneOnScreen) {
             enemies.get(closestIndex).shotgunShot();
             zombiesKilled++;
+        }
+    }
+
+    private boolean enemyIsNotACar(Enemy enemy) {
+        if (enemy instanceof Car) {
+            return false;
+        } else {
+            return true;
         }
     }
 

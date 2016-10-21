@@ -1,5 +1,7 @@
 package com.kamilbeben.zombiestorm.tools;
 
+import com.kamilbeben.zombiestorm.Zombie;
+
 import java.util.Random;
 
 /**
@@ -10,6 +12,16 @@ public class Timer {
     private float timerGeneral = 0f;
     private float timerLastEnemySpawn = 0f;
     private float timerBetweenEnemies = 0f;
+
+    private float time_long = 2.5f;
+    private float time_middle = 1.75f;
+    private float time_short = 1.0f;
+
+    private static final float time_long_base = 2.5f;
+    private static final float time_middle_base = 1.75f;
+    private static final float time_short_base = 1.0f;
+
+
 
 
     public void updateTimer(float delta) {
@@ -31,14 +43,45 @@ public class Timer {
     }
 
     private void randomizeTimerBetweenEnemies() {
+        updateSpawnTimer();
         int random = Tools.randomFrom1To10();
         if (random > 7) {
-            timerBetweenEnemies = 2.5f;
+            timerBetweenEnemies = time_long;
         } else if (random > 2) {
-            timerBetweenEnemies = 1.75f;
+            timerBetweenEnemies = time_middle;
         } else if (random > 0) {
-            timerBetweenEnemies = 1.0f;
+            timerBetweenEnemies = time_short;
         }
+    }
+
+    private void updateSpawnTimer() {
+        switch (getSpeedLevel()) {
+            default:
+            case 1:
+                setTimeMultiplier(Tools.speedMultiplier_1);
+                break;
+            case 2:
+                setTimeMultiplier(Tools.speedMultiplier_2);
+                break;
+            case 3:
+                setTimeMultiplier(Tools.speedMultiplier_3);
+                break;
+            case 4:
+                setTimeMultiplier(Tools.speedMultiplier_4);
+                break;
+            case 5:
+                setTimeMultiplier(Tools.speedMultiplier_5);
+                break;
+            case 6:
+                setTimeMultiplier(Tools.speedMultiplier_6);
+                break;
+        }
+    }
+
+    private void setTimeMultiplier(float speedMultiplier) {
+        time_long = time_long_base / speedMultiplier;
+        time_middle = time_middle_base / speedMultiplier;
+        time_short = time_short_base / speedMultiplier;
     }
 
     public static final float randomizeMonkeyJumpTime() {

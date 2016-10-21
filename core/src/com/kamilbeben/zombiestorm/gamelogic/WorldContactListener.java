@@ -40,6 +40,7 @@ public class WorldContactListener implements ContactListener {
         checkForCollisionBetweenPlayerAndGround(contact.getFixtureA(), contact.getFixtureB());
         checkIfPlayerCollidesWithLeftWall(contact.getFixtureA(), contact.getFixtureB());
         checkForCollisionsBetweenPlayerAndStumbleLines(contact.getFixtureA(), contact.getFixtureB());
+        checkForCollisionBetweenPlayerAndIslands(contact.getFixtureA(), contact.getFixtureB());
 
         checkForCollisionsBetweeenZombiesAndHoles(a, b);
         checkForCollisionBetweenZombieAndCar(contact.getFixtureA(), contact.getFixtureB());
@@ -80,6 +81,14 @@ public class WorldContactListener implements ContactListener {
 
         if (hole.getUserData() instanceof Hole && enemy.getUserData() instanceof Enemy) {
             ((Enemy) enemy.getUserData()).killEnemy();
+        }
+    }
+
+    private void checkForCollisionBetweenPlayerAndIslands(Fixture a, Fixture b) {
+        if ((a.getFilterData().categoryBits == Zombie.PLAYER_BIT && b.getFilterData().categoryBits == Zombie.CAR_BIT) ||
+                (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.CAR_BIT)) {
+            Body player = (a.getBody().getUserData() instanceof Player) ? a.getBody() : b.getBody();
+            ((Player) player.getUserData()).hitByCar();
         }
     }
 

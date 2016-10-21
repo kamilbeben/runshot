@@ -46,11 +46,13 @@ public class PlayerRenderer {
     private Animation animationCarAccident;
 
     private boolean stumbling = false;
+    private boolean carAccident = false;
 
     public PlayerRenderer(TextureHolder textureHolder) {
         upperBody = new Sprite(textureHolder.GAME_PLAYER);
         lowerBody = new Sprite(textureHolder.GAME_PLAYER);
         fullBodyStumble = new Sprite(textureHolder.GAME_PLAYER_EXTENDED);
+        fullBodyCarAccident = new Sprite(textureHolder.GAME_PLAYER_EXTENDED);
         setupTwoPartedAnimations();
         setupOnePartedAnimations();
         currentState = State.STANDING;
@@ -130,6 +132,15 @@ public class PlayerRenderer {
         }
         animationStumble = new Animation(0.03f, frames);
         frames.clear();
+
+        fullBodyCarAccident.setBounds(0, 0, 174 / Zombie.PPM, 181 / Zombie.PPM);
+        yPosition = 632;
+        for (int i=0; i<8; i++) {
+            frames.add(new TextureRegion(fullBodyStumble.getTexture(), i * 174, yPosition, 174, 181));
+        }
+        animationCarAccident = new Animation(0.05f, frames);
+        frames.clear();
+
     }
 
     public void setSpeedLevel(int speedLevel) {
@@ -173,6 +184,9 @@ public class PlayerRenderer {
         updatePosition(body);
         if (stumbling) {
             fullBodyStumble.setRegion(animationStumble.getKeyFrame(stateTimer_FULLBODY, false));
+            stateTimer_FULLBODY += delta;
+        } else if (carAccident) {
+            fullBodyCarAccident.setRegion(animationCarAccident.getKeyFrame(stateTimer_FULLBODY, false));
             stateTimer_FULLBODY += delta;
         } else {
             upperBody.setRegion(getUpperBodyFrame(delta, shooting, jumping));
@@ -254,6 +268,8 @@ public class PlayerRenderer {
     public void updatePosition(Body body) {
         if (stumbling) {
             fullBodyStumble.setPosition(body.getPosition().x, body.getPosition().y - 68f / Zombie.PPM);
+        } else if (carAccident) {
+            fullBodyCarAccident.setPosition(body.getPosition().x - 0 / Zombie.PPM, body.getPosition().y - 64f / Zombie.PPM);
         } else {
             upperBody.setPosition(body.getPosition().x - upperBody.getWidth() / 3 + 9 / Zombie.PPM, body.getPosition().y - 16 / Zombie.PPM);
             lowerBody.setPosition(body.getPosition().x - lowerBody.getWidth() / 3 - 10 / Zombie.PPM,
@@ -264,6 +280,8 @@ public class PlayerRenderer {
     public void render(SpriteBatch batch) {
         if (stumbling) {
             fullBodyStumble.draw(batch);
+        } else if (carAccident) {
+            fullBodyCarAccident.draw(batch);
         } else {
             lowerBody.draw(batch);
             upperBody.draw(batch);
@@ -292,6 +310,10 @@ public class PlayerRenderer {
 
     public void setStumble() {
         stumbling = true;
+    }
+
+    public void setCarAccident() {
+        carAccident = true;
     }
 
 

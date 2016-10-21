@@ -22,7 +22,7 @@ public abstract class Island extends Sprite {
     protected AmmoPack ammoPack;
     protected PolygonShape islandShape = new PolygonShape();
     protected EdgeShape jumpLine = new EdgeShape();
-    protected EdgeShape  stumbleLine= new EdgeShape();
+    protected EdgeShape accidentLine = new EdgeShape();
 
     private float speed = 7f;
 
@@ -41,6 +41,7 @@ public abstract class Island extends Sprite {
 
         createIslandKinematicBody(fixtureDef);
         createJumpSensor(fixtureDef);
+        createAccidentSensor(fixtureDef);
     }
 
     private void defineBody(float x, float y, World world) {
@@ -61,6 +62,15 @@ public abstract class Island extends Sprite {
     private void createJumpSensor(FixtureDef fixtureDef) {
         fixtureDef.filter.categoryBits = Zombie.GROUND_BIT;
         fixtureDef.shape = jumpLine;
+        fixtureDef.isSensor = true;
+        body.createFixture(fixtureDef);
+    }
+
+
+    private void createAccidentSensor(FixtureDef fixtureDef) {
+        fixtureDef.filter.categoryBits = Zombie.CAR_BIT;
+        fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
+        fixtureDef.shape = accidentLine;
         fixtureDef.isSensor = true;
         body.createFixture(fixtureDef);
     }
