@@ -25,13 +25,6 @@ public class MenuButton {
         stage.addActor(button);
     }
 
-    public MenuButton(Stage stage, float positionY, Texture texture) {
-        this.texture = texture;
-        setMenuButtonStyleAndPosition( generateButtonSkinFromFile(), positionY);
-        setButtonListener();
-        stage.addActor(button);
-    }
-
     private void setButtonListener() {
         button.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -91,14 +84,6 @@ public class MenuButton {
 
     public void remove() {
         button.remove();
-    }
-
-    public float getY() {
-        return button.getY();
-    }
-
-    public float getHeight() {
-        return texture.getHeight();
     }
 
 }

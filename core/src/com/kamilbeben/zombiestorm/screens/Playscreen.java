@@ -17,9 +17,8 @@ import com.kamilbeben.zombiestorm.gamelogic.GameState;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
 import com.kamilbeben.zombiestorm.gamelogic.Shotgun;
-import com.kamilbeben.zombiestorm.graphicalfireworks.GDXRenderer;
+import com.kamilbeben.zombiestorm.graphicalfireworks.GraphicsOverlay;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
-import com.kamilbeben.zombiestorm.objects.Parachute;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Island;
 import com.kamilbeben.zombiestorm.obstacles.HoleLong;
@@ -43,7 +42,7 @@ public class Playscreen implements Screen {
     private Viewport viewport;
     private WorldRenderer worldRenderer;
     public HudPlayscreen hud;
-    private GDXRenderer gdxRenderer;
+    private GraphicsOverlay graphicsOverlay;
 
     public GameState state = new GameState();
 
@@ -55,9 +54,11 @@ public class Playscreen implements Screen {
     private ObjectSpawner objectSpawner;
     private Timer timer = new Timer();
 
-    private Shotgun shotgun = new Shotgun();
+    private Shotgun shotgun;
 
     private int speedlLevel = 1;
+
+    private boolean gameOverNotCalledYet = true;
 
     //TEST ONLY
     private boolean spawnEnemies = true;
@@ -79,7 +80,8 @@ public class Playscreen implements Screen {
         holes = new ArrayList<Hole>();
         islands = new ArrayList<Island>();
         objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world, game.assets.textureHolder);
-        gdxRenderer = new GDXRenderer(physics.world, game.assets.textureHolder);
+        graphicsOverlay = new GraphicsOverlay(physics.world, game.assets.textureHolder);
+        shotgun = new Shotgun(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setCatchMenuKey(true);
     }
@@ -92,19 +94,20 @@ public class Playscreen implements Screen {
 
     private void update(float delta) {
         handleInput();
+        timer.updateTimer(delta);
         physics.update(delta, player);
         player.update(delta);
         updateEnemies(delta);
 
         if (state.isGoing()) {
-            timer.updateTimer(delta);
             updateHolesAndIslands(delta);
+            shotgun.update(delta);
         }
         checkForGameOver();
         updateSpeedLevel();
         hud.update(timer.getTime(), player.getBulletsAmount());
 
-        gdxRenderer.update(delta);
+        graphicsOverlay.update(timer.getTime());
 
         if (state.isGoing()) {
             worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
@@ -153,8 +156,9 @@ public class Playscreen implements Screen {
 
 
     private void checkForGameOver() {
-        if (!player.isAlive()) {
+        if (!player.isAlive() && gameOverNotCalledYet) {
             gameOver();
+            gameOverNotCalledYet = false;
         }
     }
 
@@ -164,12 +168,13 @@ public class Playscreen implements Screen {
             tmp.stopMoving();
         }
         worldRenderer.stopAnimating();
-        hud.gameOver();
+        hud.gameOver(timer.getTime());
+        timer.setGameOver();
     }
 
     private void shotgunShot() {
         if (player.shotgunShot()) {
-            shotgun.shot(enemies, player);
+            shotgun.shot(enemies, player, hud);
         }
     }
 
@@ -206,7 +211,7 @@ public class Playscreen implements Screen {
 
                 player.render(game.batch);
 
-                gdxRenderer.render(game.batch);
+                graphicsOverlay.render(game.batch);
                 game.batch.end();
                 hud.render(game.batch);
 
@@ -224,7 +229,7 @@ public class Playscreen implements Screen {
 
     private void handleInput() {
 
-        if (state.isOver() && (Gdx.input.justTouched())) {
+        if (state.isOver() && timer.canIReadInputAfterGameOver() && (Gdx.input.justTouched())) {
             game.setScreen(new Playscreen(game, false));
         } else if (state.isNotReady() && Gdx.input.justTouched()) {
             state.setGoing();

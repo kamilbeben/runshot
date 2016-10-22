@@ -1,10 +1,13 @@
 package com.kamilbeben.zombiestorm.gamelogic;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Car;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Player;
+import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 
 import java.util.List;
 
@@ -13,16 +16,20 @@ import java.util.List;
  */
 public class Shotgun {
 
-    private int zombiesKilled = 0;
     private int closestIndex;
     private float closestPosition;
     private boolean isSomeoneOnScreen = false;
 
-    public void Shotgun() {
+    private Sprite fireEffect;
+    private boolean drawEffect = false;
+    private float drawTimer = 0f;
 
+    public Shotgun(Texture texture) {
+        fireEffect = new Sprite(texture);
+        fireEffect.setSize(fireEffect.getTexture().getWidth() / Zombie.PPM, fireEffect.getTexture().getHeight() / Zombie.PPM);
     }
 
-    public void shot(List <Enemy> enemies, Player player) {
+    public void shot(List <Enemy> enemies, Player player, HudPlayscreen hud) {
         isSomeoneOnScreen = false;
 
         closestPosition = Zombie.WIDTH + 1;
@@ -38,8 +45,10 @@ public class Shotgun {
         }
         if (isPlayerLowEnough(player) && isSomeoneOnScreen) {
             enemies.get(closestIndex).shotgunShot();
-            zombiesKilled++;
+            hud.zombieGotShot();
         }
+
+        updateFireEffect(player);
     }
 
     private boolean enemyIsNotACar(Enemy enemy) {
@@ -66,11 +75,25 @@ public class Shotgun {
         }
     }
 
-    public int howManyKilled() {
-        return zombiesKilled;
+    public void update(float delta) {
+        if (drawEffect) {
+            drawTimer += delta;
+            if (drawTimer > 0.1f) {
+                drawEffect = false;
+            }
+        }
+    }
+
+    private void updateFireEffect(Player player) {
+        drawTimer = 0f;
+        drawEffect = true;
+        fireEffect.setPosition(player.getPosition().x + 64 / Zombie.PPM, player.getPosition().y + 4 / Zombie.PPM);
     }
 
     public void render(SpriteBatch batch) {
-
+        if (drawEffect) {
+            fireEffect.draw(batch);
+            fireEffect.setAlpha(1 - 10*drawTimer);
+        }
     }
 }

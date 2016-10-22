@@ -1,15 +1,10 @@
 package com.kamilbeben.zombiestorm.hud;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kamilbeben.zombiestorm.Zombie;
 
 /**
@@ -17,48 +12,43 @@ import com.kamilbeben.zombiestorm.Zombie;
  */
 public class TextPlayscreen {
 
+
     private BitmapFont font;
     private Stage stage;
 
     private final float padding = 20f;
-    private Label timer;
-    private Label score;
+    private Label distance;
     private Label gameOver;
 
 
-    public TextPlayscreen(Stage stage) {
-        font = new BitmapFont();
+    public TextPlayscreen(Stage stage, BitmapFont bitmapFont) {
+        font = bitmapFont;
         this.stage = stage;
         initializeLabels();
     }
 
     private void initializeLabels() {
 
-        timer = new Label("0", new Label.LabelStyle(font, Color.WHITE));
-        timer.setPosition(padding, Zombie.HEIGHT - padding - textHeight(timer.getText().toString()));
+        distance = new Label("0", new Label.LabelStyle(font, Color.WHITE));
+        distance.setPosition(Zombie.WIDTH - padding - textWidth(distance.getText().toString()), Zombie.HEIGHT - padding - textHeight(distance.getText().toString()));
 
 
-        score = new Label("0", new Label.LabelStyle(font, Color.WHITE));
-        score.setPosition(Zombie.WIDTH - padding - textWidth(score.getText().toString()),
-                Zombie.HEIGHT - padding - textHeight(score.getText().toString()));
+        stage.addActor(distance);
+    }
 
-        gameOver = new Label("Game Over", new Label.LabelStyle(font, Color.WHITE));
+    public void update(float distanceFloat) {
+        distance.setText(String.format("%1.0f", distanceFloat));
+        distance.setPosition(padding, Zombie.HEIGHT - padding - textHeight(distance.getText().toString()));
+    }
+
+    public void gameOver(float distance, int zombieKilled) {
+        float score = distance + (zombieKilled * 10);
+
+        gameOver = new Label("Game over! \nDistance: " + Integer.toString((int) distance) + "\nZombie's killed: " + Integer.toString(zombieKilled) + "\nScore: "  + Integer.toString((int) score),
+                new Label.LabelStyle(font, Color.WHITE));
         gameOver.setPosition((Zombie.WIDTH - textWidth(gameOver.getText().toString()))/2,
                 (Zombie.HEIGHT - textHeight(gameOver.getText().toString()))/2);
 
-        stage.addActor(timer);
-        stage.addActor(score);
-    }
-
-    public void update(float timerFloat, float scoreFloat) {
-        timer.setText(String.format("%1.1f", timerFloat));
-        timer.setPosition(padding, Zombie.HEIGHT - padding - textHeight(timer.getText().toString()));
-        score.setText(String.format("%1.0f", scoreFloat));
-        score.setPosition(Zombie.WIDTH - padding - textWidth(score.getText().toString()),
-                Zombie.HEIGHT - padding - textHeight(score.getText().toString()));
-    }
-
-    public void gameOver() {
         stage.addActor(this.gameOver);
     }
     private float textHeight(String text) {

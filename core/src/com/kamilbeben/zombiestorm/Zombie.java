@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.screens.Menuscreen;
 import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Assets;
+import com.kamilbeben.zombiestorm.tools.Data;
 
 public class Zombie extends Game {
 
@@ -24,6 +25,8 @@ public class Zombie extends Game {
 	public static final short AMMO_PACK_BIT = 256;
 	public static final short CAR_BIT = 512;
 	public static final short STUMBLE_BIT = 1024;
+
+	public Data data = new Data();
 
 
 	public Assets assets = new Assets();

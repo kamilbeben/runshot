@@ -4,8 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kamilbeben.zombiestorm.Zombie;
@@ -27,10 +32,15 @@ public class Menuscreen implements Screen {
     private MenuButton buttonPlay;
     private MenuButton buttonOptions;
     private MenuButton buttonAbout;
+    private MenuButton buttonTutorial;
 
     private Sprite background_bot;
     private ParallaxBackground fog;
     private Sprite background_top;
+
+    private Sprite runningSprite;
+    private Animation animation;
+    private float animationTimer = 0f;
 
     public Menuscreen(Zombie game) {
         this.game = game;
@@ -39,7 +49,8 @@ public class Menuscreen implements Screen {
         background_bot = new Sprite(game.assets.textureHolder.MENU_BACKGROUND_BOT);
         background_top = new Sprite(game.assets.textureHolder.MENU_BACKGROUND_TOP);
         fog = new ParallaxBackground(game.assets.textureHolder.MENU_PARALLAX_FOG, 25, false);
-        initializeStage();
+        setupStage();
+        setupAnimation(game.assets.textureHolder.MENU_PLAYER_ANIMATION);
     }
 
 
@@ -49,7 +60,7 @@ public class Menuscreen implements Screen {
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
     }
 
-    private void initializeStage() {
+    private void setupStage() {
         camera = new OrthographicCamera(Zombie.WIDTH, Zombie.HEIGHT);
         camera.translate(camera.viewportWidth/2, camera.viewportHeight/2);
         viewport = new FitViewport(Zombie.WIDTH, Zombie.HEIGHT, camera);
@@ -58,21 +69,39 @@ public class Menuscreen implements Screen {
         addActors();
     }
 
+    private void setupAnimation(Texture texture) {
+        runningSprite = new Sprite(texture);
+        runningSprite.setBounds(0, 0, 120, 146);
+        runningSprite.setPosition((Zombie.WIDTH - 120)/2, 24);
+
+        Array<TextureRegion> frames = new Array<TextureRegion>();
+        for (int i=0; i<12; i++) {
+            frames.add(new TextureRegion(runningSprite.getTexture(), i * 120, 0, 120, 146));
+        }
+        animation = new Animation(0.1f, frames);
+        frames.clear();
+    }
+
     private void addActors() {
-        buttonPlay = new MenuButton(stage, 240,
+        buttonPlay = new MenuButton(stage, new Vector2(197, 228),
                 game.assets.textureHolder.MENU_PLAY);
 
-        buttonOptions = new MenuButton(stage, buttonPlay.getY() - buttonSpacing - game.assets.textureHolder.MENU_OPTIONS.getHeight(),
+        buttonTutorial = new MenuButton(stage, new Vector2(124, 167),
+                game.assets.textureHolder.MENU_TUTORIAL);
+
+        buttonOptions = new MenuButton(stage, new Vector2(566, 227),
                 game.assets.textureHolder.MENU_OPTIONS);
 
-        buttonAbout = new MenuButton(stage, buttonOptions.getY() - buttonSpacing - game.assets.textureHolder.MENU_ABOUT.getHeight(),
+        buttonAbout = new MenuButton(stage, new Vector2(568, 167),
                 game.assets.textureHolder.MENU_ABOUT);
+
     }
 
     public void update(float delta) {
         handleUserInput();
         fog.update(delta);
         camera.update();
+        updateAnimation(delta);
     }
 
     public void handleUserInput() {
@@ -95,6 +124,19 @@ public class Menuscreen implements Screen {
 
     }
 
+    private void updateAnimation(float delta) {
+        runningSprite.setRegion(getFrame(delta));
+    }
+
+
+    public TextureRegion getFrame(float delta) {
+        TextureRegion region;
+        region = animation.getKeyFrame(animationTimer, true);
+        animationTimer += delta;
+        return region;
+    }
+
+
     @Override
     public void render(float delta) {
         update(delta);
@@ -106,6 +148,7 @@ public class Menuscreen implements Screen {
         background_bot.draw(game.batch);
         fog.render(game.batch);
         background_top.draw(game.batch);
+        runningSprite.draw(game.batch);
         game.batch.end();
         stage.draw();
     }

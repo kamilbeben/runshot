@@ -12,21 +12,19 @@ import java.util.List;
 /**
  * Created by bezik on 13.10.16.
  */
-public class GDXRenderer {
+public class GraphicsOverlay {
 
     private float lastRotationTime = 0f;
     private float lastDirectionChange = 0f;
     private float timer = 0f;
 
-    private ParallaxBackground cloudsFar;
-    private ParallaxBackground cloudsClose;
 
     List<Fireflies> fireflies;
 
     private Sprite palette;
 
 
-    public GDXRenderer(World world, TextureHolder textureHolder) {
+    public GraphicsOverlay(World world, TextureHolder textureHolder) {
         setupFireflies(world, textureHolder);
         setupColorPalette(textureHolder);
     }
@@ -46,13 +44,14 @@ public class GDXRenderer {
         palette.setSize(Zombie.WIDTH / Zombie.PPM, Zombie.HEIGHT / Zombie.PPM);
     }
 
-    public void update(float delta) {
-        timer += delta;
+    public void update(float timer) {
         if (timer > lastRotationTime + 0.1f) {
+            lastRotationTime = timer;
             rotateFireflies();
         }
 
         if (timer > lastDirectionChange + 1f) {
+            lastDirectionChange = timer;
             changeFirefliesDirection();
         }
 
@@ -63,14 +62,12 @@ public class GDXRenderer {
 
 
     private void changeFirefliesDirection() {
-        lastDirectionChange = timer;
         for (Fireflies tmp : fireflies) {
             tmp.changeDirection();
         }
     }
 
     private void rotateFireflies() {
-        lastRotationTime = timer;
         for (Fireflies tmp : fireflies) {
             tmp.rotate();
         }

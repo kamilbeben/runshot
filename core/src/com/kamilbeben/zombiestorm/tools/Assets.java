@@ -35,6 +35,7 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Extras/parallax_far.png", Texture.class);
         manager.load("Playscreen/Extras/parallax_middle.png", Texture.class);
         manager.load("Playscreen/Extras/parallax_fog.png", Texture.class);
+        manager.load("Playscreen/Extras/fire_effect.png", Texture.class);
         manager.load("Playscreen/Characters/car.png", Texture.class);
         manager.load("Playscreen/Characters/car_lights.png", Texture.class);
         manager.load("Playscreen/Characters/monkey.png", Texture.class);
@@ -45,6 +46,7 @@ public class Assets implements Disposable {
         manager.load("Playscreen/Obstacles/hole_short.png", Texture.class);
         manager.load("Playscreen/Obstacles/island_long.png", Texture.class);
         manager.load("Playscreen/Obstacles/island_short.png", Texture.class);
+        manager.load("Fonts/font.fnt", BitmapFont.class);
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Playscreen/Hud/ammoBG.png", Texture.class),
@@ -61,6 +63,7 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Extras/parallax_far.png", Texture.class),
                 manager.get("Playscreen/Extras/parallax_middle.png", Texture.class),
                 manager.get("Playscreen/Extras/parallax_fog.png", Texture.class),
+                manager.get("Playscreen/Extras/fire_effect.png", Texture.class),
                 manager.get("Playscreen/Characters/car.png", Texture.class),
                 manager.get("Playscreen/Characters/car_lights.png", Texture.class),
                 manager.get("Playscreen/Characters/monkey.png", Texture.class),
@@ -83,6 +86,8 @@ public class Assets implements Disposable {
         manager.load("Menuscreen/play.png", Texture.class);
         manager.load("Menuscreen/options.png", Texture.class);
         manager.load("Menuscreen/about.png", Texture.class);
+        manager.load("Menuscreen/tutorial.png", Texture.class);
+        manager.load("Menuscreen/run_frames.png", Texture.class);
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Menuscreen/background.jpg", Texture.class),
@@ -90,7 +95,9 @@ public class Assets implements Disposable {
                 manager.get("Playscreen/Extras/parallax_fog.png", Texture.class),
                 manager.get("Menuscreen/play.png", Texture.class),
                 manager.get("Menuscreen/options.png", Texture.class),
-                manager.get("Menuscreen/about.png", Texture.class)
+                manager.get("Menuscreen/about.png", Texture.class),
+                manager.get("Menuscreen/tutorial.png", Texture.class),
+                manager.get("Menuscreen/run_frames.png", Texture.class)
         );
     }
 

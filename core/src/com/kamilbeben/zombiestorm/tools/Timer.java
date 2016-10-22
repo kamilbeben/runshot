@@ -21,11 +21,18 @@ public class Timer {
     private static final float time_middle_base = 1.75f;
     private static final float time_short_base = 1.0f;
 
+    private boolean gameOver = false;
+    private float gameOverTimer = 0f;
+
 
 
 
     public void updateTimer(float delta) {
-        timerGeneral += delta;
+        if (gameOver) {
+            gameOverTimer += delta;
+        } else {
+            timerGeneral += delta;
+        }
     }
 
     public float getTime() {
@@ -88,6 +95,17 @@ public class Timer {
         return 1f + (Tools.randomFrom1To10() / 4f);
     }
 
+    public void setGameOver() {
+        gameOver = true;
+    }
+
+    public boolean canIReadInputAfterGameOver() {
+        if (gameOverTimer > 0.5f) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public int getSpeedLevel() {
         if (timerGeneral < 15f) {

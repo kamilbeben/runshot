@@ -2,6 +2,7 @@ package com.kamilbeben.zombiestorm.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -20,32 +21,30 @@ public class HudPlayscreen {
 
     private TextPlayscreen text;
 
-    private float score = 0f;
-    private float distance = 0f;
     private int zombieKilled = 0;
-    private int headshots = 0;
+
 
     public HudPlayscreen(Zombie game) {
         viewport = new FitViewport(Zombie.WIDTH, Zombie.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
-        text = new TextPlayscreen(stage);
+        text = new TextPlayscreen(stage, game.assets.manager.get("Fonts/font.fnt", BitmapFont.class));
+
         ammoRenderer = new AmmoRenderer(game.assets.textureHolder);
     }
 
     public void update(float timer, int bulletAmount) {
-        text.update(timer, score);
+        text.update(calculateDistance(timer));
         ammoRenderer.checkHowManyBullets(bulletAmount);
-        setScore(timer);
+
     }
 
-    private void setScore(float time) {
-        distance = (3 * time) + ((time * time) / 200);
-        score = distance + (zombieKilled * 10) + (headshots * 50);
+    private float calculateDistance(float time) {
+        return (3 * time) + ((time * time) / 200);
     }
 
-    public void gameOver() {
-        text.gameOver();
+    public void gameOver(float time) {
+        text.gameOver(calculateDistance(time), zombieKilled);
     }
 
     public void render(SpriteBatch batch) {
@@ -56,11 +55,7 @@ public class HudPlayscreen {
     }
 
     public void zombieGotShot() {
-
-    }
-
-    public void zombieGotHeadShot() {
-
+        zombieKilled++;
     }
 
     public void dispose() {

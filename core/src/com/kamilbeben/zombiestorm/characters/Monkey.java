@@ -95,7 +95,10 @@ public class Monkey extends Enemy {
         frames.clear();
 
         for (int i=0; i<6; i++) {
-            frames.add(new TextureRegion(getTexture(), i * 128, 148 * 2, 128, 148));
+            frames.add(new TextureRegion(getTexture(), i * 128, 274, 128, 148));
+        }
+        for (int i=0; i<6; i++) {
+            frames.add(new TextureRegion(getTexture(), 5 * 128, 274, 128, 148));
         }
         shot = new Animation(0.075f, frames);
         frames.clear();
