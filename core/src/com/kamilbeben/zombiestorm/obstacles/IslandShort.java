@@ -30,8 +30,4 @@ public class IslandShort extends Island {
 
         createBody(x, y, world);
     }
-
-    protected void addAmmoPack(World world, float x, float y, Texture texture) {
-        ammoPack = new AmmoPack(world, x, y, texture);
-    }
 }

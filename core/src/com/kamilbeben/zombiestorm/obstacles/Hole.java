@@ -32,7 +32,6 @@ public abstract class Hole extends Sprite {
     }
 
     protected abstract void setupBody(float x, float y, World world);
-    public abstract HolePosition getStartTileAndNumberOfTiles();
 
 
     public void update(float delta) {

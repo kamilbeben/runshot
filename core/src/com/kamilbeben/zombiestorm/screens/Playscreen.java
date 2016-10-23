@@ -25,6 +25,9 @@ import com.kamilbeben.zombiestorm.obstacles.HoleLong;
 import com.kamilbeben.zombiestorm.obstacles.HoleShort;
 import com.kamilbeben.zombiestorm.obstacles.IslandLong;
 import com.kamilbeben.zombiestorm.obstacles.IslandShort;
+import com.kamilbeben.zombiestorm.obstacles.Obstacle;
+import com.kamilbeben.zombiestorm.obstacles.StoneBig;
+import com.kamilbeben.zombiestorm.obstacles.StoneSmall;
 import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.graphicalfireworks.WorldRenderer;
 
@@ -50,7 +53,7 @@ public class Playscreen implements Screen {
     private Player player;
     private List<Enemy> enemies;
     private List<Hole> holes;
-    private List<Island> islands;
+    private List<Obstacle> obstacles;
     private ObjectSpawner objectSpawner;
     private Timer timer = new Timer();
 
@@ -78,8 +81,8 @@ public class Playscreen implements Screen {
         player = new Player(physics.world, game.assets.textureHolder);
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
-        islands = new ArrayList<Island>();
-        objectSpawner = new ObjectSpawner(enemies, holes, islands, physics.world, game.assets.textureHolder);
+        obstacles = new ArrayList<Obstacle>();
+        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, physics.world, game.assets.textureHolder);
         graphicsOverlay = new GraphicsOverlay(physics.world, game.assets.textureHolder);
         shotgun = new Shotgun(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
         Gdx.input.setCatchBackKey(true);
@@ -132,7 +135,7 @@ public class Playscreen implements Screen {
         for (Hole tmp : holes) {
             tmp.setSpeedLevel(speedlLevel);
         }
-        for (Island tmp : islands) {
+        for (Obstacle tmp : obstacles) {
             tmp.setSpeedLevel(speedlLevel);
         }
         player.setSpeedLevel(speedlLevel);
@@ -149,7 +152,7 @@ public class Playscreen implements Screen {
         for (Hole tmp : holes) {
             tmp.update(delta);
         }
-        for (Island tmp : islands) {
+        for (Obstacle tmp : obstacles) {
             tmp.update(delta);
         }
     }
@@ -164,7 +167,7 @@ public class Playscreen implements Screen {
 
     private void gameOver() {
         state.setOver();
-        for (Island tmp : islands) {
+        for (Obstacle tmp : obstacles) {
             tmp.stopMoving();
         }
         worldRenderer.stopAnimating();
@@ -200,7 +203,7 @@ public class Playscreen implements Screen {
                 for (Enemy tmp : enemies) {
                     tmp.render(game.batch);
                 }
-                for (Island tmp : islands) {
+                for (Obstacle tmp : obstacles) {
                     tmp.render(game.batch);
                 }
 
@@ -269,10 +272,13 @@ public class Playscreen implements Screen {
             holes.add(new HoleLong(physics.world, holesPosition, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_LONG));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-            islands.add(new IslandLong(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
+            obstacles.add(new IslandLong(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_7)) {
-            islands.add(new IslandShort(physics.world, holesPosition, 260, timer.getSpeedLevel(), game.assets.textureHolder));
+            obstacles.add(new StoneSmall(physics.world, 1200, 128, timer.getSpeedLevel(), game.assets.textureHolder));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_8)) {
+            obstacles.add(new StoneBig(physics.world, 1200, 128, timer.getSpeedLevel(), game.assets.textureHolder));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
             timer.addTenSeconds();

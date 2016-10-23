@@ -17,38 +17,19 @@ import com.kamilbeben.zombiestorm.tools.Tools;
 /**
  * Created by bezik on 08.10.16.
  */
-public abstract class Island extends Sprite {
+public abstract class Island extends Obstacle {
 
     protected AmmoPack ammoPack;
-    protected PolygonShape islandShape = new PolygonShape();
-    protected EdgeShape jumpLine = new EdgeShape();
     protected EdgeShape accidentLine = new EdgeShape();
 
-    private float speed = 7f;
-
-    public Body body;
-
     public Island(Texture texture, int speedLevel) {
-        super(texture);
-        setSpeedLevel(speedLevel);
+        super(texture, speedLevel);
     }
 
-    protected abstract void setupBody(float x, float y, World world);
-
-    protected void createBody(float x, float y, World world) {
-        defineBody(x, y, world);
-        FixtureDef fixtureDef = new FixtureDef();
-
+    @Override
+    protected void setupSpecificTypeBody(FixtureDef fixtureDef) {
         createIslandKinematicBody(fixtureDef);
-        createJumpSensor(fixtureDef);
         createAccidentSensor(fixtureDef);
-    }
-
-    private void defineBody(float x, float y, World world) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(x * 1/ Zombie.PPM, y * 1/ Zombie.PPM);
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
-        body = world.createBody(bodyDef);
     }
 
     private void createIslandKinematicBody(FixtureDef fixtureDef) {
@@ -59,14 +40,6 @@ public abstract class Island extends Sprite {
         body.createFixture(fixtureDef);
     }
 
-    private void createJumpSensor(FixtureDef fixtureDef) {
-        fixtureDef.filter.categoryBits = Zombie.GROUND_BIT;
-        fixtureDef.shape = jumpLine;
-        fixtureDef.isSensor = true;
-        body.createFixture(fixtureDef);
-    }
-
-
     private void createAccidentSensor(FixtureDef fixtureDef) {
         fixtureDef.filter.categoryBits = Zombie.CAR_BIT;
         fixtureDef.filter.maskBits = Zombie.PLAYER_BIT;
@@ -75,48 +48,41 @@ public abstract class Island extends Sprite {
         body.createFixture(fixtureDef);
     }
 
+    protected void addAmmoPack(World world, float x, float y, Texture texture) {
+        ammoPack = new AmmoPack(world, x, y, texture);
+    }
 
+    @Override
     public void update(float delta) {
         move(delta);
         updateSpritePosition();
         ammoPack.updateSpritePosition();
     }
 
+    @Override
     public void stopMoving() {
         body.setAwake(false);
         ammoPack.body.setAwake(false);
     }
 
-
+    @Override
     public void move(float delta) {
         float calculatedSpeed = speed * delta;
         body.setLinearVelocity(new Vector2(-calculatedSpeed, 0f));
         ammoPack.move(calculatedSpeed);
     }
 
+    @Override
     protected void updateSpritePosition() {
         setPosition(body.getPosition().x - getWidth() / 2,
                 (body.getPosition().y) - getHeight() / 2);
     }
 
+    @Override
     public void render(SpriteBatch batch) {
-        if (isIslandOnScreen()) {
+        if (isObstacleOnScreen()) {
             draw(batch);
             ammoPack.render(batch);
         }
     }
-
-    public boolean isIslandOnScreen() {
-        if (body.getPosition().x > -300 / Zombie.PPM && body.getPosition().x < 1300 / Zombie.PPM) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    public void setSpeedLevel(int speedLevel) {
-        speed = Tools.getStaticObjectsSpeedLevel(speedLevel);
-    }
-
 }

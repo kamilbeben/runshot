@@ -11,6 +11,10 @@ import com.kamilbeben.zombiestorm.obstacles.HoleShort;
 import com.kamilbeben.zombiestorm.obstacles.Island;
 import com.kamilbeben.zombiestorm.obstacles.IslandLong;
 import com.kamilbeben.zombiestorm.obstacles.IslandShort;
+import com.kamilbeben.zombiestorm.obstacles.Obstacle;
+import com.kamilbeben.zombiestorm.obstacles.Stone;
+import com.kamilbeben.zombiestorm.obstacles.StoneBig;
+import com.kamilbeben.zombiestorm.obstacles.StoneSmall;
 import com.kamilbeben.zombiestorm.tools.TextureHolder;
 import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
@@ -24,21 +28,21 @@ public class ObjectSpawner {
 
     private List<Enemy> enemies;
     private List<Hole> holes;
-    private List<Island> islands;
+    private List<Obstacle> obstacles;
     private World world;
-    private boolean lastRandomWasAnObstacle = false;
+    private boolean lastRandomWasAnObstacleOrHole = false;
     private boolean[] lastRandomWasAMonkey;
     private boolean[] lastRandomWasAWalker;
     private TextureHolder textureHolder;
 
     float lastHole = -3f;
-    float lastIsland = -3f;
+    float lastObstacle = -3f;
 
 
-    public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Island> islands, World world, TextureHolder textureHolder) {
+    public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Obstacle> obstacles, World world, TextureHolder textureHolder) {
         this.enemies = enemies;
         this.holes = holes;
-        this.islands = islands;
+        this.obstacles = obstacles;
         this.world = world;
         this.textureHolder = textureHolder;
 
@@ -52,9 +56,9 @@ public class ObjectSpawner {
 
     public void update(Timer timer) {
         clearArrays();
-        if (timer.isItTimeToSpawnNewObstacleOrEnemy() && ((lastHole + 3f < timer.getTime()))) {
-            if (lastIsland + 15f < timer.getTime()) {
-                addIsland(timer);
+        if (timer.isItTimeToSpawnNewObstacleOrEnemy() && ((lastHole + 3f < timer.getTime()))  && ((lastObstacle + 2f < timer.getTime()))) {
+            if (lastObstacle + 10f < timer.getTime()) {
+                addObstacle(timer);
             } else  {
                 chooseBetweenObstacleAndEnemy(timer);
             }
@@ -93,19 +97,19 @@ public class ObjectSpawner {
 
     private void clearIslands() {
         boolean islandOnScreen = false;
-        for (Island tmp : islands) {
-            if (tmp.isIslandOnScreen()) {
+        for (Obstacle tmp : obstacles) {
+            if (tmp.isObstacleOnScreen()) {
                 islandOnScreen = true;
             }
         }
-        if (!islandOnScreen && !islands.isEmpty()) {
-            islands.clear();
+        if (!islandOnScreen && !obstacles.isEmpty()) {
+            obstacles.clear();
         }
     }
 
     private void chooseBetweenObstacleAndEnemy(Timer timer) {
         int random = Tools.randomFrom1To10();
-        if (random < 5 || lastRandomWasAnObstacle) {
+        if (random < 5 || lastRandomWasAnObstacleOrHole) {
             enemies.add(randomizeEnemy(timer));
         } else {
             chooseBetweenHoleAndIsland(timer);
@@ -115,12 +119,12 @@ public class ObjectSpawner {
     private void chooseBetweenHoleAndIsland(Timer timer) {
         resetWalkerBoolean();
         resetMonkeyBoolean();
-        lastRandomWasAnObstacle = true;
+        lastRandomWasAnObstacleOrHole = true;
         int random = Tools.randomFrom1To10();
         if (random > 5) {
             addHole(timer);
         } else {
-            addIsland(timer);
+            addObstacle(timer);
         }
     }
 
@@ -128,16 +132,25 @@ public class ObjectSpawner {
         if (lastHole + 3f < (timer.getTime())) {
             holes.add(randomizeHole(timer));
             lastHole = timer.getTime();
-            lastRandomWasAnObstacle = true;
+            lastRandomWasAnObstacleOrHole = true;
         } else {
-            islands.add(randomizeIsland(timer));
+            obstacles.add(randomizeIsland(timer));
         }
     }
 
 
-    private void addIsland(Timer timer) {
-        lastIsland = timer.getTime();
-        islands.add(randomizeIsland(timer));
+    private void addObstacle(Timer timer) {
+        lastObstacle = timer.getTime();
+        obstacles.add(randomizeObstacle(timer));
+    }
+
+    private Obstacle randomizeObstacle(Timer timer) {
+        int random = Tools.randomFrom1To10();
+        if (random < 5) {
+            return randomizeIsland(timer);
+        } else {
+            return randomizeStone(timer);
+        }
     }
 
     private Island randomizeIsland(Timer timer) {
@@ -146,6 +159,15 @@ public class ObjectSpawner {
             return new IslandShort(world, 1200, 260, timer.getSpeedLevel(), textureHolder);
         } else {
             return new IslandLong(world, 1200, 260, timer.getSpeedLevel(), textureHolder);
+        }
+    }
+
+    private Stone randomizeStone(Timer timer) {
+        int random = Tools.randomFrom1To10();
+        if (random < 5) {
+            return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
+        } else {
+            return new StoneBig(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
         }
     }
 
@@ -179,10 +201,10 @@ public class ObjectSpawner {
             } else {
                 return randomizeEnemy(timer);
             }
-        } else if (!lastRandomWasAnObstacle){
+        } else if (!lastRandomWasAnObstacleOrHole){
             resetWalkerBoolean();
             resetMonkeyBoolean();
-            lastRandomWasAnObstacle = true;
+            lastRandomWasAnObstacleOrHole = true;
             return new Car(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_CAR, textureHolder.GAME_ENEMY_CAR_LIGHTS);
         } else {
             return randomizeEnemy(timer);
@@ -200,7 +222,7 @@ public class ObjectSpawner {
     }
 
     private void resetObstacleBoolean() {
-        lastRandomWasAnObstacle = false;
+        lastRandomWasAnObstacleOrHole = false;
     }
 
     private Enemy newWalker(Timer timer) {
@@ -211,7 +233,7 @@ public class ObjectSpawner {
         }
         lastRandomWasAMonkey[0] = false;
         lastRandomWasAMonkey[1] = false;
-        lastRandomWasAnObstacle = false;
+        lastRandomWasAnObstacleOrHole = false;
         return new Walker(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_WALKER);
     }
 
@@ -223,7 +245,7 @@ public class ObjectSpawner {
         }
         lastRandomWasAWalker[0] = false;
         lastRandomWasAWalker[1] = false;
-        lastRandomWasAnObstacle = false;
+        lastRandomWasAnObstacleOrHole = false;
         return new Monkey(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_MONKEY);
     }
 }

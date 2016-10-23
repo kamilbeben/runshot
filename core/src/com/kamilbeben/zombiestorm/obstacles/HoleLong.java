@@ -28,11 +28,4 @@ public class HoleLong extends Hole {
         createBody(x, y, shape, world);
     }
 
-
-    @Override
-    public HolePosition getStartTileAndNumberOfTiles() {
-        float start = ((body.getPosition().x - getWidth() / 2 / Zombie.PPM - 134 / Zombie.PPM) * 100 / 32);
-        return new HolePosition(Tools.roundTilePosition(start), 8);
-
-    }
 }

@@ -35,7 +35,7 @@ public class Zombie extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new Menuscreen(this));
+		setScreen(new Playscreen(this, true));
 	}
 
 	@Override
