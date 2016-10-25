@@ -167,7 +167,7 @@ public class ObjectSpawner {
         if (random < 5) {
             return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
         } else {
-            return new StoneBig(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
+            return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
         }
     }
 
@@ -201,11 +201,11 @@ public class ObjectSpawner {
             } else {
                 return randomizeEnemy(timer);
             }
-        } else if (!lastRandomWasAnObstacleOrHole){
+        } else if (!lastRandomWasAnObstacleOrHole && lastObstacle + 2f < timer.getTime()){
             resetWalkerBoolean();
             resetMonkeyBoolean();
             lastRandomWasAnObstacleOrHole = true;
-            return new Car(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_CAR, textureHolder.GAME_ENEMY_CAR_LIGHTS);
+            return new Car(world, 1400, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_CAR, textureHolder.GAME_ENEMY_CAR_LIGHTS);
         } else {
             return randomizeEnemy(timer);
         }

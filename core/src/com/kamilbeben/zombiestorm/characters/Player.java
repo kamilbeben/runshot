@@ -21,6 +21,7 @@ public class Player {
 
     private Boolean shooting = false;
     private Boolean jumping = false;
+    private Boolean stumble = false;
 
     private Body body;
 
@@ -57,19 +58,9 @@ public class Player {
         fixtureDef.friction = 0.2f;
         body.createFixture(fixtureDef);
 
-
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
         fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK_BIT | Zombie.CAR_BIT;
-        body.createFixture(fixtureDef);
-
-        CircleShape circle = new CircleShape();
-        circle.setRadius(28f / Zombie.PPM);
-        circle.setPosition(new Vector2(0, -15 / Zombie.PPM));
-        fixtureDef.shape = circle;
-        fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Zombie.STUMBLE_BIT;
         body.createFixture(fixtureDef);
 
         body.setUserData(this);
@@ -108,9 +99,11 @@ public class Player {
     }
 
     public void hitByCar() {
-        playerRenderer.setCarAccident();
-        body.applyLinearImpulse(new Vector2(-0.5f, 0), new Vector2(body.getWorldCenter().x + 20f / Zombie.PPM, body.getWorldCenter().y), true);
-        collisionsOff();
+        if (!stumble) {
+            playerRenderer.setCarAccident();
+            body.applyLinearImpulse(new Vector2(-0.5f, 0), new Vector2(body.getWorldCenter().x + 20f / Zombie.PPM, body.getWorldCenter().y), true);
+            collisionsOff();
+        }
     }
 
 
@@ -137,6 +130,7 @@ public class Player {
     public void stumble() {
         dead();
         playerRenderer.setStumble();
+        stumble = true;
         body.applyLinearImpulse(new Vector2(3.5f, 2f), new Vector2(body.getWorldCenter().x + 20f / Zombie.PPM, body.getWorldCenter().y), true);
     }
 

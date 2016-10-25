@@ -83,16 +83,16 @@ public class Menuscreen implements Screen {
     }
 
     private void addActors() {
-        buttonPlay = new MenuButton(stage, new Vector2(197, 228),
+        buttonPlay = new MenuButton(stage, new Vector2(197, 204),
                 game.assets.textureHolder.MENU_PLAY);
 
-        buttonTutorial = new MenuButton(stage, new Vector2(124, 167),
+        buttonTutorial = new MenuButton(stage, new Vector2(124, 116),
                 game.assets.textureHolder.MENU_TUTORIAL);
 
-        buttonOptions = new MenuButton(stage, new Vector2(566, 227),
+        buttonOptions = new MenuButton(stage, new Vector2(566, 204),
                 game.assets.textureHolder.MENU_OPTIONS);
 
-        buttonAbout = new MenuButton(stage, new Vector2(568, 167),
+        buttonAbout = new MenuButton(stage, new Vector2(568, 116),
                 game.assets.textureHolder.MENU_ABOUT);
 
     }
@@ -109,14 +109,14 @@ public class Menuscreen implements Screen {
             game.setScreen(new Playscreen(game, true));
             dispose();
         }
-//        if ( buttonOptions.clicked ) {
-//            game.setScreen(new OptionsScreen(game));
-//            dispose();
-//        }
-//        if ( infoButton.clicked ) {
-//            game.setScreen(new AboutScreen(game));
-//            dispose();
-//        }
+        if ( buttonOptions.clicked ) {
+            game.setScreen(new Optionscreen(game));
+            dispose();
+        }
+        if ( buttonAbout.clicked ) {
+            game.setScreen(new Aboutscreen(game));
+            dispose();
+        }
     }
 
     @Override

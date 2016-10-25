@@ -105,6 +105,36 @@ public class Assets implements Disposable {
         );
     }
 
+
+    public void loadAboutAssets() {
+        manager.clear();
+
+        manager.load("Fonts/font_about.fnt", BitmapFont.class);
+        manager.load("Aboutscreen/background.jpg", Texture.class);
+        manager.load("Aboutscreen/return.png", Texture.class);
+        waitForLoadingToComplete();
+        textureHolder = new TextureHolder(
+                manager.get("Aboutscreen/background.jpg", Texture.class),
+                manager.get("Aboutscreen/return.png", Texture.class)
+        );
+    }
+
+    public void loadOptionsAssets() {
+        manager.clear();
+
+        manager.load("Optionscreen/background.jpg", Texture.class);
+        manager.load("Optionscreen/return.png", Texture.class);
+        manager.load("Optionscreen/background.jpg", Texture.class);
+        manager.load("Optionscreen/background.jpg", Texture.class);
+        waitForLoadingToComplete();
+        textureHolder = new TextureHolder(
+                manager.get("Optionscreen/background.jpg", Texture.class),
+                manager.get("Optionscreen/return.png", Texture.class),
+                manager.get("Optionscreen/background.jpg", Texture.class),
+                manager.get("Optionscreen/background.jpg", Texture.class)
+        );
+    }
+
     private void waitForLoadingToComplete() {
         while (!manager.update()) {
         }

@@ -1,6 +1,7 @@
 package com.kamilbeben.zombiestorm;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.screens.Menuscreen;
 import com.kamilbeben.zombiestorm.screens.Playscreen;
@@ -26,6 +27,14 @@ public class Zombie extends Game {
 	public static final short CAR_BIT = 512;
 	public static final short STUMBLE_BIT = 1024;
 
+	public static final void enableAndroidBackKey() {
+		Gdx.input.setCatchBackKey(true);
+	}
+
+	public static final void enableAndroidMenuKey() {
+		Gdx.input.setCatchMenuKey(true);
+	}
+
 	public Data data = new Data();
 
 
@@ -35,7 +44,7 @@ public class Zombie extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new Playscreen(this, true));
+		setScreen(new Menuscreen(this));
 	}
 
 	@Override

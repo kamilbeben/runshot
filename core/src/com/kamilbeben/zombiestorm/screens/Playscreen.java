@@ -78,15 +78,19 @@ public class Playscreen implements Screen {
         hud = new HudPlayscreen(game);
         setupCamera();
         physics = new Physics();
+        setupLists();
+        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, physics.world, game.assets.textureHolder);
+        graphicsOverlay = new GraphicsOverlay(physics.world, game.assets.textureHolder);
+        shotgun = new Shotgun(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
+        game.enableAndroidBackKey();
+        game.enableAndroidMenuKey();
+    }
+
+    private void setupLists() {
         player = new Player(physics.world, game.assets.textureHolder);
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
         obstacles = new ArrayList<Obstacle>();
-        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, physics.world, game.assets.textureHolder);
-        graphicsOverlay = new GraphicsOverlay(physics.world, game.assets.textureHolder);
-        shotgun = new Shotgun(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
-        Gdx.input.setCatchBackKey(true);
-        Gdx.input.setCatchMenuKey(true);
     }
 
     private void setupCamera() {
@@ -97,27 +101,23 @@ public class Playscreen implements Screen {
 
     private void update(float delta) {
         handleInput();
-        timer.updateTimer(delta);
         physics.update(delta, player);
         player.update(delta);
         updateEnemies(delta);
 
         if (state.isGoing()) {
+            timer.updateTimer(delta);
             updateHolesAndIslands(delta);
             shotgun.update(delta);
-        }
-        checkForGameOver();
-        updateSpeedLevel();
-        hud.update(timer.getTime(), player.getBulletsAmount());
-
-        graphicsOverlay.update(timer.getTime());
-
-        if (state.isGoing()) {
             worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
             if (spawnEnemies) {
                 objectSpawner.update(timer);
             }
         }
+        checkForGameOver();
+        updateSpeedLevel();
+        hud.update(timer.getTime(), player.getBulletsAmount());
+        graphicsOverlay.update(timer.getTime());
         camera.update();
     }
 
