@@ -126,12 +126,16 @@ public class Assets implements Disposable {
         manager.load("Optionscreen/return.png", Texture.class);
         manager.load("Optionscreen/background.jpg", Texture.class);
         manager.load("Optionscreen/background.jpg", Texture.class);
+        manager.load("Optionscreen/slider_background.png", Texture.class);
+        manager.load("Optionscreen/knob.png", Texture.class);
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Optionscreen/background.jpg", Texture.class),
                 manager.get("Optionscreen/return.png", Texture.class),
                 manager.get("Optionscreen/background.jpg", Texture.class),
-                manager.get("Optionscreen/background.jpg", Texture.class)
+                manager.get("Optionscreen/background.jpg", Texture.class),
+                manager.get("Optionscreen/slider_background.png", Texture.class),
+                manager.get("Optionscreen/knob.png", Texture.class)
         );
     }
 

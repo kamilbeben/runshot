@@ -6,9 +6,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.Vector2;
@@ -25,10 +29,11 @@ public class Optionscreen implements Screen {
     private Stage stage;
 
     private Sprite background;
-    private static final float itemSpacing = 28;
-    private static final float adHeight = 50;
 
     private MenuButton buttonReturn;
+
+    private Slider musicSlider;
+    private Slider sfxSlider;
 
 
     public Optionscreen(Zombie game) {
@@ -37,6 +42,7 @@ public class Optionscreen implements Screen {
         initializeSprites();
         initializeStage();
         game.enableAndroidBackKey();
+        setupSliders();
     }
 
     private void initializeSprites() {
@@ -61,11 +67,52 @@ public class Optionscreen implements Screen {
                 game.assets.textureHolder.OPTIONS_RETURN);
     }
 
+    private void setupSliders() {
+        Drawable background = new Image(game.assets.textureHolder.OPTIONS_SLIDER_BACKGROUND).getDrawable();
+        Drawable knob = new Image(game.assets.textureHolder.OPTIONS_SLIDER_KNOB).getDrawable();
+        Slider.SliderStyle skin = new Slider.SliderStyle(background, knob);
+        setupMusicSlider(skin);
+        setupSFXSlider(skin);
+    }
+
+    private void setupMusicSlider(Slider.SliderStyle skin) {
+        musicSlider = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        musicSlider.setValue(game.data.musicVolume);
+        musicSlider.setSize(200, 30);
+        musicSlider.setPosition((Zombie.WIDTH - musicSlider.getWidth()) / 2, 230);
+
+        musicSlider.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                saveMusicValue();
+                return false;
+            }
+        });
+        stage.addActor(musicSlider);
+    }
+
+    private void setupSFXSlider(Slider.SliderStyle skin) {
+        sfxSlider = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        sfxSlider.setValue(game.data.sfxVolume);
+        sfxSlider.setSize(200, 30);
+        sfxSlider.setPosition((Zombie.WIDTH - sfxSlider.getWidth()) / 2, musicSlider.getY() - 80);
+
+        sfxSlider.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                saveSfxValue();
+                return false;
+            }
+        });
+        stage.addActor(sfxSlider);
+    }
+
 
     @Override
     public void show() {
 
     }
+
 
     @Override
     public void render(float delta) {
@@ -87,10 +134,20 @@ public class Optionscreen implements Screen {
 
 
         if (buttonReturn.clicked || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+            saveMusicValue();
+            saveSfxValue();
             game.setScreen(new Menuscreen(game));
             dispose();
         }
 
+    }
+
+    private void saveMusicValue() {
+        game.data.musicVolume = musicSlider.getValue();
+    }
+
+    private void saveSfxValue() {
+        game.data.sfxVolume = sfxSlider.getValue();
     }
 
     @Override

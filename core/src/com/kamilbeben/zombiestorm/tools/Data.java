@@ -6,6 +6,8 @@ package com.kamilbeben.zombiestorm.tools;
 public class Data {
 
     private int highScore = 0;
+    public float musicVolume = 0;
+    public float sfxVolume = 0;
 
     public Data() {
         loadData();
