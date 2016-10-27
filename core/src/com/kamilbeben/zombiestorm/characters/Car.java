@@ -37,9 +37,7 @@ public class Car extends Enemy {
     @Override
     protected void setupBody(float x, float y) {
         defineBody(x, y);
-
         FixtureDef fixtureDef = new FixtureDef();
-
         setupStaticBody(fixtureDef);
         setupZombieDestroyer(fixtureDef);
         setupStumbleLine(fixtureDef);

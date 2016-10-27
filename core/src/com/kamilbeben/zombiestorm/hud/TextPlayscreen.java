@@ -19,6 +19,7 @@ public class TextPlayscreen {
     private final float padding = 20f;
     private Label distance;
     private Label gameOver;
+    private Label pause;
 
 
     public TextPlayscreen(Stage stage, BitmapFont bitmapFont) {
@@ -38,7 +39,7 @@ public class TextPlayscreen {
 
     public void update(float distanceFloat) {
         distance.setText(String.format("%1.0f", distanceFloat));
-        distance.setPosition(padding, Zombie.HEIGHT - padding - textHeight(distance.getText().toString()));
+        distance.setPosition(Zombie.WIDTH - padding - textWidth(distance.getText().toString()), Zombie.HEIGHT - padding - textHeight(distance.getText().toString()));
     }
 
     public void gameOver(float distance, int zombieKilled) {
@@ -51,6 +52,20 @@ public class TextPlayscreen {
 
         stage.addActor(this.gameOver);
     }
+
+    public void pause() {
+
+        pause = new Label("         Pause \nClick on screen to unpause \nClick back button to leave", new Label.LabelStyle(font, Color.WHITE));
+        pause.setPosition((Zombie.WIDTH - textWidth(pause.getText().toString()))/2,
+                (Zombie.HEIGHT - textHeight(pause.getText().toString()))/2);
+
+        stage.addActor(this.pause);
+    }
+
+    public void unpause() {
+        pause.remove();
+    }
+
     private float textHeight(String text) {
         GlyphLayout glyphLayout = new GlyphLayout();
         glyphLayout.setText(font, text);

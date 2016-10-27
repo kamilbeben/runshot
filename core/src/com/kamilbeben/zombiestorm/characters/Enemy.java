@@ -106,8 +106,8 @@ public abstract class Enemy extends Sprite {
     }
 
 
-    public void dispose(World world) {
-        world.destroyBody(body);
+    public void dispose() {
+        body.getWorld().destroyBody(body);
         getTexture().dispose();
     }
 

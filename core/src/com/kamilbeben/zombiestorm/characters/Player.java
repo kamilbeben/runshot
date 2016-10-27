@@ -42,30 +42,40 @@ public class Player {
     }
 
     private void setupBody(World world) {
+        defineBody(world);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = setupShape();
+        createMainBody(fixtureDef);
+        createSensor(fixtureDef);
+        body.setUserData(this);
+        fixtureDef.shape.dispose();
+    }
+
+    private void defineBody(World world) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(64 / Zombie.PPM, 97 / Zombie.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
+    }
 
+    private PolygonShape setupShape() {
         PolygonShape polygon = new PolygonShape();
         polygon.setAsBox(15 / Zombie.PPM, 55 / Zombie.PPM);
-        fixtureDef.shape = polygon;
+        return polygon;
+    }
 
+    private void createMainBody(FixtureDef fixtureDef) {
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
         fixtureDef.filter.maskBits = Zombie.ENEMY_BIT | Zombie.STATIC_BIT | Zombie.HOLE_BIT | Zombie.WALLS_BIT | Zombie.STUMBLE_BIT | Zombie.CAR_BIT;
-
         fixtureDef.friction = 0.2f;
         body.createFixture(fixtureDef);
+    }
 
+    private void createSensor(FixtureDef fixtureDef) {
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.PLAYER_BIT;
         fixtureDef.filter.maskBits = Zombie.GROUND_BIT | Zombie.HOLE_BIT | Zombie.AMMO_PACK_BIT | Zombie.CAR_BIT;
         body.createFixture(fixtureDef);
-
-        body.setUserData(this);
-
-        polygon.dispose();
     }
 
     public boolean shotgunShot() {

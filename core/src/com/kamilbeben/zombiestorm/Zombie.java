@@ -35,7 +35,7 @@ public class Zombie extends Game {
 		Gdx.input.setCatchMenuKey(true);
 	}
 
-	public Data data = new Data();
+	public Data data;
 
 
 	public Assets assets = new Assets();
@@ -44,6 +44,7 @@ public class Zombie extends Game {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		data = new Data();
 		setScreen(new Menuscreen(this));
 	}
 

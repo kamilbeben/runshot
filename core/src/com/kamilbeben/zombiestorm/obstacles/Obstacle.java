@@ -71,4 +71,9 @@ public abstract class Obstacle extends Sprite {
         speed = Tools.getStaticObjectsSpeedLevel(speedLevel);
     }
 
+    public void dispose() {
+        body.getWorld().destroyBody(body);
+        getTexture().dispose();
+    }
+
 }

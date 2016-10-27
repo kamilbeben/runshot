@@ -59,9 +59,9 @@ public class PlayerRenderer {
     }
 
     private void setupTwoPartedAnimations() {
-        int yPosition = 0*113;
         upperBody.setBounds(32 / Zombie.PPM, 80 / Zombie.PPM, 101 / Zombie.PPM, 113 / Zombie.PPM);
 
+        int yPosition = 0*113;
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(upperBody.getTexture(), i * 101, yPosition, 101, 113));
@@ -95,7 +95,6 @@ public class PlayerRenderer {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         };
-
         animationJumpingLowerBody = new Animation(0.066f, frames);
         frames.clear();
 
@@ -103,7 +102,6 @@ public class PlayerRenderer {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 113));
         };
-
         animationSteadyUpperBody = new Animation(0.1f, frames);
         frames.clear();
 
@@ -111,17 +109,15 @@ public class PlayerRenderer {
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(lowerBody.getTexture(), i * 101, yPosition, 101, 67));
         };
-
         animationSteadyLowerBody = new Animation(0.1f, frames);
         frames.clear();
     }
 
     private void setupOnePartedAnimations() {
-        fullBodyStumble.setBounds(0,0, 267 / Zombie.PPM, 158 / Zombie.PPM);
-
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        int yPosition = 158;
 
+        fullBodyStumble.setBounds(0,0, 267 / Zombie.PPM, 158 / Zombie.PPM);
+        int yPosition = 158;
         for (int k=0; k<3; k++) {
             for (int i=0; i<7; i++) {
                 frames.add(new TextureRegion(fullBodyStumble.getTexture(), i * 267, k * yPosition, 267, 158));

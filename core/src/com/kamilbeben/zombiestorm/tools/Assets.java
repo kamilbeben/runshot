@@ -22,6 +22,7 @@ public class Assets implements Disposable {
             manager.clear();
         }
         manager.load("Playscreen/Hud/ammoBG.png", Texture.class);
+        manager.load("Playscreen/Hud/pause.png", Texture.class);
         manager.load("Playscreen/Hud/ammoOFF.png", Texture.class);
         manager.load("Playscreen/Hud/ammoON.png", Texture.class);
         manager.load("Playscreen/Extras/shell.png", Texture.class);
@@ -52,6 +53,7 @@ public class Assets implements Disposable {
         waitForLoadingToComplete();
         textureHolder = new TextureHolder(
                 manager.get("Playscreen/Hud/ammoBG.png", Texture.class),
+                manager.get("Playscreen/Hud/pause.png", Texture.class),
                 manager.get("Playscreen/Hud/ammoON.png", Texture.class),
                 manager.get("Playscreen/Hud/ammoOFF.png", Texture.class),
                 manager.get("Playscreen/Extras/shell.png", Texture.class),

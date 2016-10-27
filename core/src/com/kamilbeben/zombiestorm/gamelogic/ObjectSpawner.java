@@ -248,4 +248,13 @@ public class ObjectSpawner {
         lastRandomWasAnObstacleOrHole = false;
         return new Monkey(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_MONKEY);
     }
+
+    public void dispose() {
+        for (Enemy tmp : enemies) {
+            tmp.dispose();
+        }
+        for (Obstacle tmp : obstacles) {
+            tmp.dispose();
+        }
+    }
 }

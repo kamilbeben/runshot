@@ -38,13 +38,10 @@ public class Walker extends Enemy {
     @Override
     protected void setupBody(float x, float y) {
         defineBody(x, y);
-
         FixtureDef fixtureDef = new FixtureDef();
         setupMainBody(fixtureDef);
-
-        body.setUserData(this);
-
         setupStumbleLine(fixtureDef);
+        body.setUserData(this);
     }
 
     private void defineBody(float x, float y) {
@@ -77,10 +74,9 @@ public class Walker extends Enemy {
     }
 
     private void setupLooks() {
-
         setBounds(0, 0, 110 / Zombie.PPM, 156 / Zombie.PPM);
-
         Array<TextureRegion> frames = new Array<TextureRegion>();
+
         for (int i=0; i<11; i++) {
             frames.add(new TextureRegion(getTexture(), i * 110, 0, 110, 156));
         }
@@ -98,7 +94,6 @@ public class Walker extends Enemy {
         }
         gotShot = new Animation(0.12f, frames);
         frames.clear();
-
     }
 
     @Override

@@ -136,6 +136,7 @@ public class Optionscreen implements Screen {
         if (buttonReturn.clicked || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             saveMusicValue();
             saveSfxValue();
+            game.data.saveData();
             game.setScreen(new Menuscreen(game));
             dispose();
         }

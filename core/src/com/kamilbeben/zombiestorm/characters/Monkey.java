@@ -78,10 +78,9 @@ public class Monkey extends Enemy {
     }
 
     private void setupLooks() {
-
         setBounds(0, 0, 128 / Zombie.PPM, 148 / Zombie.PPM);
-
         Array<TextureRegion> frames = new Array<TextureRegion>();
+
         for (int i=0; i<12; i++) {
             frames.add(new TextureRegion(getTexture(), i * 128, 0, 128, 148));
         }
