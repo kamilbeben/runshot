@@ -105,6 +105,9 @@ public abstract class Enemy extends Sprite {
         }
     }
 
+    public void headHit() {
+        killEnemy();
+    }
 
     public void dispose() {
         body.getWorld().destroyBody(body);

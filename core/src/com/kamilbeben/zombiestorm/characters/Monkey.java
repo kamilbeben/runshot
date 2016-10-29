@@ -1,19 +1,16 @@
 package com.kamilbeben.zombiestorm.characters;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
-import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
@@ -46,7 +43,7 @@ public class Monkey extends Enemy {
         FixtureDef fixtureDef = new FixtureDef();
         setupMainBody(fixtureDef);
         body.setUserData(this);
-        setupStumbleLine(fixtureDef);
+        setupHeadLine(fixtureDef);
     }
 
     private void defineBody(float x, float y) {
@@ -66,9 +63,9 @@ public class Monkey extends Enemy {
         body.createFixture(fixtureDef);
     }
 
-    private void setupStumbleLine(FixtureDef fixtureDef) {
+    private void setupHeadLine(FixtureDef fixtureDef) {
         EdgeShape edgeShape = new EdgeShape();
-        edgeShape.set(new Vector2(0 / Zombie.PPM, 50 / Zombie.PPM), new Vector2(10 / Zombie.PPM, 50 / Zombie.PPM));
+        edgeShape.set(new Vector2(-10 / Zombie.PPM, 50 / Zombie.PPM), new Vector2(15 / Zombie.PPM, 50 / Zombie.PPM));
         fixtureDef.shape = edgeShape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;

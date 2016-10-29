@@ -7,12 +7,12 @@ import java.util.Random;
  */
 public class Tools {
 
-    public static final float speedMultiplier_1= 1.3f;
-    public static final float speedMultiplier_2= 1.5f;
-    public static final float speedMultiplier_3= 1.7f;
-    public static final float speedMultiplier_4= 1.9f;
-    public static final float speedMultiplier_5= 2.1f;
-    public static final float speedMultiplier_6= 2.3f;
+    public static final float speedMultiplier_1= 1.8f;
+    public static final float speedMultiplier_2= 2.0f;
+    public static final float speedMultiplier_3= 2.2f;
+    public static final float speedMultiplier_4= 2.4f;
+    public static final float speedMultiplier_5= 2.6f;
+    public static final float speedMultiplier_6= 2.8f;
 
     public Tools() {
 
@@ -20,14 +20,6 @@ public class Tools {
 
     public static int randomFrom1To10() {
         return new Random().nextInt(9) + 1; //minimum + rn.nextInt(maxValue - minvalue + 1)
-    }
-
-    public static int roundTilePosition(float number) {
-        if (number >= 0) {
-            return (int) number;
-        } else {
-            return ((int) number) - 1;
-        }
     }
 
     public static float getStaticObjectsSpeedLevel(int speedLevel) {

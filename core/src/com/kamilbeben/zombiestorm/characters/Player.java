@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -27,9 +26,7 @@ public class Player {
 
     private boolean alive = true;
 
-    private static final float firstJumpForce = 5f;
-    private static final float secondJumpForce = 3f;
-    private int jumpCounter = 0;
+    private static final float jumpForce = 6.5f;
 
     private PlayerRenderer playerRenderer;
 
@@ -82,6 +79,7 @@ public class Player {
         if (bullets > 0 ){
             shooting = true;
             bullets--;
+            body.applyLinearImpulse(new Vector2(0, 1.5f), body.getWorldCenter(), true);
             return true;
         } else {
             return false;
@@ -92,6 +90,12 @@ public class Player {
         bullets = 6;
     }
 
+    public void pickSingleShell() {
+        if (bullets < 6) {
+            bullets++;
+        }
+    }
+
     public void update(float delta) {
         playerRenderer.update(delta, shooting, jumping, body);
         if (shooting) {
@@ -99,9 +103,12 @@ public class Player {
         }
         if (jumping) {
             jumping = !playerRenderer.isJumpingOver();
-        } else {
-            jumpCounter = 0;
         }
+    }
+
+    public void touchLeftWall() {
+        alive = false;
+        body.applyLinearImpulse(new Vector2(-2f, 0), body.getWorldCenter(), true);
     }
 
     public void startMoving() {
@@ -116,24 +123,28 @@ public class Player {
         }
     }
 
+    public void onHitEnemyHead() {
+        body.applyLinearImpulse(new Vector2(0, jumpForce*1.5f), body.getWorldCenter(), true);
+        jumping = true;
+    }
 
     public void jumpFirst() {
         if (alive) {
-            body.applyLinearImpulse(new Vector2(0, firstJumpForce), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, jumpForce), body.getWorldCenter(), true);
             jumping = true;
-            jumpCounter = 1;
         }
     }
 
-    public void jumpSecond() {
-        if (jumpCounter == 1) {
-            body.applyLinearImpulse(new Vector2(0, secondJumpForce), body.getWorldCenter(), true);
-            jumpCounter = 2;
-        }
+    public void reverseJump() {
+        body.applyLinearImpulse(new Vector2(0, -jumpForce), body.getWorldCenter(), true);
     }
 
-    public boolean isJumping() {
-        return jumping;
+    public boolean isInTheAir() {
+        if (body.getPosition().y > 1.55) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

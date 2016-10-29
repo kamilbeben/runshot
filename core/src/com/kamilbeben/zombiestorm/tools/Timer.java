@@ -12,6 +12,7 @@ public class Timer {
     private float timerGeneral = 0f;
     private float timerLastEnemySpawn = 0f;
     private float timerBetweenEnemies = 0f;
+    private float timerSingleShell = 0f;
 
     private float time_long = 2.5f;
     private float time_middle = 1.75f;
@@ -58,6 +59,15 @@ public class Timer {
             timerBetweenEnemies = time_middle;
         } else if (random > 0) {
             timerBetweenEnemies = time_short;
+        }
+    }
+
+    public boolean isItTimeToSpawnSingleShell() {
+        if (timerSingleShell + 4f < timerGeneral) {
+            timerSingleShell = timerGeneral;
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -1,19 +1,16 @@
 package com.kamilbeben.zombiestorm.characters;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
-import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -40,7 +37,7 @@ public class Walker extends Enemy {
         defineBody(x, y);
         FixtureDef fixtureDef = new FixtureDef();
         setupMainBody(fixtureDef);
-        setupStumbleLine(fixtureDef);
+        setupHeadLine(fixtureDef);
         body.setUserData(this);
     }
 
@@ -62,9 +59,9 @@ public class Walker extends Enemy {
         shape.dispose();
     }
 
-    private void setupStumbleLine(FixtureDef fixtureDef) {
+    private void setupHeadLine(FixtureDef fixtureDef) {
         EdgeShape edgeShape = new EdgeShape();
-        edgeShape.set(new Vector2(-5 / Zombie.PPM, 55 / Zombie.PPM), new Vector2(5 / Zombie.PPM, 55 / Zombie.PPM));
+        edgeShape.set(new Vector2(-15 / Zombie.PPM, 55 / Zombie.PPM), new Vector2(15 / Zombie.PPM, 55 / Zombie.PPM));
         fixtureDef.shape = edgeShape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;

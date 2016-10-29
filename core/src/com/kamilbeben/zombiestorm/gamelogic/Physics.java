@@ -27,15 +27,8 @@ public class Physics {
         initializeCollisionDetection();
     }
 
-    public void update(float delta, Player player) {
+    public void update(float delta) {
         world.step(delta, 8, 3);
-        if (playerCollidesWithLeftWall()) {
-            player.dead();
-        }
-    }
-
-    public boolean playerCollidesWithLeftWall() {
-        return contactListener.playerCollidesWithLeftWall;
     }
 
     public void renderDebug(OrthographicCamera camera) {
@@ -44,7 +37,7 @@ public class Physics {
 
 
     private void initializeCollisionDetection() {
-        contactListener = new WorldContactListener(world);
+        contactListener = new WorldContactListener();
         world.setContactListener(contactListener);
     }
 

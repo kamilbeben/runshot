@@ -5,6 +5,7 @@ import com.kamilbeben.zombiestorm.characters.Car;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Monkey;
 import com.kamilbeben.zombiestorm.characters.Walker;
+import com.kamilbeben.zombiestorm.objects.SingleShell;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.HoleLong;
 import com.kamilbeben.zombiestorm.obstacles.HoleShort;
@@ -21,6 +22,8 @@ import com.kamilbeben.zombiestorm.tools.Tools;
 
 import java.util.List;
 
+import jdk.nashorn.tools.ShellFunctions;
+
 /**
  * Created by bezik on 12.10.16.
  */
@@ -29,6 +32,7 @@ public class ObjectSpawner {
     private List<Enemy> enemies;
     private List<Hole> holes;
     private List<Obstacle> obstacles;
+    private List<SingleShell> singleShells;
     private World world;
     private boolean lastRandomWasAnObstacleOrHole = false;
     private boolean[] lastRandomWasAMonkey;
@@ -39,10 +43,11 @@ public class ObjectSpawner {
     float lastObstacle = -3f;
 
 
-    public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Obstacle> obstacles, World world, TextureHolder textureHolder) {
+    public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Obstacle> obstacles, List<SingleShell> singleShells, World world, TextureHolder textureHolder) {
         this.enemies = enemies;
         this.holes = holes;
         this.obstacles = obstacles;
+        this.singleShells = singleShells;
         this.world = world;
         this.textureHolder = textureHolder;
 
@@ -62,6 +67,9 @@ public class ObjectSpawner {
             } else  {
                 chooseBetweenObstacleAndEnemy(timer);
             }
+            if (timer.isItTimeToSpawnSingleShell()) {
+                singleShells.add(new SingleShell(world, 1280, 128, textureHolder.GAME_EXTRAS_SHOTGUN_SHELL, timer.getSpeedLevel()));
+            }
         }
     }
 
@@ -69,6 +77,19 @@ public class ObjectSpawner {
         clearEnemies();
         clearHoles();
         clearIslands();
+        clearShells();
+    }
+
+    private void clearShells() {
+        boolean shellOnScreen = false;
+        for (SingleShell tmp : singleShells) {
+            if (tmp.isShellOnScreen()) {
+                shellOnScreen = true;
+            }
+        }
+        if (!shellOnScreen && !singleShells.isEmpty()) {
+            singleShells.clear();
+        }
     }
 
     private void clearEnemies() {

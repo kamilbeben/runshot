@@ -14,6 +14,7 @@ import com.kamilbeben.zombiestorm.characters.Monkey;
 import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.characters.Walker;
 import com.kamilbeben.zombiestorm.objects.AmmoPack;
+import com.kamilbeben.zombiestorm.objects.SingleShell;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 
 /**
@@ -21,12 +22,9 @@ import com.kamilbeben.zombiestorm.obstacles.Hole;
  */
 public class WorldContactListener implements ContactListener {
 
-    public World world;
     public int playerFootContacts = 0;
-    public boolean playerCollidesWithLeftWall = false;
 
-    public WorldContactListener(World world) {
-        this.world = world;
+    public WorldContactListener() {
     }
 
     @Override
@@ -36,10 +34,11 @@ public class WorldContactListener implements ContactListener {
 
         checkForCollisionsBetweeenPlayerAndHoles(a, b);
         checkForCollisionsBetweeenPlayerAndAmmoPacks(a, b);
+        checkForCollisionsBetweeenPlayerAndSingleShell(a, b);
+        checkForCollisionsBetweenPlayerAndStumbleLines(contact.getFixtureA(), contact.getFixtureB());
         checkForCollisionsBetweeenPlayerAndCar(a, b);
         checkForCollisionBetweenPlayerAndGround(contact.getFixtureA(), contact.getFixtureB());
         checkIfPlayerCollidesWithLeftWall(contact.getFixtureA(), contact.getFixtureB());
-        checkForCollisionsBetweenPlayerAndStumbleLines(contact.getFixtureA(), contact.getFixtureB());
         checkForCollisionBetweenPlayerAndIslands(contact.getFixtureA(), contact.getFixtureB());
 
         checkForCollisionsBetweeenZombiesAndHoles(a, b);
@@ -48,10 +47,18 @@ public class WorldContactListener implements ContactListener {
 
     private void checkForCollisionsBetweenPlayerAndStumbleLines(Fixture a, Fixture b) {
         Body player = (a.getFilterData().categoryBits == Zombie.PLAYER_BIT) ? a.getBody() : b.getBody();
+        Body enemy = (a.getFilterData().categoryBits == Zombie.STUMBLE_BIT) ? a.getBody() : b.getBody();
         if ((a.getFilterData().categoryBits == Zombie.PLAYER_BIT && b.getFilterData().categoryBits == Zombie.STUMBLE_BIT) ||
                 (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.STUMBLE_BIT)) {
+
             if (player.getUserData() instanceof Player) {
-                ((Player) player.getUserData()).stumble();
+                if (enemy.getUserData() instanceof Car) {
+                    ((Player) player.getUserData()).stumble();
+                } else if (enemy.getUserData() instanceof Enemy) {
+                    ((Player) player.getUserData()).onHitEnemyHead();
+                    ((Enemy) enemy.getUserData()).headHit();
+                    System.out.println("Yeaaah");
+                }
             }
         }
     }
@@ -102,7 +109,8 @@ public class WorldContactListener implements ContactListener {
     private void checkIfPlayerCollidesWithLeftWall(Fixture a, Fixture b) {
         if ((a.getFilterData().categoryBits == Zombie.PLAYER_BIT && b.getFilterData().categoryBits == Zombie.WALLS_BIT) ||
                 (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.WALLS_BIT)) {
-            playerCollidesWithLeftWall = true;
+            Body player = (a.getBody().getUserData() instanceof Player) ? a.getBody() : b.getBody();
+            ((Player) player.getUserData()).touchLeftWall();
         }
     }
 
@@ -121,6 +129,18 @@ public class WorldContactListener implements ContactListener {
         if (ammo.getUserData() instanceof AmmoPack && player.getUserData() instanceof Player) {
             ((AmmoPack) ammo.getUserData()).stopRendering();
             ((Player) player.getUserData()).pickAmmo();
+        }
+    }
+
+    private void checkForCollisionsBetweeenPlayerAndSingleShell(Body a, Body b) {
+        Body player = (a.getUserData() instanceof Player) ? a : b;
+        Body shell = (a.getUserData() instanceof SingleShell) ? a : b;
+
+        if (shell.getUserData() instanceof SingleShell && player.getUserData() instanceof Player) {
+            if (!((SingleShell) shell.getUserData()).alreadyUsed()) {
+                ((Player) player.getUserData()).pickSingleShell();
+            }
+            ((SingleShell) shell.getUserData()).stopRendering();
         }
     }
 

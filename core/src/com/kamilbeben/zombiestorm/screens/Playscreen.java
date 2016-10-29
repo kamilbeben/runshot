@@ -15,6 +15,7 @@ import com.kamilbeben.zombiestorm.gamelogic.Physics;
 import com.kamilbeben.zombiestorm.gamelogic.Shotgun;
 import com.kamilbeben.zombiestorm.graphicalfireworks.GraphicsOverlay;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
+import com.kamilbeben.zombiestorm.objects.SingleShell;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Obstacle;
 import com.kamilbeben.zombiestorm.tools.InputHandler;
@@ -37,6 +38,7 @@ public class Playscreen implements Screen {
     private List<Enemy> enemies;
     private List<Hole> holes;
     private List<Obstacle> obstacles;
+    private List<SingleShell> singleShells;
     private ObjectSpawner objectSpawner;
     private Player player;
     private Shotgun shotgun;
@@ -59,7 +61,7 @@ public class Playscreen implements Screen {
         setupCamera();
         physics = new Physics();
         setupLists();
-        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, physics.world, game.assets.textureHolder);
+        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, singleShells, physics.world, game.assets.textureHolder);
         graphicsOverlay = new GraphicsOverlay(physics.world, game.assets.textureHolder);
         shotgun = new Shotgun(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
         Zombie.enableAndroidBackKey();
@@ -71,6 +73,7 @@ public class Playscreen implements Screen {
         enemies = new ArrayList<Enemy>();
         holes = new ArrayList<Hole>();
         obstacles = new ArrayList<Obstacle>();
+        singleShells = new ArrayList<SingleShell>();
     }
 
     private void setupCamera() {
@@ -93,8 +96,12 @@ public class Playscreen implements Screen {
         for (Obstacle tmp : obstacles) {
             tmp.render(game.batch);
         }
-        for (Hole tmp : holes)
+        for (Hole tmp : holes) {
             tmp.render(game.batch);
+        }
+        for (SingleShell tmp : singleShells) {
+            tmp.render(game.batch);
+        }
         shotgun.render(game.batch);
         player.render(game.batch);
         graphicsOverlay.render(game.batch);
@@ -105,7 +112,7 @@ public class Playscreen implements Screen {
     private void update(float delta) {
         handleInput();
         if (!state.isPause()) {
-            physics.update(delta, player);
+            physics.update(delta);
             player.update(delta);
             if (!state.isNotReady()) {
                 timer.updateTimer(delta);
@@ -116,6 +123,9 @@ public class Playscreen implements Screen {
                 shotgun.update(delta);
                 worldRenderer.updateGroundAndBackgroundAnimation(timer.getTime(), delta);
                 objectSpawner.update(timer);
+            }
+            for (SingleShell tmp : singleShells) {
+                tmp.update(delta);
             }
             checkForGameOver();
             updateSpeedLevel();
@@ -218,8 +228,8 @@ public class Playscreen implements Screen {
     private void jump() {
         if (physics.canPlayerJump()) {
             player.jumpFirst();
-        } else if (player.isJumping()) {
-            player.jumpSecond();
+        } else if (player.isInTheAir()) {
+            player.reverseJump();
         }
     }
 
