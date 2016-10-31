@@ -61,7 +61,7 @@ public class Walker extends Enemy {
 
     private void setupHeadLine(FixtureDef fixtureDef) {
         EdgeShape edgeShape = new EdgeShape();
-        edgeShape.set(new Vector2(-15 / Zombie.PPM, 55 / Zombie.PPM), new Vector2(15 / Zombie.PPM, 55 / Zombie.PPM));
+        edgeShape.set(new Vector2(-19 / Zombie.PPM, 60 / Zombie.PPM), new Vector2(19 / Zombie.PPM, 60 / Zombie.PPM));
         fixtureDef.shape = edgeShape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Zombie.STUMBLE_BIT;

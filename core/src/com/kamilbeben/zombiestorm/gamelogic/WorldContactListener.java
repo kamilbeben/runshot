@@ -57,7 +57,6 @@ public class WorldContactListener implements ContactListener {
                 } else if (enemy.getUserData() instanceof Enemy) {
                     ((Player) player.getUserData()).onHitEnemyHead();
                     ((Enemy) enemy.getUserData()).headHit();
-                    System.out.println("Yeaaah");
                 }
             }
         }

@@ -124,8 +124,10 @@ public class Player {
     }
 
     public void onHitEnemyHead() {
-        body.applyLinearImpulse(new Vector2(0, jumpForce*1.5f), body.getWorldCenter(), true);
-        jumping = true;
+        if (body.getLinearVelocity().y < 0) {
+            body.applyLinearImpulse(new Vector2(0, jumpForce * 1.5f), body.getWorldCenter(), true);
+            jumping = true;
+        }
     }
 
     public void jumpFirst() {

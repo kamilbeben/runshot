@@ -106,6 +106,7 @@ public class Playscreen implements Screen {
         player.render(game.batch);
         graphicsOverlay.render(game.batch);
         game.batch.end();
+        physics.renderDebug(camera);
         hud.render(game.batch);
     }
 
