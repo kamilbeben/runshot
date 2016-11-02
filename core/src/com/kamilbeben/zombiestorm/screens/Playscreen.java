@@ -12,6 +12,7 @@ import com.kamilbeben.zombiestorm.characters.Player;
 import com.kamilbeben.zombiestorm.gamelogic.GameState;
 import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
+import com.kamilbeben.zombiestorm.gamelogic.PlayscreenSounds;
 import com.kamilbeben.zombiestorm.gamelogic.Shotgun;
 import com.kamilbeben.zombiestorm.graphicalfireworks.GraphicsOverlay;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
@@ -49,6 +50,8 @@ public class Playscreen implements Screen {
     private WorldRenderer worldRenderer;
     private GraphicsOverlay graphicsOverlay;
 
+    private PlayscreenSounds sounds;
+
     private int speedlLevel = 1;
     private boolean gameOverNotCalledYet = true;
 
@@ -58,10 +61,11 @@ public class Playscreen implements Screen {
         game.assets.loadPlayscreenAssets(clearManager);
         worldRenderer = new WorldRenderer(game.assets.textureHolder);
         hud = new HudPlayscreen(game);
+        sounds = new PlayscreenSounds(game.assets.sounds, game.options.sfxVolume, game.options.musicVolume);
         setupCamera();
         physics = new Physics();
         setupLists();
-        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, singleShells, physics.world, game.assets.textureHolder);
+        objectSpawner = new ObjectSpawner(enemies, holes, obstacles, singleShells, physics.world, game);
         graphicsOverlay = new GraphicsOverlay(physics.world, game.assets.textureHolder);
         shotgun = new Shotgun(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
         Zombie.enableAndroidBackKey();
@@ -192,6 +196,7 @@ public class Playscreen implements Screen {
     private void shotgunShot() {
         if (player.shotgunShot()) {
             shotgun.shot(enemies, player, hud);
+            sounds.shot();
         }
     }
 

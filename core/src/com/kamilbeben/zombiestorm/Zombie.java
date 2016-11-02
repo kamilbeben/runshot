@@ -4,17 +4,15 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.screens.Menuscreen;
-import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Assets;
-import com.kamilbeben.zombiestorm.tools.Data;
+import com.kamilbeben.zombiestorm.tools.Options;
+import com.kamilbeben.zombiestorm.tools.MusicPlayer;
 
 public class Zombie extends Game {
 
 	public static final float WIDTH = 854;
 	public static final float HEIGHT = 480;
 	public static final float PPM = 100;
-
-
 
 	public static final short DEAD_BIT = 0;
 	public static final short ENEMY_BIT = 2;
@@ -35,16 +33,18 @@ public class Zombie extends Game {
 		Gdx.input.setCatchMenuKey(true);
 	}
 
-	public Data data;
+	public Options options;
+	public MusicPlayer music;
 
-
-	public Assets assets = new Assets();
+	public Assets assets;
 	public SpriteBatch batch;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		data = new Data();
+		assets = new Assets();
+		options = new Options();
+		music = new MusicPlayer(this);
 		setScreen(new Menuscreen(this));
 	}
 

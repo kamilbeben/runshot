@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
-import com.kamilbeben.zombiestorm.tools.HolePosition;
 import com.kamilbeben.zombiestorm.tools.TextureHolder;
 import com.kamilbeben.zombiestorm.tools.Tools;
 

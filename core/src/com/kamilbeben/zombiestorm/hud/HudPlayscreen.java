@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kamilbeben.zombiestorm.Zombie;
-import com.kamilbeben.zombiestorm.tools.Assets;
 
 /**
  * Created by bezik on 08.10.16.
@@ -30,7 +29,7 @@ public class HudPlayscreen {
     public HudPlayscreen(Zombie game) {
         viewport = new FitViewport(Zombie.WIDTH, Zombie.HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
-        text = new TextPlayscreen(stage, game.assets.manager.get("Fonts/font.fnt", BitmapFont.class));
+        text = new TextPlayscreen(stage, game.assets.textures.get("fonts/font.fnt", BitmapFont.class));
         Gdx.input.setInputProcessor(stage);
         ammoRenderer = new AmmoRenderer(game.assets.textureHolder);
         setupPauseSprite(game);

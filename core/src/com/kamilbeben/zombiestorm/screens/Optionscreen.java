@@ -77,7 +77,7 @@ public class Optionscreen implements Screen {
 
     private void setupMusicSlider(Slider.SliderStyle skin) {
         musicSlider = new Slider(0.0f, 1.0f, 0.1f, false, skin);
-        musicSlider.setValue(game.data.musicVolume);
+        musicSlider.setValue(game.options.musicVolume);
         musicSlider.setSize(200, 30);
         musicSlider.setPosition((Zombie.WIDTH - musicSlider.getWidth()) / 2, 230);
 
@@ -93,7 +93,7 @@ public class Optionscreen implements Screen {
 
     private void setupSFXSlider(Slider.SliderStyle skin) {
         sfxSlider = new Slider(0.0f, 1.0f, 0.1f, false, skin);
-        sfxSlider.setValue(game.data.sfxVolume);
+        sfxSlider.setValue(game.options.sfxVolume);
         sfxSlider.setSize(200, 30);
         sfxSlider.setPosition((Zombie.WIDTH - sfxSlider.getWidth()) / 2, musicSlider.getY() - 80);
 
@@ -136,7 +136,7 @@ public class Optionscreen implements Screen {
         if (buttonReturn.clicked || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
             saveMusicValue();
             saveSfxValue();
-            game.data.saveData();
+            game.options.saveData();
             game.setScreen(new Menuscreen(game));
             dispose();
         }
@@ -144,11 +144,12 @@ public class Optionscreen implements Screen {
     }
 
     private void saveMusicValue() {
-        game.data.musicVolume = musicSlider.getValue();
+        game.options.musicVolume = musicSlider.getValue();
+        game.music.updateMusicVolume();
     }
 
     private void saveSfxValue() {
-        game.data.sfxVolume = sfxSlider.getValue();
+        game.options.sfxVolume = sfxSlider.getValue();
     }
 
     @Override

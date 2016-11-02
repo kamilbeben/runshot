@@ -78,7 +78,7 @@ public class Aboutscreen implements Screen {
     }
 
     private void initializeText() {
-        text = new AboutText(game.assets.manager.get("Fonts/font_about.fnt", BitmapFont.class));
+        text = new AboutText(game.assets.textures.get("fonts/font_about.fnt", BitmapFont.class));
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.kamilbeben.zombiestorm.gamelogic;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.physics.box2d.World;
+import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Car;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Monkey;
@@ -16,6 +18,7 @@ import com.kamilbeben.zombiestorm.obstacles.Obstacle;
 import com.kamilbeben.zombiestorm.obstacles.Stone;
 import com.kamilbeben.zombiestorm.obstacles.StoneBig;
 import com.kamilbeben.zombiestorm.obstacles.StoneSmall;
+import com.kamilbeben.zombiestorm.tools.Assets;
 import com.kamilbeben.zombiestorm.tools.TextureHolder;
 import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
@@ -37,19 +40,20 @@ public class ObjectSpawner {
     private boolean lastRandomWasAnObstacleOrHole = false;
     private boolean[] lastRandomWasAMonkey;
     private boolean[] lastRandomWasAWalker;
-    private TextureHolder textureHolder;
+
+    private Zombie game;
 
     float lastHole = -3f;
     float lastObstacle = -3f;
 
 
-    public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Obstacle> obstacles, List<SingleShell> singleShells, World world, TextureHolder textureHolder) {
+    public ObjectSpawner(List<Enemy> enemies, List <Hole> holes, List <Obstacle> obstacles, List<SingleShell> singleShells, World world, Zombie game) {
         this.enemies = enemies;
         this.holes = holes;
         this.obstacles = obstacles;
         this.singleShells = singleShells;
         this.world = world;
-        this.textureHolder = textureHolder;
+        this.game = game;
 
         lastRandomWasAMonkey = new boolean[2];
         lastRandomWasAWalker = new boolean[2];
@@ -68,7 +72,7 @@ public class ObjectSpawner {
                 chooseBetweenObstacleAndEnemy(timer);
             }
             if (timer.isItTimeToSpawnSingleShell()) {
-                singleShells.add(new SingleShell(world, 1280, 128, textureHolder.GAME_EXTRAS_SHOTGUN_SHELL, timer.getSpeedLevel()));
+                singleShells.add(new SingleShell(world, 1280, 128, game.assets.textureHolder.GAME_EXTRAS_SHOTGUN_SHELL, timer.getSpeedLevel()));
             }
         }
     }
@@ -177,18 +181,18 @@ public class ObjectSpawner {
     private Island randomizeIsland(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new IslandShort(world, 1200, 260, timer.getSpeedLevel(), textureHolder);
+            return new IslandShort(world, 1200, 260, timer.getSpeedLevel(), game.assets.textureHolder);
         } else {
-            return new IslandLong(world, 1200, 260, timer.getSpeedLevel(), textureHolder);
+            return new IslandLong(world, 1200, 260, timer.getSpeedLevel(), game.assets.textureHolder);
         }
     }
 
     private Stone randomizeStone(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
+            return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), game.assets.textureHolder);
         } else {
-            return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), textureHolder);
+            return new StoneSmall(world, 1200, 128, timer.getSpeedLevel(), game.assets.textureHolder);
         }
     }
 
@@ -196,9 +200,9 @@ public class ObjectSpawner {
     private Hole randomizeHole(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new HoleShort(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_OBSTACLE_HOLE_SHORT);
+            return new HoleShort(world, 1200, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_SHORT);
         } else {
-            return new HoleLong(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_OBSTACLE_HOLE_LONG) {
+            return new HoleLong(world, 1200, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_LONG) {
             };
         }
     }
@@ -226,7 +230,7 @@ public class ObjectSpawner {
             resetWalkerBoolean();
             resetMonkeyBoolean();
             lastRandomWasAnObstacleOrHole = true;
-            return new Car(world, 1400, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_CAR, textureHolder.GAME_ENEMY_CAR_LIGHTS);
+            return new Car(world, 1400, 100, timer.getSpeedLevel(), game);
         } else {
             return randomizeEnemy(timer);
         }
@@ -255,7 +259,7 @@ public class ObjectSpawner {
         lastRandomWasAMonkey[0] = false;
         lastRandomWasAMonkey[1] = false;
         lastRandomWasAnObstacleOrHole = false;
-        return new Walker(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_WALKER);
+        return new Walker(world, 1200, 100, timer.getSpeedLevel(), game);
     }
 
     private Enemy newMonkey(Timer timer) {
@@ -267,7 +271,7 @@ public class ObjectSpawner {
         lastRandomWasAWalker[0] = false;
         lastRandomWasAWalker[1] = false;
         lastRandomWasAnObstacleOrHole = false;
-        return new Monkey(world, 1200, 100, timer.getSpeedLevel(), textureHolder.GAME_ENEMY_MONKEY);
+        return new Monkey(world, 1200, 100, timer.getSpeedLevel(), game);
     }
 
     public void dispose() {

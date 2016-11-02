@@ -1,5 +1,6 @@
 package com.kamilbeben.zombiestorm.characters;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,8 +30,8 @@ public class Monkey extends Enemy {
     private Animation shot;
 
 
-    public Monkey(World world, float x, float y, int speedLevel, Texture texture) {
-        super(world, x, y, texture);
+    public Monkey(World world, float x, float y, int speedLevel, Zombie game) {
+        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_MONKEY, game.assets.sounds.get("audio/sfx/onheadjump.ogg", Sound.class), game.options.sfxVolume);
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();

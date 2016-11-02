@@ -2,6 +2,7 @@ package com.kamilbeben.zombiestorm.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -41,6 +42,8 @@ public class Menuscreen implements Screen {
     private Sprite runningSprite;
     private Animation animation;
     private float animationTimer = 0f;
+
+    private Music music;
 
     public Menuscreen(Zombie game) {
         this.game = game;
@@ -144,7 +147,6 @@ public class Menuscreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-
         background_bot.draw(game.batch);
         fog.render(game.batch);
         background_top.draw(game.batch);
