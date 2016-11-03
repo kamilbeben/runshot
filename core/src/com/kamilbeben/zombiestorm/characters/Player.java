@@ -1,5 +1,6 @@
 package com.kamilbeben.zombiestorm.characters;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -29,13 +30,17 @@ public class Player {
     private static final float jumpForce = 6.5f;
 
     private PlayerRenderer playerRenderer;
+    private PlayerSoundPlayer sounds;
 
     private int bullets = 6;
+    private int smashedEnemies = 0;
 
 
-    public Player(World world, TextureHolder textureHolder) {
+
+    public Player(World world, Zombie game) {
         setupBody(world);
-        playerRenderer = new PlayerRenderer(textureHolder);
+        playerRenderer = new PlayerRenderer(game.assets.textureHolder);
+        sounds = new PlayerSoundPlayer(game.assets.sounds, game.options.sfxVolume);
     }
 
     private void setupBody(World world) {
@@ -126,6 +131,7 @@ public class Player {
     public void onHitEnemyHead() {
         if (body.getLinearVelocity().y < 0) {
             body.applyLinearImpulse(new Vector2(0, jumpForce * 1.5f), body.getWorldCenter(), true);
+            smashedEnemies++;
             jumping = true;
         }
     }
@@ -134,6 +140,7 @@ public class Player {
         if (alive) {
             body.applyLinearImpulse(new Vector2(0, jumpForce), body.getWorldCenter(), true);
             jumping = true;
+            sounds.jump();
         }
     }
 
@@ -181,6 +188,10 @@ public class Player {
         for (Fixture tmp : fixtures) {
             tmp.setSensor(true);
         }
+    }
+
+    public int getEnemiesSmashed() {
+        return smashedEnemies;
     }
 
     public int getBulletsAmount() {

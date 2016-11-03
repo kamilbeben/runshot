@@ -31,7 +31,7 @@ public class Monkey extends Enemy {
 
 
     public Monkey(World world, float x, float y, int speedLevel, Zombie game) {
-        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_MONKEY, game.assets.sounds.get("audio/sfx/onheadjump.ogg", Sound.class), game.options.sfxVolume);
+        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_MONKEY);
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();

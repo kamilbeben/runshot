@@ -30,8 +30,10 @@ public class Assets implements Disposable {
 
     public void loadPlaySounds() {
         sounds.load("audio/sfx/shot.ogg", Sound.class);
+        sounds.load("audio/sfx/reload.ogg", Sound.class);
+        sounds.load("audio/sfx/jump.ogg", Sound.class);
         sounds.load("audio/sfx/honk.ogg", Sound.class);
-        sounds.load("audio/sfx/onheadjump.ogg", Sound.class);
+        sounds.load("audio/sfx/hit.ogg", Sound.class);
         waitForLoadingToComplete(sounds);
     }
 

@@ -36,21 +36,17 @@ public abstract class Enemy extends Sprite {
     protected boolean justGotShot = false;
     protected boolean justGotHitByCar = false;
 
-    private static Sound sound;
-    private static float volume;
 
 
     protected World world;
     public Body body;
 
-    public Enemy(World world, float x, float y, Texture texture, Sound sound, float volume) {
+    public Enemy(World world, float x, float y, Texture texture) {
         super(texture);
         this.world = world;
         setPosition(x, y);
         currentState = State.WALKING;
         previousState = State.WALKING;
-        this.sound = sound;
-        this.volume = volume;
     }
 
     protected  abstract void setupBody(float x, float y);
@@ -112,7 +108,6 @@ public abstract class Enemy extends Sprite {
 
     public void headHit() {
         killEnemy();
-        sound.play(volume);
     }
 
     public void dispose() {

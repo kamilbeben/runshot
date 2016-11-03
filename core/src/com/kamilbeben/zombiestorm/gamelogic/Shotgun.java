@@ -1,5 +1,6 @@
 package com.kamilbeben.zombiestorm.gamelogic;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public class Shotgun {
 
+    private int enemiesKilled = 0;
     private int closestIndex;
     private float closestPosition;
     private boolean isSomeoneOnScreen = false;
@@ -24,12 +26,21 @@ public class Shotgun {
     private boolean drawEffect = false;
     private float drawTimer = 0f;
 
-    public Shotgun(Texture texture) {
-        fireEffect = new Sprite(texture);
+    private Sound shot;
+    private float sfxVolume;
+
+    public Shotgun(Zombie game) {
+        fireEffect = new Sprite(game.assets.textureHolder.GAME_EXTRAS_FIRE_EFFECT);
         fireEffect.setSize(fireEffect.getTexture().getWidth() / Zombie.PPM, fireEffect.getTexture().getHeight() / Zombie.PPM);
+        setupSound(game);
     }
 
-    public void shot(List <Enemy> enemies, Player player, HudPlayscreen hud) {
+    private void setupSound(Zombie game) {
+        this.sfxVolume = game.options.sfxVolume;
+        shot = game.assets.sounds.get("audio/sfx/shot.ogg", Sound.class);
+    }
+
+    public void shot(List <Enemy> enemies, Player player) {
         isSomeoneOnScreen = false;
 
         closestPosition = Zombie.WIDTH + 1;
@@ -45,10 +56,11 @@ public class Shotgun {
         }
         if (isPlayerLowEnough(player) && isSomeoneOnScreen) {
             enemies.get(closestIndex).shotgunShot();
-            hud.zombieGotShot();
+            enemiesKilled++;
         }
 
         updateFireEffect(player);
+        shot.play(sfxVolume);
     }
 
     private boolean enemyIsNotACar(Enemy enemy) {
@@ -95,5 +107,9 @@ public class Shotgun {
             fireEffect.draw(batch);
             fireEffect.setAlpha(1 - 10*drawTimer);
         }
+    }
+
+    public int getEnemiesKilled() {
+        return enemiesKilled;
     }
 }

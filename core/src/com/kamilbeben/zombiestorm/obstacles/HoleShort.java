@@ -3,6 +3,7 @@ package com.kamilbeben.zombiestorm.obstacles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.TextureHolder;
 
 /**
  * Created by bezik on 30.09.16.
@@ -10,8 +11,8 @@ import com.kamilbeben.zombiestorm.Zombie;
 public class HoleShort extends Hole {
 
 
-    public HoleShort(World world, float x, float y, int speedLevel, Texture texture) {
-        super(texture, speedLevel);
+    public HoleShort(World world, float x, float y, int speedLevel, TextureHolder textureHolder) {
+        super(textureHolder.GAME_OBSTACLE_HOLE_SHORT, speedLevel);
         setSize(getWidth() / Zombie.PPM, getHeight() / Zombie.PPM);
         setupBody(x, y, world);
         updateSpritePosition();

@@ -22,9 +22,11 @@ import com.kamilbeben.zombiestorm.obstacles.Hole;
  */
 public class WorldContactListener implements ContactListener {
 
+    private ContactSoundMaker sounds;
     public int playerFootContacts = 0;
 
-    public WorldContactListener() {
+    public WorldContactListener(Zombie game) {
+        sounds = new ContactSoundMaker(game.assets.sounds, game.options.sfxVolume);
     }
 
     @Override
@@ -54,9 +56,11 @@ public class WorldContactListener implements ContactListener {
             if (player.getUserData() instanceof Player) {
                 if (enemy.getUserData() instanceof Car) {
                     ((Player) player.getUserData()).stumble();
+                    sounds.honk();
                 } else if (enemy.getUserData() instanceof Enemy) {
                     ((Player) player.getUserData()).onHitEnemyHead();
                     ((Enemy) enemy.getUserData()).headHit();
+                    sounds.hit();
                 }
             }
         }
@@ -77,6 +81,7 @@ public class WorldContactListener implements ContactListener {
 
         if (car.getUserData() instanceof Car && player.getUserData() instanceof Player) {
             ((Player) player.getUserData()).hitByCar();
+            sounds.hit();
         }
     }
 
@@ -95,6 +100,7 @@ public class WorldContactListener implements ContactListener {
                 (b.getFilterData().categoryBits == Zombie.PLAYER_BIT && a.getFilterData().categoryBits == Zombie.CAR_BIT)) {
             Body player = (a.getBody().getUserData() instanceof Player) ? a.getBody() : b.getBody();
             ((Player) player.getUserData()).hitByCar();
+            sounds.hit();
         }
     }
 
@@ -118,6 +124,7 @@ public class WorldContactListener implements ContactListener {
                 (b.getFilterData().categoryBits == Zombie.ENEMY_BIT && a.getFilterData().categoryBits == Zombie.CAR_BIT)) {
             Fixture zombie = (a.getFilterData().categoryBits == Zombie.CAR_BIT) ? b : a;
             ((Enemy) zombie.getBody().getUserData()).carAccident();
+            sounds.honk();
         }
     }
 
@@ -128,6 +135,7 @@ public class WorldContactListener implements ContactListener {
         if (ammo.getUserData() instanceof AmmoPack && player.getUserData() instanceof Player) {
             ((AmmoPack) ammo.getUserData()).stopRendering();
             ((Player) player.getUserData()).pickAmmo();
+            sounds.reload();
         }
     }
 
@@ -138,6 +146,7 @@ public class WorldContactListener implements ContactListener {
         if (shell.getUserData() instanceof SingleShell && player.getUserData() instanceof Player) {
             if (!((SingleShell) shell.getUserData()).alreadyUsed()) {
                 ((Player) player.getUserData()).pickSingleShell();
+                sounds.reload();
             }
             ((SingleShell) shell.getUserData()).stopRendering();
         }

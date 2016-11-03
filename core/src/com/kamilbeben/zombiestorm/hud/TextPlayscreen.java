@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.Options;
 
 /**
  * Created by bezik on 08.10.16.
@@ -42,13 +43,18 @@ public class TextPlayscreen {
         distance.setPosition(Zombie.WIDTH - padding - textWidth(distance.getText().toString()), Zombie.HEIGHT - padding - textHeight(distance.getText().toString()));
     }
 
-    public void gameOver(float distance, int zombieKilled) {
-        float score = distance + (zombieKilled * 10);
+    public void gameOver(float distance, int shot, int smashed, Options options) {
+        float score = distance + (shot * 10) + (smashed * 20);
+        gameOver = new Label("", new Label.LabelStyle(font, Color.WHITE));
+        if (options.checkIfNewHighScore((int) score)) {
+            gameOver.setText("Congratulations! New HighScore!\n");
+        }
 
-        gameOver = new Label("Game over! \nDistance: " + Integer.toString((int) distance) + "\nZombie's killed: " + Integer.toString(zombieKilled) + "\nScore: "  + Integer.toString((int) score),
-                new Label.LabelStyle(font, Color.WHITE));
+        gameOver.setText(gameOver.getText() + "       Distance: " + Integer.toString((int) distance) + "\n     Zombie's killed: " + Integer.toString(shot) +
+                "\n   Zombie's smashed: " + Integer.toString(smashed) + "\n        Score: "  + Integer.toString((int) score)
+                + "\n     Best score: "  + Integer.toString(options.getHighScore()));
         gameOver.setPosition((Zombie.WIDTH - textWidth(gameOver.getText().toString()))/2,
-                (Zombie.HEIGHT - textHeight(gameOver.getText().toString()))/2);
+                (Zombie.HEIGHT + textHeight(gameOver.getText().toString()))/2);
 
         stage.addActor(this.gameOver);
     }

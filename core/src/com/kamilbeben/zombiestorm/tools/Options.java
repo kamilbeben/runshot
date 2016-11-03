@@ -39,4 +39,14 @@ public class Options {
         preferences.flush();
     }
 
+    public boolean checkIfNewHighScore(int score) {
+        if (score > highScore) {
+            highScore = score;
+            saveData();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

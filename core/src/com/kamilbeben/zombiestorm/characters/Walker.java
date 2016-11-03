@@ -26,7 +26,7 @@ public class Walker extends Enemy {
     private Animation gotHitByCar;
 
     public Walker(World world, float x, float y, int speedLevel, Zombie game) {
-        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_WALKER, game.assets.sounds.get("audio/sfx/onheadjump.ogg", Sound.class), game.options.sfxVolume);
+        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_WALKER);
         setupBody(x, y);
         setupLooks();
         updateSpritePosition();

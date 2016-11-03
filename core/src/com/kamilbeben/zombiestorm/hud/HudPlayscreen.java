@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kamilbeben.zombiestorm.Zombie;
+import com.kamilbeben.zombiestorm.tools.Options;
 
 /**
  * Created by bezik on 08.10.16.
@@ -20,8 +21,6 @@ public class HudPlayscreen {
     private AmmoRenderer ammoRenderer;
 
     private TextPlayscreen text;
-
-    private int zombieKilled = 0;
 
     private Sprite pause;
 
@@ -50,8 +49,8 @@ public class HudPlayscreen {
         return (3 * time) + ((time * time) / 200);
     }
 
-    public void gameOver(float time) {
-        text.gameOver(calculateDistance(time), zombieKilled);
+    public void gameOver(float time, int shot, int smashed, Options options) {
+        text.gameOver(calculateDistance(time), shot, smashed, options);
     }
 
     public void render(SpriteBatch batch) {
@@ -70,9 +69,6 @@ public class HudPlayscreen {
         text.pause();
     }
 
-    public void zombieGotShot() {
-        zombieKilled++;
-    }
 
     public void dispose() {
         stage.dispose();

@@ -200,9 +200,9 @@ public class ObjectSpawner {
     private Hole randomizeHole(Timer timer) {
         int random = Tools.randomFrom1To10();
         if (random < 5) {
-            return new HoleShort(world, 1200, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_SHORT);
+            return new HoleShort(world, 1200, 100, timer.getSpeedLevel(), game.assets.textureHolder);
         } else {
-            return new HoleLong(world, 1200, 100, timer.getSpeedLevel(), game.assets.textureHolder.GAME_OBSTACLE_HOLE_LONG) {
+            return new HoleLong(world, 1200, 100, timer.getSpeedLevel(), game.assets.textureHolder) {
             };
         }
     }

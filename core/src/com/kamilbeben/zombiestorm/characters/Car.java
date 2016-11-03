@@ -29,7 +29,7 @@ public class Car extends Enemy {
     private Sprite carLights;
 
     public Car(World world, float x, float y, int speedLevel, Zombie game) {
-        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_CAR, game.assets.sounds.get("audio/sfx/honk.ogg", Sound.class), game.options.sfxVolume);
+        super(world, x, y, game.assets.textureHolder.GAME_ENEMY_CAR);
         setupBody(x, y);
         setupLooks(game.assets.textureHolder.GAME_ENEMY_CAR_LIGHTS);
         setSpeedLevel(speedLevel);

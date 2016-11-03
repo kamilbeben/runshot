@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Player;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class Physics {
     public Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
 
-    public Physics() {
-        initializeCollisionDetection();
+    public Physics(Zombie game) {
+        initializeCollisionDetection(game);
     }
 
     public void update(float delta) {
@@ -36,8 +37,8 @@ public class Physics {
     }
 
 
-    private void initializeCollisionDetection() {
-        contactListener = new WorldContactListener();
+    private void initializeCollisionDetection(Zombie game) {
+        contactListener = new WorldContactListener(game);
         world.setContactListener(contactListener);
     }
 
