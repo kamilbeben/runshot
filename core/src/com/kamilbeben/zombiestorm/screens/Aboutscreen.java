@@ -65,7 +65,7 @@ public class Aboutscreen implements Screen {
 
     public void handleUserInput() {
 
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK) || buttonReturn.isClicked()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK) || buttonReturn.justClicked()) {
             game.setScreen(new Menuscreen(game));
             dispose();
         }

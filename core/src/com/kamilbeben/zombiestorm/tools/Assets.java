@@ -20,12 +20,32 @@ public class Assets implements Disposable {
         textures = new AssetManager();
         sounds = new AssetManager();
         textureHolder = new TextureHolder();
-        loadPlaySounds();
+    }
+
+    public float getProgress() {
+        return (sounds.getProgress() + textures.getProgress()) /2 ;
+    }
+
+    public void loadLoadingscreenAssets() {
+        textures.clear();
+        textures.load("texture/loadscreen/background.jpg", Texture.class);
+        textures.load("texture/loadscreen/progressBG.jpg", Texture.class);
+        textures.load("texture/loadscreen/progressKNOB.jpg", Texture.class);
+        waitForLoadingToComplete(textures);
+        textureHolder.loadLoadingScreen(
+                textures.get("texture/loadscreen/background.jpg", Texture.class),
+                textures.get("texture/loadscreen/progressBG.jpg", Texture.class),
+                textures.get("texture/loadscreen/progressKNOB.jpg", Texture.class)
+        );
     }
 
     public void loadMenuSounds() {
         sounds.load("audio/music/menu.ogg", Music.class);
         waitForLoadingToComplete(sounds);
+    }
+
+    public boolean loadPlayscreenComplete() {
+        return (textures.update() && sounds.update());
     }
 
     public void loadPlaySounds() {
@@ -34,45 +54,9 @@ public class Assets implements Disposable {
         sounds.load("audio/sfx/jump.ogg", Sound.class);
         sounds.load("audio/sfx/honk.ogg", Sound.class);
         sounds.load("audio/sfx/hit.ogg", Sound.class);
-        waitForLoadingToComplete(sounds);
     }
 
-
-    public void loadPlayscreenAssets(boolean clearManager) {
-        if (clearManager) {
-            textures.clear();
-        }
-        textures.load("texture/playscreen/hud/ammoBG.png", Texture.class);
-        textures.load("texture/playscreen/hud/pause.png", Texture.class);
-        textures.load("texture/playscreen/hud/ammoOFF.png", Texture.class);
-        textures.load("texture/playscreen/hud/ammoON.png", Texture.class);
-        textures.load("texture/playscreen/extras/shell.png", Texture.class);
-        textures.load("texture/playscreen/extras/ammopack.png", Texture.class);
-        textures.load("texture/playscreen/extras/grass_animation.png", Texture.class);
-        textures.load("texture/playscreen/extras/firefly.png", Texture.class);
-        textures.load("texture/playscreen/extras/firefly_blue.png", Texture.class);
-        textures.load("texture/playscreen/extras/firefly_transparent.png", Texture.class);
-        textures.load("texture/playscreen/extras/palette.png", Texture.class);
-        textures.load("texture/playscreen/extras/background.jpg", Texture.class);
-        textures.load("texture/playscreen/extras/parallax_far.png", Texture.class);
-        textures.load("texture/playscreen/extras/parallax_middle.png", Texture.class);
-        textures.load("texture/playscreen/extras/parallax_fog.png", Texture.class);
-        textures.load("texture/playscreen/extras/fire_effect.png", Texture.class);
-        textures.load("texture/playscreen/extras/points_break.png", Texture.class);
-        textures.load("texture/playscreen/characters/car.png", Texture.class);
-        textures.load("texture/playscreen/characters/car_lights.png", Texture.class);
-        textures.load("texture/playscreen/characters/monkey.png", Texture.class);
-        textures.load("texture/playscreen/characters/walker.png", Texture.class);
-        textures.load("texture/playscreen/characters/player.png", Texture.class);
-        textures.load("texture/playscreen/characters/player_ext.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/hole_long.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/hole_short.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/island_long.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/island_short.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/stone_big.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/stone_small.png", Texture.class);
-        textures.load("fonts/font.fnt", BitmapFont.class);
-        waitForLoadingToComplete(textures);
+    public void assignPlayscreenTextures() {
         textureHolder.loadPlayscreen(
                 textures.get("texture/playscreen/hud/ammoBG.png", Texture.class),
                 textures.get("texture/playscreen/hud/pause.png", Texture.class),
@@ -104,11 +88,47 @@ public class Assets implements Disposable {
                 textures.get("texture/playscreen/obstacles/stone_big.png", Texture.class),
                 textures.get("texture/playscreen/obstacles/stone_small.png", Texture.class)
         );
+
+        textures.unload("texture/loadscreen/background.jpg");
+        textures.unload("texture/loadscreen/progressBG.jpg");
+        textures.unload("texture/loadscreen/progressKNOB.jpg");
+    }
+
+    public void loadPlayscreenTextures() {
+        textures.load("texture/playscreen/hud/ammoBG.png", Texture.class);
+        textures.load("texture/playscreen/hud/pause.png", Texture.class);
+        textures.load("texture/playscreen/hud/ammoOFF.png", Texture.class);
+        textures.load("texture/playscreen/hud/ammoON.png", Texture.class);
+        textures.load("texture/playscreen/extras/shell.png", Texture.class);
+        textures.load("texture/playscreen/extras/ammopack.png", Texture.class);
+        textures.load("texture/playscreen/extras/grass_animation.png", Texture.class);
+        textures.load("texture/playscreen/extras/firefly.png", Texture.class);
+        textures.load("texture/playscreen/extras/firefly_blue.png", Texture.class);
+        textures.load("texture/playscreen/extras/firefly_transparent.png", Texture.class);
+        textures.load("texture/playscreen/extras/palette.png", Texture.class);
+        textures.load("texture/playscreen/extras/background.jpg", Texture.class);
+        textures.load("texture/playscreen/extras/parallax_far.png", Texture.class);
+        textures.load("texture/playscreen/extras/parallax_middle.png", Texture.class);
+        textures.load("texture/playscreen/extras/parallax_fog.png", Texture.class);
+        textures.load("texture/playscreen/extras/fire_effect.png", Texture.class);
+        textures.load("texture/playscreen/extras/points_break.png", Texture.class);
+        textures.load("texture/playscreen/characters/car.png", Texture.class);
+        textures.load("texture/playscreen/characters/car_lights.png", Texture.class);
+        textures.load("texture/playscreen/characters/monkey.png", Texture.class);
+        textures.load("texture/playscreen/characters/walker.png", Texture.class);
+        textures.load("texture/playscreen/characters/player.png", Texture.class);
+        textures.load("texture/playscreen/characters/player_ext.png", Texture.class);
+        textures.load("texture/playscreen/obstacles/hole_long.png", Texture.class);
+        textures.load("texture/playscreen/obstacles/hole_short.png", Texture.class);
+        textures.load("texture/playscreen/obstacles/island_long.png", Texture.class);
+        textures.load("texture/playscreen/obstacles/island_short.png", Texture.class);
+        textures.load("texture/playscreen/obstacles/stone_big.png", Texture.class);
+        textures.load("texture/playscreen/obstacles/stone_small.png", Texture.class);
+        textures.load("fonts/font.fnt", BitmapFont.class);
     }
 
     public void loadMenuAssets() {
         textures.clear();
-
         textures.load("texture/menuscreen/background.jpg", Texture.class);
         textures.load("texture/menuscreen/background_top.png", Texture.class);
         textures.load("texture/playscreen/extras/parallax_fog.png", Texture.class);

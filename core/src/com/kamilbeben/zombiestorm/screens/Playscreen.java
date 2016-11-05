@@ -52,10 +52,9 @@ public class Playscreen implements Screen {
     private int speedlLevel = 1;
     private boolean gameOverNotCalledYet = true;
 
-    public Playscreen(Zombie game, boolean clearManager) {
+    public Playscreen(Zombie game) {
         state = new GameState();
         this.game = game;
-        game.assets.loadPlayscreenAssets(clearManager);
         worldRenderer = new WorldRenderer(game.assets.textureHolder);
         hud = new HudPlayscreen(game);
         setupCamera();
@@ -197,7 +196,7 @@ public class Playscreen implements Screen {
     private void handleInput() {
         if (Gdx.input.justTouched()) {
             if (state.isOver() && timer.canIReadInputAfterGameOver()) {
-                game.setScreen(new Playscreen(game, false));
+                game.setScreen(new Playscreen(game));
             } else if (state.isNotReady()) {
                 startGame();
             } else if (state.isPause()) {

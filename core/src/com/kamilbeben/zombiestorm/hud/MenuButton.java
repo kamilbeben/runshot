@@ -67,7 +67,7 @@ public class MenuButton {
         return skin;
     }
 
-    public boolean isClicked() {
+    public boolean justClicked() {
         if (clicked) {
             clicked = false;
             return true;

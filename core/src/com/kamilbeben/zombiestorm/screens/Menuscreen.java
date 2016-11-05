@@ -2,7 +2,6 @@ package com.kamilbeben.zombiestorm.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -43,7 +43,6 @@ public class Menuscreen implements Screen {
     private Animation animation;
     private float animationTimer = 0f;
 
-    private Music music;
 
     public Menuscreen(Zombie game) {
         this.game = game;
@@ -55,6 +54,7 @@ public class Menuscreen implements Screen {
         setupStage();
         setupAnimation(game.assets.textureHolder.MENU_PLAYER_ANIMATION);
     }
+
 
 
     private void setupCamera() {
@@ -108,8 +108,8 @@ public class Menuscreen implements Screen {
     }
 
     public void handleUserInput() {
-        if ( buttonPlay.clicked ) {
-            game.setScreen(new Playscreen(game, true));
+        if ( buttonPlay.justClicked() ) {
+            game.setScreen(new Loadscreen(game));
             dispose();
         }
         if ( buttonOptions.clicked ) {
@@ -121,6 +121,7 @@ public class Menuscreen implements Screen {
             dispose();
         }
     }
+
 
     @Override
     public void show() {
