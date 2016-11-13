@@ -120,6 +120,10 @@ public class Menuscreen implements Screen {
             game.setScreen(new Aboutscreen(game));
             dispose();
         }
+        if ( buttonTutorial.clicked ) {
+            game.setScreen(new Tutorialscreen(game));
+            dispose();
+        }
     }
 
 

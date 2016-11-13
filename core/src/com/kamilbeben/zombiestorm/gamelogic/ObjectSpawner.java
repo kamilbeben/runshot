@@ -72,7 +72,7 @@ public class ObjectSpawner {
                 chooseBetweenObstacleAndEnemy(timer);
             }
             if (timer.isItTimeToSpawnSingleShell()) {
-                singleShells.add(new SingleShell(world, 1280, 128, game.assets.textureHolder.GAME_EXTRAS_SHOTGUN_SHELL, timer.getSpeedLevel()));
+                singleShells.add(new SingleShell(world, 1280, 200, game.assets.textureHolder.GAME_EXTRAS_SHOTGUN_SHELL, timer.getSpeedLevel()));
             }
         }
     }

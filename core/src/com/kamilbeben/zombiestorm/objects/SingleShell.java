@@ -51,7 +51,7 @@ public class SingleShell {
     private void defineBody(World world, float x, float y) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(x / Zombie.PPM, y / Zombie.PPM);
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
         body = world.createBody(bodyDef);
     }
 
@@ -70,13 +70,15 @@ public class SingleShell {
     }
 
     private void setupLooks(Texture texture) {
+        int width = 32;
+        int height = 32;
         sprite = new Sprite(texture);
-        sprite.setSize(32 / Zombie.PPM, 32 / Zombie.PPM);
-        sprite.setBounds(0, 0, 32 / Zombie.PPM, 32 / Zombie.PPM);
+        sprite.setSize(width*0.5f / Zombie.PPM, height * 0.5f / Zombie.PPM);
+        sprite.setBounds(0, 0, width / Zombie.PPM, height / Zombie.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i=0; i<8; i++) {
-            frames.add(new TextureRegion(sprite.getTexture(), i * 32, 0, 32, 32));
+            frames.add(new TextureRegion(sprite.getTexture(), i * width, 0, width, height));
         }
         animation = new Animation(0.2f, frames);
         frames.clear();

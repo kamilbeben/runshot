@@ -55,7 +55,7 @@ public class Loadscreen implements Screen{
         style.knobAfter = new Image(game.assets.textureHolder.LOADING_PROGRESS_KNOB).getDrawable();
         progressBar = new ProgressBar(0f, 1f, 0.1f, false, style);
         progressBar.setSize(300f, 10f);
-        progressBar.setPosition((Zombie.WIDTH - progressBar.getWidth()) /2, (Zombie.HEIGHT - progressBar.getHeight()) /2 - 30f);
+        progressBar.setPosition((Zombie.WIDTH - progressBar.getWidth()) /2, 30f);
         stage.addActor(progressBar);
     }
 

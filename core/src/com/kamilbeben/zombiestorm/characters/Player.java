@@ -114,6 +114,7 @@ public class Player {
     public void touchLeftWall() {
         alive = false;
         body.applyLinearImpulse(new Vector2(-2f, 0), body.getWorldCenter(), true);
+        collisionsOff();
     }
 
     public void startMoving() {

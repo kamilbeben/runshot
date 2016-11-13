@@ -63,7 +63,7 @@ public class Timer {
     }
 
     public boolean isItTimeToSpawnSingleShell() {
-        if (timerSingleShell + 4f < timerGeneral) {
+        if (timerSingleShell + 8f < timerGeneral) {
             timerSingleShell = timerGeneral;
             return true;
         } else {

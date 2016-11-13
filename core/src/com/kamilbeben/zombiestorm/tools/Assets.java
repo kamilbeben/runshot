@@ -56,6 +56,7 @@ public class Assets implements Disposable {
         sounds.load("audio/sfx/hit.ogg", Sound.class);
     }
 
+
     public void assignPlayscreenTextures() {
         textureHolder.loadPlayscreen(
                 textures.get("texture/playscreen/hud/ammoBG.png", Texture.class),
@@ -163,6 +164,25 @@ public class Assets implements Disposable {
                 textures.get("texture/aboutscreen/return.png", Texture.class)
         );
     }
+
+
+    public void loadTutorialAssets() {
+        textures.clear();
+        textures.load("texture/tutorial/1.jpg", Texture.class);
+        textures.load("texture/tutorial/2.jpg", Texture.class);
+        textures.load("texture/tutorial/3.jpg", Texture.class);
+        textures.load("texture/tutorial/4.jpg", Texture.class);
+        textures.load("texture/tutorial/5.jpg", Texture.class);
+        waitForLoadingToComplete(textures);
+        textureHolder.loadTutorialscreen(
+                textures.get("texture/tutorial/1.jpg", Texture.class),
+                textures.get("texture/tutorial/2.jpg", Texture.class),
+                textures.get("texture/tutorial/3.jpg", Texture.class),
+                textures.get("texture/tutorial/4.jpg", Texture.class),
+                textures.get("texture/tutorial/5.jpg", Texture.class)
+        );
+    }
+
 
     public void loadOptionsAssets() {
         textures.clear();

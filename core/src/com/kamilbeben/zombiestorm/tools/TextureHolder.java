@@ -63,9 +63,20 @@ public class TextureHolder {
     public Texture LOADING_PROGRESS_BG;
     public Texture LOADING_PROGRESS_KNOB;
 
+    public Texture[] TUTORIAL;
+
 
     public TextureHolder() {
 
+    }
+
+    public void loadTutorialscreen(Texture TUTORIAL_1, Texture TUTORIAL_2, Texture TUTORIAL_3, Texture TUTORIAL_4, Texture TUTORIAL_5) {
+        TUTORIAL = new Texture[5];
+        TUTORIAL[0] = TUTORIAL_1;
+        TUTORIAL[1] = TUTORIAL_2;
+        TUTORIAL[2] = TUTORIAL_3;
+        TUTORIAL[3] = TUTORIAL_4;
+        TUTORIAL[4] = TUTORIAL_5;
     }
 
     public void loadLoadingScreen(Texture LOADING_BACKGROUND, Texture LOADING_PROGRESS_BG, Texture LOADING_PROGRESS_KNOB) {
