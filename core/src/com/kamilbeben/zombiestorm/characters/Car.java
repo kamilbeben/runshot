@@ -1,7 +1,5 @@
 package com.kamilbeben.zombiestorm.characters;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -15,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.kamilbeben.zombiestorm.Zombie;
-import com.kamilbeben.zombiestorm.screens.Playscreen;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 /**
@@ -136,10 +133,6 @@ public class Car extends Enemy {
 
     @Override
     public void killEnemy() {
-        laughAtPlayer();
     }
 
-    private void laughAtPlayer() {
-
-    }
 }

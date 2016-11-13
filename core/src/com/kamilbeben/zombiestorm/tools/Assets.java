@@ -49,6 +49,7 @@ public class Assets implements Disposable {
     }
 
     public void loadPlaySounds() {
+        sounds.load("audio/music/game.ogg", Music.class);
         sounds.load("audio/sfx/shot.ogg", Sound.class);
         sounds.load("audio/sfx/reload.ogg", Sound.class);
         sounds.load("audio/sfx/jump.ogg", Sound.class);
@@ -75,7 +76,6 @@ public class Assets implements Disposable {
                 textures.get("texture/playscreen/extras/parallax_middle.png", Texture.class),
                 textures.get("texture/playscreen/extras/parallax_fog.png", Texture.class),
                 textures.get("texture/playscreen/extras/fire_effect.png", Texture.class),
-                textures.get("texture/playscreen/extras/points_break.png", Texture.class),
                 textures.get("texture/playscreen/characters/car.png", Texture.class),
                 textures.get("texture/playscreen/characters/car_lights.png", Texture.class),
                 textures.get("texture/playscreen/characters/monkey.png", Texture.class),
@@ -86,7 +86,6 @@ public class Assets implements Disposable {
                 textures.get("texture/playscreen/obstacles/hole_short.png", Texture.class),
                 textures.get("texture/playscreen/obstacles/island_long.png", Texture.class),
                 textures.get("texture/playscreen/obstacles/island_short.png", Texture.class),
-                textures.get("texture/playscreen/obstacles/stone_big.png", Texture.class),
                 textures.get("texture/playscreen/obstacles/stone_small.png", Texture.class)
         );
 
@@ -112,7 +111,6 @@ public class Assets implements Disposable {
         textures.load("texture/playscreen/extras/parallax_middle.png", Texture.class);
         textures.load("texture/playscreen/extras/parallax_fog.png", Texture.class);
         textures.load("texture/playscreen/extras/fire_effect.png", Texture.class);
-        textures.load("texture/playscreen/extras/points_break.png", Texture.class);
         textures.load("texture/playscreen/characters/car.png", Texture.class);
         textures.load("texture/playscreen/characters/car_lights.png", Texture.class);
         textures.load("texture/playscreen/characters/monkey.png", Texture.class);
@@ -123,7 +121,6 @@ public class Assets implements Disposable {
         textures.load("texture/playscreen/obstacles/hole_short.png", Texture.class);
         textures.load("texture/playscreen/obstacles/island_long.png", Texture.class);
         textures.load("texture/playscreen/obstacles/island_short.png", Texture.class);
-        textures.load("texture/playscreen/obstacles/stone_big.png", Texture.class);
         textures.load("texture/playscreen/obstacles/stone_small.png", Texture.class);
         textures.load("fonts/font.fnt", BitmapFont.class);
     }
@@ -173,13 +170,15 @@ public class Assets implements Disposable {
         textures.load("texture/tutorial/3.jpg", Texture.class);
         textures.load("texture/tutorial/4.jpg", Texture.class);
         textures.load("texture/tutorial/5.jpg", Texture.class);
+        textures.load("texture/tutorial/6.jpg", Texture.class);
         waitForLoadingToComplete(textures);
         textureHolder.loadTutorialscreen(
                 textures.get("texture/tutorial/1.jpg", Texture.class),
                 textures.get("texture/tutorial/2.jpg", Texture.class),
                 textures.get("texture/tutorial/3.jpg", Texture.class),
                 textures.get("texture/tutorial/4.jpg", Texture.class),
-                textures.get("texture/tutorial/5.jpg", Texture.class)
+                textures.get("texture/tutorial/5.jpg", Texture.class),
+                textures.get("texture/tutorial/6.jpg", Texture.class)
         );
     }
 

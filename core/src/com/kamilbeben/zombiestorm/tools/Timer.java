@@ -18,9 +18,9 @@ public class Timer {
     private float time_middle = 1.75f;
     private float time_short = 1.0f;
 
-    private static final float time_long_base = 2.5f;
-    private static final float time_middle_base = 1.75f;
-    private static final float time_short_base = 1.0f;
+    private static final float time_long_base = 1.5f;
+    private static final float time_middle_base = 1.15f;
+    private static final float time_short_base = 0.75f;
 
     private boolean gameOver = false;
     private float gameOverTimer = 0f;
@@ -63,7 +63,7 @@ public class Timer {
     }
 
     public boolean isItTimeToSpawnSingleShell() {
-        if (timerSingleShell + 8f < timerGeneral) {
+        if (timerSingleShell + 12f < timerGeneral) {
             timerSingleShell = timerGeneral;
             return true;
         } else {

@@ -69,6 +69,7 @@ public class Loadscreen implements Screen{
         if (game.assets.loadPlayscreenComplete()) {
             game.assets.assignPlayscreenTextures();
             game.setScreen(new Playscreen(game));
+            game.music.startGameTheme();
         }
     }
 

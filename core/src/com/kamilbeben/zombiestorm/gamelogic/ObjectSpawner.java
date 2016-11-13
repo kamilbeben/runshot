@@ -210,7 +210,12 @@ public class ObjectSpawner {
 
     private Enemy randomizeEnemy(Timer timer) {
         int random = Tools.randomFrom1To10();
-        if (random < 5) {
+        if (!lastRandomWasAnObstacleOrHole && lastObstacle + 1f < timer.getTime()){
+            resetWalkerBoolean();
+            resetMonkeyBoolean();
+            lastRandomWasAnObstacleOrHole = true;
+            return new Car(world, 1400, 100, timer.getSpeedLevel(), game);
+        } else if (random < 5) {
             if (!lastRandomWasAWalker[1]) {
                 resetMonkeyBoolean();
                 resetObstacleBoolean();
@@ -218,7 +223,7 @@ public class ObjectSpawner {
             } else {
                 return randomizeEnemy(timer);
             }
-        } else if (random < 8) {
+        } else if (random < 10) {
             if (!lastRandomWasAMonkey[1]) {
                 resetWalkerBoolean();
                 resetObstacleBoolean();
@@ -226,11 +231,6 @@ public class ObjectSpawner {
             } else {
                 return randomizeEnemy(timer);
             }
-        } else if (!lastRandomWasAnObstacleOrHole && lastObstacle + 2f < timer.getTime()){
-            resetWalkerBoolean();
-            resetMonkeyBoolean();
-            lastRandomWasAnObstacleOrHole = true;
-            return new Car(world, 1400, 100, timer.getSpeedLevel(), game);
         } else {
             return randomizeEnemy(timer);
         }

@@ -29,14 +29,11 @@ public class AboutText {
     }
 
     private void addText() {
-        text =  "Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla" +
-                "Bla bla bla bla bla bla bla bla bla bla. \n" +
-                "Bla bala bla bla bla bal.\n\n" +
-                "Created by Kamil Beben in 2016\n" +
-                "using libGDX library with box2d extension.\n" +
-                "Used font \"" + fontName + "\"" + " created by " + fontCreator + ".\n\n" +
-                "Check out my website!\n" +
-                "fuck you faggon, dont add website until its done.";
+        text =  "Created by Kamil Beben in 2016" +
+                "\nusing libGDX library with box2d extension." +
+                "\nUsed programs: Gimp (graphics), DragonBones(animations), LMMS(music), Audacity(sounds)" +
+                "\nUsed sounds created by: Mike Koenig (bite, honk, bounce), RA The Sun God (shot, reload), " +
+                "\nUsed font \"" + fontName + "\"" + " created by " + fontCreator + ".";
     }
 
     public void render(Batch batch) {

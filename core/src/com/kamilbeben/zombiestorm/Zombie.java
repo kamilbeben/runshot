@@ -45,6 +45,7 @@ public class Zombie extends Game {
 		assets = new Assets();
 		options = new Options();
 		music = new MusicPlayer(this);
+		music.startMenuTheme();
 		setScreen(new Menuscreen(this));
 	}
 
