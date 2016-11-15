@@ -220,11 +220,6 @@ public class Playscreen implements Screen {
                 game.setScreen(new Menuscreen(game));
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            shotgunShot();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-            jump();
-        }
     }
 
     private void startGame() {
