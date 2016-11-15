@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.tools.Options;
 
@@ -50,11 +51,11 @@ public class TextPlayscreen {
             gameOver.setText("Congratulations! New HighScore!\n");
         }
 
-        gameOver.setText(gameOver.getText() + "       Distance: " + Integer.toString((int) distance) + "\n     Zombie's killed: " + Integer.toString(shot) +
-                "\n   Zombie's smashed: " + Integer.toString(smashed) + "\n        Score: "  + Integer.toString((int) score)
-                + "\n     Best score: "  + Integer.toString(options.getHighScore()));
+        gameOver.setText(gameOver.getText() + "Distance: " + Integer.toString((int) distance) + "\nZombie's killed: " + Integer.toString(shot) +
+                "\nZombie's smashed: " + Integer.toString(smashed) + "\nScore: "  + Integer.toString((int) score)
+                + "\nBest score: "  + Integer.toString(options.getHighScore()));
         gameOver.setPosition((Zombie.WIDTH - textWidth(gameOver.getText().toString()))/2,
-                (Zombie.HEIGHT + textHeight(gameOver.getText().toString()))/2);
+                (Zombie.HEIGHT)/2);
 
         stage.addActor(this.gameOver);
     }

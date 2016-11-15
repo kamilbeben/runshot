@@ -1,6 +1,7 @@
 package com.kamilbeben.zombiestorm.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,14 +15,15 @@ import com.kamilbeben.zombiestorm.gamelogic.ObjectSpawner;
 import com.kamilbeben.zombiestorm.gamelogic.Physics;
 import com.kamilbeben.zombiestorm.gamelogic.Shotgun;
 import com.kamilbeben.zombiestorm.graphicalfireworks.GraphicsOverlay;
+import com.kamilbeben.zombiestorm.graphicalfireworks.WorldRenderer;
 import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 import com.kamilbeben.zombiestorm.objects.SingleShell;
 import com.kamilbeben.zombiestorm.obstacles.Hole;
 import com.kamilbeben.zombiestorm.obstacles.Obstacle;
 import com.kamilbeben.zombiestorm.tools.InputHandler;
 import com.kamilbeben.zombiestorm.tools.Timer;
-import com.kamilbeben.zombiestorm.graphicalfireworks.WorldRenderer;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,6 +181,7 @@ public class Playscreen implements Screen {
 
     private void gameOver() {
         state.setOver();
+        shotgun.gameOver();
         for (Obstacle tmp : obstacles) {
             tmp.stopMoving();
         }
@@ -216,6 +219,11 @@ public class Playscreen implements Screen {
             } else if (state.isPause() && InputHandler.backKey()) {
                 game.setScreen(new Menuscreen(game));
             }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            shotgunShot();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            jump();
         }
     }
 

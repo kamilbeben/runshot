@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.screens.Menuscreen;
 import com.kamilbeben.zombiestorm.tools.Assets;
-import com.kamilbeben.zombiestorm.tools.Options;
 import com.kamilbeben.zombiestorm.tools.MusicPlayer;
+import com.kamilbeben.zombiestorm.tools.Options;
 
 public class Zombie extends Game {
 

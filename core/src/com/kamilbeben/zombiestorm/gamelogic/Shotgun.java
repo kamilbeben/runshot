@@ -1,14 +1,12 @@
 package com.kamilbeben.zombiestorm.gamelogic;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Car;
 import com.kamilbeben.zombiestorm.characters.Enemy;
 import com.kamilbeben.zombiestorm.characters.Player;
-import com.kamilbeben.zombiestorm.hud.HudPlayscreen;
 
 import java.util.List;
 
@@ -94,6 +92,10 @@ public class Shotgun {
                 drawEffect = false;
             }
         }
+    }
+
+    public void gameOver() {
+        drawEffect = false;
     }
 
     private void updateFireEffect(Player player) {

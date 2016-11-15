@@ -31,8 +31,9 @@ public class AboutText {
     private void addText() {
         text =  "Created by Kamil Beben in 2016" +
                 "\nusing libGDX library with box2d extension." +
+                "\nContact: kamilbeben94@gmail.com" +
                 "\nUsed programs: Gimp (graphics), DragonBones(animations), LMMS(music), Audacity(sounds)" +
-                "\nUsed sounds created by: Mike Koenig (bite, honk, bounce), RA The Sun God (shot, reload), " +
+                "\nUsed sounds created by: Mike Koenig (bite, honk, bounce), RA The Sun God (shot, reload) " +
                 "\nUsed font \"" + fontName + "\"" + " created by " + fontCreator + ".";
     }
 

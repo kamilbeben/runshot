@@ -1,6 +1,5 @@
 package com.kamilbeben.zombiestorm.gamelogic;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kamilbeben.zombiestorm.Zombie;
 import com.kamilbeben.zombiestorm.characters.Car;
@@ -16,16 +15,11 @@ import com.kamilbeben.zombiestorm.obstacles.IslandLong;
 import com.kamilbeben.zombiestorm.obstacles.IslandShort;
 import com.kamilbeben.zombiestorm.obstacles.Obstacle;
 import com.kamilbeben.zombiestorm.obstacles.Stone;
-import com.kamilbeben.zombiestorm.obstacles.StoneBig;
 import com.kamilbeben.zombiestorm.obstacles.StoneSmall;
-import com.kamilbeben.zombiestorm.tools.Assets;
-import com.kamilbeben.zombiestorm.tools.TextureHolder;
 import com.kamilbeben.zombiestorm.tools.Timer;
 import com.kamilbeben.zombiestorm.tools.Tools;
 
 import java.util.List;
-
-import jdk.nashorn.tools.ShellFunctions;
 
 /**
  * Created by bezik on 12.10.16.

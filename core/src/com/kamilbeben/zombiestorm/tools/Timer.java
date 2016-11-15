@@ -1,9 +1,5 @@
 package com.kamilbeben.zombiestorm.tools;
 
-import com.kamilbeben.zombiestorm.Zombie;
-
-import java.util.Random;
-
 /**
  * Created by bezik on 25.09.16.
  */
